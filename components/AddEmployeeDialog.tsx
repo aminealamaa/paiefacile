@@ -1,0 +1,197 @@
+"use client";
+
+import { useState } from "react";
+import { useTranslations } from 'next-intl';
+import { Button } from "@/components/ui/button";
+import { Dialog, DialogTrigger, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Plus } from "lucide-react";
+import { addEmployeeAction } from "@/app/actions/employees";
+
+export function AddEmployeeDialog() {
+  const [isOpen, setIsOpen] = useState(false);
+  const [contractType, setContractType] = useState<string>("");
+  const [maritalStatus, setMaritalStatus] = useState<string>("");
+  const t = useTranslations('employees');
+  const tCommon = useTranslations('common');
+
+  const handleSubmit = async (formData: FormData) => {
+    // Add the select values to form data since Select component doesn't automatically add them
+    if (contractType) {
+      formData.set('contract_type', contractType);
+    }
+    if (maritalStatus) {
+      formData.set('marital_status', maritalStatus);
+    }
+    
+    const result = await addEmployeeAction(formData);
+    if (result?.success) {
+      setIsOpen(false);
+      // Reset form
+      setContractType("");
+      setMaritalStatus("");
+      // Refresh the page to show the new employee
+      window.location.reload();
+    } else if (result?.error) {
+      alert(result.error);
+    }
+  };
+
+  const handleOpenChange = (open: boolean) => {
+    setIsOpen(open);
+    if (!open) {
+      // Reset form when dialog closes
+      setContractType("");
+      setMaritalStatus("");
+    }
+  };
+
+  return (
+    <Dialog open={isOpen} onOpenChange={handleOpenChange}>
+      <DialogTrigger asChild>
+        <Button>
+          <Plus className="w-4 h-4 mr-2" />
+          {t('newEmployee')}
+        </Button>
+      </DialogTrigger>
+      <DialogContent className="sm:max-w-[500px]">
+        <DialogHeader>
+          <DialogTitle>{t('addEmployee')}</DialogTitle>
+        </DialogHeader>
+        <form action={handleSubmit} className="space-y-4">
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+            <div className="space-y-2">
+              <Label htmlFor="first_name">{t('firstName')}</Label>
+              <Input 
+                id="first_name"
+                name="first_name" 
+                placeholder={t('firstName')} 
+                required 
+              />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="last_name">{t('lastName')}</Label>
+              <Input 
+                id="last_name"
+                name="last_name" 
+                placeholder={t('lastName')} 
+                required 
+              />
+            </div>
+          </div>
+
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+            <div className="space-y-2">
+              <Label htmlFor="cin_number">CIN</Label>
+              <Input 
+                id="cin_number"
+                name="cin_number" 
+                placeholder="CIN number" 
+              />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="cnss_number">CNSS</Label>
+              <Input 
+                id="cnss_number"
+                name="cnss_number" 
+                placeholder="CNSS number" 
+              />
+            </div>
+          </div>
+
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+            <div className="space-y-2">
+              <Label htmlFor="job_title">{t('position')}</Label>
+              <Input 
+                id="job_title"
+                name="job_title" 
+                placeholder={t('position')} 
+              />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="base_salary">{t('salary')}</Label>
+              <Input 
+                id="base_salary"
+                name="base_salary" 
+                placeholder={t('salary')} 
+                type="number" 
+                min="0" 
+                step="0.01" 
+                required 
+              />
+            </div>
+          </div>
+
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+            <div className="space-y-2">
+              <Label htmlFor="contract_type">Type de contrat</Label>
+              <Select value={contractType} onValueChange={setContractType} required>
+                <SelectTrigger>
+                  <SelectValue placeholder="Sélectionner le type" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="CDI">CDI</SelectItem>
+                  <SelectItem value="CDD">CDD</SelectItem>
+                  <SelectItem value="ANAPEC">ANAPEC</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="hire_date">{t('hireDate')}</Label>
+              <Input 
+                id="hire_date"
+                name="hire_date" 
+                type="date" 
+              />
+            </div>
+          </div>
+
+          {/* Family Information Section */}
+          <div className="border-t pt-4">
+            <h3 className="text-sm font-medium text-gray-900 mb-3">{t('familyInfo')}</h3>
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+              <div className="space-y-2">
+                <Label htmlFor="marital_status">{t('maritalStatus')}</Label>
+                <Select value={maritalStatus} onValueChange={setMaritalStatus}>
+                  <SelectTrigger>
+                    <SelectValue placeholder={t('maritalStatus')} />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="single">{t('single')}</SelectItem>
+                    <SelectItem value="married">{t('married')}</SelectItem>
+                    <SelectItem value="divorced">{t('divorced')}</SelectItem>
+                    <SelectItem value="widowed">{t('widowed')}</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="children_count">{t('childrenCount')}</Label>
+                <Input 
+                  id="children_count"
+                  name="children_count" 
+                  type="number" 
+                  min="0" 
+                  max="6"
+                  defaultValue="0"
+                  placeholder="0"
+                />
+                <p className="text-xs text-gray-500">Maximum 6 enfants pour les déductions fiscales</p>
+              </div>
+            </div>
+          </div>
+
+          <DialogFooter>
+            <Button type="button" variant="outline" onClick={() => setIsOpen(false)}>
+              {t('cancel')}
+            </Button>
+            <Button type="submit">
+              {t('save')}
+            </Button>
+          </DialogFooter>
+        </form>
+      </DialogContent>
+    </Dialog>
+  );
+}
