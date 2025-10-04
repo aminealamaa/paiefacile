@@ -1,4 +1,5 @@
 "use client";
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import * as React from "react";
 
 // Minimal dialog built with native <dialog>
@@ -18,18 +19,21 @@ export function Dialog({ children, open, onOpenChange }: { children: React.React
   return <DialogContext.Provider value={{ open: isOpen, setOpen }}>{children}</DialogContext.Provider>;
 }
 
-export function DialogTrigger({ asChild, children }: { asChild?: boolean; children: React.ReactElement; }) {
+export function DialogTrigger({ children }: { children: React.ReactElement; }) {
   const ctx = React.useContext(DialogContext)!;
-  return React.cloneElement(children, { onClick: () => ctx.setOpen(true) });
+  return React.cloneElement(children, { 
+    onClick: () => ctx.setOpen(true),
+    type: "button"
+  } as any);
 }
 
-export function DialogContent({ children }: { children: React.ReactNode; }) {
+export function DialogContent({ children, className }: { children: React.ReactNode; className?: string; }) {
   const ctx = React.useContext(DialogContext)!;
   if (!ctx.open) return null;
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center">
       <div className="absolute inset-0 bg-black/50" onClick={() => ctx.setOpen(false)} />
-      <div className="relative z-10 w-full max-w-lg rounded-md bg-white p-4 shadow-lg">
+      <div className={`relative z-10 w-full max-w-lg rounded-md bg-white p-4 shadow-lg ${className || ''}`}>
         {children}
       </div>
     </div>

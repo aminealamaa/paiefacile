@@ -29,7 +29,7 @@ export async function addEmployeeAction(formData: FormData) {
     cin_number: formData.get("cin_number")?.toString() ?? "",
     cnss_number: formData.get("cnss_number")?.toString() ?? "",
     hire_date: formData.get("hire_date")?.toString() ?? "",
-    contract_type: formData.get("contract_type")?.toString() as any,
+    contract_type: formData.get("contract_type")?.toString() as "CDI" | "CDD" | "ANAPEC",
     base_salary: formData.get("base_salary")?.toString() ?? "0",
     job_title: formData.get("job_title")?.toString() ?? "",
     marital_status: formData.get("marital_status")?.toString() ?? "single",
@@ -45,8 +45,8 @@ export async function addEmployeeAction(formData: FormData) {
     .single();
   if (!company) return { error: "Company not found" };
 
-  const payload: any = { ...parsed.data, company_id: company.id };
-  if (payload.hire_date) payload.hire_date = new Date(payload.hire_date).toISOString();
+  const payload: Record<string, unknown> = { ...parsed.data, company_id: company.id };
+  if (payload.hire_date) payload.hire_date = new Date(payload.hire_date as string).toISOString();
 
   const { error } = await supabase.from("employees").insert(payload);
   if (error) return { error: error.message };

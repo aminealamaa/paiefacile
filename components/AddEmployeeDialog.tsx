@@ -15,7 +15,6 @@ export function AddEmployeeDialog() {
   const [contractType, setContractType] = useState<string>("");
   const [maritalStatus, setMaritalStatus] = useState<string>("");
   const t = useTranslations('employees');
-  const tCommon = useTranslations('common');
 
   const handleSubmit = async (formData: FormData) => {
     // Add the select values to form data since Select component doesn't automatically add them
@@ -50,7 +49,7 @@ export function AddEmployeeDialog() {
 
   return (
     <Dialog open={isOpen} onOpenChange={handleOpenChange}>
-      <DialogTrigger asChild>
+      <DialogTrigger>
         <Button>
           <Plus className="w-4 h-4 mr-2" />
           {t('newEmployee')}

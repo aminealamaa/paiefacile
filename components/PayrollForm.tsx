@@ -1,18 +1,17 @@
 "use client";
 
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { useActionState } from "react";
 import { useTranslations } from 'next-intl';
 import { calculatePayroll } from "@/app/actions/payroll";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { PayslipDownload } from "@/components/PayslipDownload";
+import { PayslipPDF } from "@/components/PayslipPDF";
 
 export function PayrollForm({ employees, company }: { employees: Record<string, unknown>[]; company: Record<string, unknown> }) {
   const t = useTranslations('payroll');
-  const tCommon = useTranslations('common');
   const initialState: Record<string, unknown> = { };
   const [state, formAction] = useActionState(calculatePayroll, initialState);
 
@@ -31,7 +30,7 @@ export function PayrollForm({ employees, company }: { employees: Record<string, 
               <option value="">Sélectionner un employé</option>
               {employees.map((e) => (
                 <option key={e.id as string} value={e.id as string}>
-                  {e.last_name} {e.first_name} {e.job_title ? `- ${e.job_title}` : ""}
+                  {e.last_name as string} {e.first_name as string} {e.job_title ? `- ${e.job_title as string}` : ""}
                 </option>
               ))}
             </select>
@@ -92,11 +91,11 @@ export function PayrollForm({ employees, company }: { employees: Record<string, 
         <Button type="submit">{t('calculatePayroll')}</Button>
       </form>
 
-      {state?.error && (
-        <div className="text-red-600 text-sm">{state.error}</div>
-      )}
+      {state?.error ? (
+        <div className="text-red-600 text-sm">{state.error as string}</div>
+      ) : null}
 
-      {state?.result && (
+      {state?.result ? (
         <div className="space-y-4">
           <h2 className="text-xl font-semibold">Résultats</h2>
           <div className="overflow-x-auto rounded-md border">
@@ -108,26 +107,26 @@ export function PayrollForm({ employees, company }: { employees: Record<string, 
                 </TableRow>
               </TableHeader>
               <TableBody>
-                <TableRow><TableCell>{t('baseSalary')}</TableCell><TableCell>{state.result.base_salary}</TableCell></TableRow>
-                <TableRow><TableCell>{t('bonuses')}</TableCell><TableCell>{state.result.bonuses}</TableCell></TableRow>
-                <TableRow><TableCell>Heures supplémentaires</TableCell><TableCell>{state.result.overtimePay}</TableCell></TableRow>
-                <TableRow><TableCell><strong>{t('grossSalary')}</strong></TableCell><TableCell><strong>{state.result.gross_salary}</strong></TableCell></TableRow>
-                <TableRow><TableCell>CNSS</TableCell><TableCell>-{state.result.cnss}</TableCell></TableRow>
-                <TableRow><TableCell>AMO</TableCell><TableCell>-{state.result.amo}</TableCell></TableRow>
-                <TableRow><TableCell>Net imposable</TableCell><TableCell>{state.result.net_taxable}</TableCell></TableRow>
-                {state.result.family_deductions > 0 && (
-                  <TableRow><TableCell>Abattements familiaux</TableCell><TableCell>-{state.result.family_deductions}</TableCell></TableRow>
+                <TableRow><TableCell>{t('baseSalary')}</TableCell><TableCell>{(state.result as any).base_salary as number}</TableCell></TableRow>
+                <TableRow><TableCell>{t('bonuses')}</TableCell><TableCell>{(state.result as any).bonuses as number}</TableCell></TableRow>
+                <TableRow><TableCell>Heures supplémentaires</TableCell><TableCell>{(state.result as any).overtimePay as number}</TableCell></TableRow>
+                <TableRow><TableCell><strong>{t('grossSalary')}</strong></TableCell><TableCell><strong>{(state.result as any).gross_salary as number}</strong></TableCell></TableRow>
+                <TableRow><TableCell>CNSS</TableCell><TableCell>-{(state.result as any).cnss as number}</TableCell></TableRow>
+                <TableRow><TableCell>AMO</TableCell><TableCell>-{(state.result as any).amo as number}</TableCell></TableRow>
+                <TableRow><TableCell>Net imposable</TableCell><TableCell>{(state.result as any).net_taxable as number}</TableCell></TableRow>
+                {((state.result as any).family_deductions as number) > 0 && (
+                  <TableRow><TableCell>Abattements familiaux</TableCell><TableCell>-{(state.result as any).family_deductions as number}</TableCell></TableRow>
                 )}
-                <TableRow><TableCell>IGR</TableCell><TableCell>-{state.result.igr}</TableCell></TableRow>
-                <TableRow><TableCell>Autres déductions</TableCell><TableCell>-{state.result.other_deductions}</TableCell></TableRow>
-                <TableRow><TableCell><strong>{t('netSalary')}</strong></TableCell><TableCell><strong>{state.result.net_salary}</strong></TableCell></TableRow>
+                <TableRow><TableCell>IGR</TableCell><TableCell>-{(state.result as any).igr as number}</TableCell></TableRow>
+                <TableRow><TableCell>Autres déductions</TableCell><TableCell>-{(state.result as any).other_deductions as number}</TableCell></TableRow>
+                <TableRow><TableCell><strong>{t('netSalary')}</strong></TableCell><TableCell><strong>{(state.result as any).net_salary as number}</strong></TableCell></TableRow>
               </TableBody>
             </Table>
           </div>
 
-          <PayslipDownload company={company} result={state.result} />
+          <PayslipPDF company={company} result={state.result as any} />
         </div>
-      )}
+      ) : null}
     </div>
   );
 }

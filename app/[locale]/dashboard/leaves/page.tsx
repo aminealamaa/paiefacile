@@ -4,17 +4,35 @@ import { createSupabaseServerClient } from "@/lib/supabaseServer";
 import { getLeaveRequests, getApprovedLeavesForCalendar } from "@/app/actions/leave";
 import { LeaveManagementTabs } from "@/components/LeaveManagementTabs";
 
+interface Employee extends Record<string, unknown> {
+  id: string;
+  first_name: string;
+  last_name: string;
+}
+
+interface LeaveRequest extends Record<string, unknown> {
+  id: string;
+  start_date: string;
+  end_date: string;
+  leave_type: string;
+  status: string;
+  reason: string;
+  created_at: string;
+}
+
 export default async function LeavesPage() {
   const supabase = await createSupabaseServerClient();
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) redirect("/login");
 
   // Get company ID first
-  const { data: company } = await supabase
+  const { data: companies } = await supabase
     .from("companies")
     .select("id")
     .eq("user_id", user.id)
-    .single();
+    .limit(1);
+  
+  const company = companies?.[0] || null;
   if (!company) redirect("/dashboard/settings");
 
   // Get employees for the company
@@ -52,9 +70,9 @@ function LeavesContent({
   leaveRequests, 
   approvedLeaves 
 }: { 
-  employees: any[]; 
-  leaveRequests: any[]; 
-  approvedLeaves: any[];
+  employees: Record<string, unknown>[]; 
+  leaveRequests: Record<string, unknown>[]; 
+  approvedLeaves: Record<string, unknown>[];
 }) {
   const t = useTranslations('leaves');
 
@@ -65,10 +83,10 @@ function LeavesContent({
         <p className="text-gray-600 mt-2">{t('subtitle')}</p>
       </div>
 
-      <LeaveManagementTabs 
-        employees={employees}
-        leaveRequests={leaveRequests}
-        approvedLeaves={approvedLeaves}
+      <LeaveManagementTabs
+        employees={employees as Employee[]}
+        leaveRequests={leaveRequests as LeaveRequest[]}
+        approvedLeaves={approvedLeaves as LeaveRequest[]}
       />
     </div>
   );

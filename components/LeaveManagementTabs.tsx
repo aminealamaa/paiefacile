@@ -23,13 +23,13 @@ import {
 import { submitLeaveRequest, updateLeaveRequestStatus } from "@/app/actions/leave";
 import { format } from "date-fns";
 
-interface Employee {
+interface Employee extends Record<string, unknown> {
   id: string;
   first_name: string;
   last_name: string;
 }
 
-interface LeaveRequest {
+interface LeaveRequest extends Record<string, unknown> {
   id: string;
   start_date: string;
   end_date: string;
@@ -198,7 +198,6 @@ export function LeaveManagementTabs({
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           <div className="lg:col-span-2">
             <Calendar
-              mode="single"
               selected={selectedDate}
               onSelect={setSelectedDate}
               className="rounded-md border"
@@ -254,7 +253,7 @@ function RequestLeaveDialog({ employees }: { employees: Employee[] }) {
 
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
-      <DialogTrigger asChild>
+      <DialogTrigger>
         <Button>
           <Plus className="w-4 h-4 mr-2" />
           Request Leave

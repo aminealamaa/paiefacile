@@ -76,7 +76,7 @@ export async function submitLeaveRequest(formData: FormData) {
     employee_id: formData.get("employee_id")?.toString() ?? "",
     start_date: formData.get("start_date")?.toString() ?? "",
     end_date: formData.get("end_date")?.toString() ?? "",
-    leave_type: formData.get("leave_type")?.toString() as any,
+    leave_type: formData.get("leave_type")?.toString() as "annual" | "sick" | "unpaid" | "other",
     reason: formData.get("reason")?.toString() ?? "",
   });
 

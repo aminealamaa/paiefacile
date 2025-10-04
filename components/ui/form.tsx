@@ -1,4 +1,5 @@
 "use client";
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import * as React from "react";
 import { useFormContext, FormProvider } from "react-hook-form";
 
@@ -7,9 +8,9 @@ import { useFormContext, FormProvider } from "react-hook-form";
 
 export const Form = FormProvider;
 
-export function FormField({ name, render }: { name: string; render: (field: any) => React.ReactNode; }) {
+export function FormField({ name, render }: { name: string; render: (field: Record<string, unknown>) => React.ReactNode; }) {
   const { register, formState: { errors } } = useFormContext();
-  const error = (errors as any)[name]?.message as string | undefined;
+  const error = (errors as Record<string, any>)[name]?.message as string | undefined;
   return <div>{render({ ...register(name) })}{error && <p className="mt-1 text-sm text-red-600">{error}</p>}</div>;
 }
 

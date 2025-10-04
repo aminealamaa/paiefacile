@@ -1,4 +1,5 @@
 "use client";
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import * as React from "react";
 
 // Minimal Popover
@@ -13,7 +14,10 @@ export function Popover({ children }: { children: React.ReactNode; }) {
 
 export function PopoverTrigger({ children }: { children: React.ReactElement; }) {
   const ctx = React.useContext(PopoverContext)!;
-  return React.cloneElement(children, { onClick: () => ctx.setOpen(!ctx.open) });
+  return React.cloneElement(children, { 
+    onClick: () => ctx.setOpen(!ctx.open),
+    type: "button"
+  } as any);
 }
 
 export function PopoverContent({ children, className }: { children: React.ReactNode; className?: string; }) {

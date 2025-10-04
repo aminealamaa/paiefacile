@@ -10,11 +10,13 @@ export default async function EmployeesPage() {
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) redirect("/login");
 
-  const { data: company } = await supabase
+  const { data: companies } = await supabase
     .from("companies")
     .select("id")
     .eq("user_id", user.id)
-    .single();
+    .limit(1);
+  
+  const company = companies?.[0] || null;
   if (!company) redirect("/dashboard/settings");
 
   const { data: employees } = await supabase
@@ -28,7 +30,7 @@ export default async function EmployeesPage() {
   );
 }
 
-function EmployeesContent({ employees }: { employees: any[] }) {
+function EmployeesContent({ employees }: { employees: Record<string, unknown>[] }) {
   const t = useTranslations('employees');
   const tCommon = useTranslations('common');
 
@@ -55,11 +57,11 @@ function EmployeesContent({ employees }: { employees: any[] }) {
           </TableHeader>
           <TableBody>
             {employees.map((emp) => (
-              <TableRow key={emp.id}>
-                <TableCell>{emp.first_name}</TableCell>
-                <TableCell>{emp.last_name}</TableCell>
-                <TableCell>{emp.job_title}</TableCell>
-                <TableCell>{emp.base_salary}</TableCell>
+              <TableRow key={emp.id as string}>
+                <TableCell>{emp.first_name as string}</TableCell>
+                <TableCell>{emp.last_name as string}</TableCell>
+                <TableCell>{emp.job_title as string}</TableCell>
+                <TableCell>{emp.base_salary as number} MAD</TableCell>
                 <TableCell>
                   <Button variant="outline" size="sm" disabled>
                     {tCommon('edit')}

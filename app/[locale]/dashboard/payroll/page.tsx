@@ -10,11 +10,13 @@ export default async function PayrollPage() {
   } = await supabase.auth.getUser();
   if (!user) redirect("/login");
 
-  const { data: company } = await supabase
+  const { data: companies } = await supabase
     .from("companies")
     .select("id, name, rc_number, if_number, cnss_affiliation_number, ice, patente, address")
     .eq("user_id", user.id)
-    .single();
+    .limit(1);
+  
+  const company = companies?.[0] || null;
   if (!company) redirect("/dashboard/settings");
 
   const { data: employees } = await supabase
@@ -28,7 +30,7 @@ export default async function PayrollPage() {
   );
 }
 
-function PayrollContent({ employees, company }: { employees: any[]; company: any }) {
+function PayrollContent({ employees, company }: { employees: Record<string, unknown>[]; company: Record<string, unknown> }) {
   const t = useTranslations('payroll');
 
   return (

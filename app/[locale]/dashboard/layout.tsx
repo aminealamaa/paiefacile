@@ -25,6 +25,19 @@ export default async function DashboardLayout({
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) redirect("/login");
 
+  // Check if company exists
+  const { data: companies } = await supabase
+    .from("companies")
+    .select("id")
+    .eq("user_id", user.id)
+    .limit(1);
+  
+  const company = companies?.[0] || null;
+
+  if (!company) {
+    redirect("/dashboard/settings");
+  }
+
   async function handleSignOut() {
     "use server";
     const supabase = await createSupabaseServerClient();

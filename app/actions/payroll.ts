@@ -18,6 +18,11 @@ export type PayrollCalculationResult = {
   employeeId: string;
   month: number;
   year: number;
+  employee_name: string;
+  job_title: string;
+  cin_number: string;
+  cnss_number: string;
+  hire_date: string;
   base_salary: number;
   bonuses: number;
   overtimeHours: number;
@@ -29,6 +34,9 @@ export type PayrollCalculationResult = {
   igr: number; // Impôt sur le Revenu
   other_deductions: number;
   net_salary: number; // Net à Payer
+  marital_status: string;
+  children_count: number;
+  family_deductions: number;
 };
 
 // Français: Constantes officielles pour le calcul de la paie au Maroc
@@ -106,7 +114,7 @@ function computeOvertimePay(baseSalary: number, overtimeHours: number, premiumRa
 
 // Français: Action serveur principale. Signature compatible avec useFormState.
 export async function calculatePayroll(
-  _prevState: any,
+  _prevState: Record<string, unknown>,
   formData: FormData
 ): Promise<{ error?: string; result?: PayrollCalculationResult }> {
   try {
@@ -130,11 +138,11 @@ export async function calculatePayroll(
     const { employeeId, month, year, bonuses, overtimeHours } = parsed.data;
 
     // Français: Récupérer l'entreprise pour scoper les données
-    const { data: company } = await supabase
-      .from("companies")
-      .select("id, name, ice, patente, cnss_affiliation_number, address")
-      .eq("user_id", user.id)
-      .single();
+  const { data: company } = await supabase
+    .from("companies")
+    .select("id, name, ice, patente, cnss_affiliation_number, address")
+    .eq("user_id", user.id)
+    .single();
     if (!company) return { error: "Company not found" };
 
     // Français: Charger l'employé avec ses informations familiales, scoping par company_id
@@ -196,9 +204,9 @@ export async function calculatePayroll(
     };
 
     return { result };
-  } catch (e: any) {
+  } catch (e: unknown) {
     console.error("calculatePayroll failed", e);
-    return { error: e?.message ?? "Unexpected error" };
+    return { error: (e as Error)?.message ?? "Unexpected error" };
   }
 }
 

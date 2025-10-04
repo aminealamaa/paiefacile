@@ -16,7 +16,7 @@ const CompanySchema = z.object({
   address: z.string().optional().default("")
 });
 
-async function updateCompanyAction(formData: FormData) {
+async function updateCompanyAction(formData: FormData): Promise<void> {
   "use server";
   try {
     console.log("updateCompanyAction called");
@@ -41,7 +41,7 @@ async function updateCompanyAction(formData: FormData) {
     });
     if (!parsed.success) {
       console.log("Validation failed:", parsed.error.flatten().formErrors);
-      return { error: parsed.error.flatten().formErrors.join("\n") };
+      throw new Error(parsed.error.flatten().formErrors.join("\n"));
     }
 
     console.log("Parsed data:", parsed.data);
@@ -59,15 +59,14 @@ async function updateCompanyAction(formData: FormData) {
 
     if (error) {
       console.log("Supabase error:", error);
-      return { error: error.message };
+      throw new Error(error.message);
     }
 
     console.log("Successfully saved company:", data);
     revalidatePath("/dashboard/settings");
-    return { success: true };
   } catch (e: unknown) {
     console.error("updateCompanyAction failed", e);
-    return { error: (e as Error)?.message ?? "Unexpected error" };
+    throw e;
   }
 }
 
@@ -104,7 +103,6 @@ function SettingsContent({ company }: { company: Record<string, unknown> | null 
 
 function CompanyForm({ company }: { company: Record<string, unknown> | null }) {
   const t = useTranslations('settings');
-  const tCommon = useTranslations('common');
 
   return (
     <form action={updateCompanyAction} className="space-y-4">
@@ -156,7 +154,7 @@ function CompanyForm({ company }: { company: Record<string, unknown> | null }) {
 
         <div>
           <label htmlFor="ice" className="block text-sm font-medium mb-1">
-            ICE (Identifiant Commun de l'Entreprise)
+            ICE (Identifiant Commun de l&apos;Entreprise)
           </label>
           <Input 
             id="ice" 
@@ -179,13 +177,13 @@ function CompanyForm({ company }: { company: Record<string, unknown> | null }) {
 
         <div>
           <label htmlFor="address" className="block text-sm font-medium mb-1">
-            Adresse de l'entreprise
+            Adresse de l&apos;entreprise
           </label>
           <Input 
             id="address" 
             name="address" 
             defaultValue={company?.address as string ?? ""} 
-            placeholder="Adresse complète de l'entreprise"
+            placeholder="Adresse complète de l&apos;entreprise"
           />
         </div>
 

@@ -12,11 +12,13 @@ export default async function DashboardPage() {
   if (!user) redirect("/login");
 
   // Get company ID first
-  const { data: company } = await supabase
+  const { data: companies } = await supabase
     .from("companies")
     .select("id, name")
     .eq("user_id", user.id)
-    .single();
+    .limit(1);
+  
+  const company = companies?.[0] || null;
 
   let employeeCount = 0;
   if (company) {
