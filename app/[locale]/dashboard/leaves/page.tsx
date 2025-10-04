@@ -1,5 +1,5 @@
 import { redirect } from "next/navigation";
-import { useTranslations } from 'next-intl';
+import { getTranslations } from 'next-intl/server';
 import { createSupabaseServerClient } from "@/lib/supabaseServer";
 import { getLeaveRequests, getApprovedLeavesForCalendar } from "@/app/actions/leave";
 import { LeaveManagementTabs } from "@/components/LeaveManagementTabs";
@@ -56,11 +56,14 @@ export default async function LeavesPage() {
     employees: Array.isArray(leave.employees) ? leave.employees[0] : leave.employees
   }));
 
+  const t = await getTranslations('leaves');
+
   return (
     <LeavesContent 
       employees={employees || []}
       leaveRequests={leaveRequests}
       approvedLeaves={approvedLeaves}
+      t={t}
     />
   );
 }
@@ -68,13 +71,14 @@ export default async function LeavesPage() {
 function LeavesContent({ 
   employees, 
   leaveRequests, 
-  approvedLeaves 
+  approvedLeaves,
+  t
 }: { 
   employees: Record<string, unknown>[]; 
   leaveRequests: Record<string, unknown>[]; 
   approvedLeaves: Record<string, unknown>[];
+  t: (key: string) => string;
 }) {
-  const t = useTranslations('leaves');
 
   return (
     <div className="space-y-6">

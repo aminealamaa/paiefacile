@@ -1,5 +1,5 @@
 import { redirect } from "next/navigation";
-import { useTranslations } from 'next-intl';
+import { getTranslations } from 'next-intl/server';
 import { Button } from "@/components/ui/button";
 import { Table, TableHeader, TableBody, TableRow, TableHead, TableCell } from "@/components/ui/table";
 import { createSupabaseServerClient } from "@/lib/supabaseServer";
@@ -25,14 +25,23 @@ export default async function EmployeesPage() {
     .eq("company_id", company.id)
     .order("created_at", { ascending: false });
 
+  const t = await getTranslations('employees');
+  const tCommon = await getTranslations('common');
+
   return (
-    <EmployeesContent employees={employees || []} />
+    <EmployeesContent employees={employees || []} t={t} tCommon={tCommon} />
   );
 }
 
-function EmployeesContent({ employees }: { employees: Record<string, unknown>[] }) {
-  const t = useTranslations('employees');
-  const tCommon = useTranslations('common');
+function EmployeesContent({ 
+  employees, 
+  t, 
+  tCommon 
+}: { 
+  employees: Record<string, unknown>[];
+  t: (key: string) => string;
+  tCommon: (key: string) => string;
+}) {
 
   return (
     <div className="p-6 space-y-6">

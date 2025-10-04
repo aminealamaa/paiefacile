@@ -1,6 +1,6 @@
 import { redirect } from "next/navigation";
 import { createSupabaseServerClient } from "@/lib/supabaseServer";
-import { useTranslations } from 'next-intl';
+import { getTranslations } from 'next-intl/server';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import {Link} from "@/lib/navigation";
@@ -29,23 +29,30 @@ export default async function DashboardPage() {
     employeeCount = count || 0;
   }
 
+  const t = await getTranslations('dashboard');
+  const tNav = await getTranslations('navigation');
+
   return (
     <DashboardContent 
       companyName={company?.name || "Votre entreprise"} 
-      employeeCount={employeeCount} 
+      employeeCount={employeeCount}
+      t={t}
+      tNav={tNav}
     />
   );
 }
 
 function DashboardContent({ 
   companyName, 
-  employeeCount 
+  employeeCount,
+  t,
+  tNav
 }: { 
   companyName: string; 
   employeeCount: number;
+  t: (key: string) => string;
+  tNav: (key: string) => string;
 }) {
-  const t = useTranslations('dashboard');
-  const tNav = useTranslations('navigation');
 
   return (
     <div className="space-y-6">
