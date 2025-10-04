@@ -463,7 +463,7 @@ export function PayslipPDF({ company, result }: { company: Record<string, unknow
       document={<PayslipDocument data={payslipData} />}
       fileName={`bulletin-paie-${result?.employee_name || 'employee'}.pdf`}
     >
-      {({ blob, url, loading, error }) => (
+      {({ loading }) => (
         <Button disabled={loading} className="w-full">
           <Download className="mr-2 h-4 w-4" />
           {loading ? 'Génération...' : 'Télécharger le Bulletin de Paie (PDF)'}
