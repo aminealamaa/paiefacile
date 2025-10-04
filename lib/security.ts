@@ -4,7 +4,7 @@ import { JSDOM } from 'jsdom';
 
 // Français: Créer une instance DOMPurify pour le serveur
 const window = new JSDOM('').window;
-const purify = DOMPurify(window as any);
+const purify = DOMPurify(window as unknown as Window);
 
 /**
  * Sanitize user input to prevent XSS attacks

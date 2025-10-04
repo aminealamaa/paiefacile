@@ -18,7 +18,6 @@ export function rateLimit(config: RateLimitConfig) {
   return (req: NextRequest): NextResponse | null => {
     const ip = req.ip || req.headers.get('x-forwarded-for') || 'unknown';
     const now = Date.now();
-    const windowStart = now - config.windowMs;
     
     // Nettoyer les anciennes entrées
     for (const [key, value] of requestCounts.entries()) {
@@ -89,8 +88,8 @@ export const rateLimitConfigs = {
  * Français: Applique la limitation de taux aux routes API
  */
 export function withRateLimit(config: RateLimitConfig) {
-  return function(handler: Function) {
-    return async function(req: NextRequest, ...args: any[]) {
+  return function(handler: (req: NextRequest, ...args: unknown[]) => Promise<NextResponse>) {
+    return async function(req: NextRequest, ...args: unknown[]) {
       const rateLimitResponse = rateLimit(config)(req);
       if (rateLimitResponse) {
         return rateLimitResponse;
