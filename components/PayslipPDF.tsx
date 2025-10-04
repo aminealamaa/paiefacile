@@ -164,12 +164,19 @@ interface PayslipData {
     base_salary: number;
   };
   payroll: {
+    month: number;
+    year: number;
     base_salary: number;
+    bonuses: number;
+    overtime_hours: number;
+    overtime_pay: number;
     gross_salary: number;
-    cnss_employee: number;
-    amo_employee: number;
+    cnss: number;
+    amo: number;
+    net_taxable: number;
     igr: number;
     family_deductions: number;
+    other_deductions: number;
     net_salary: number;
   };
 }
@@ -187,7 +194,9 @@ function PayslipDocument({ data }: { data: PayslipData }) {
         {/* Header */}
         <View style={styles.header}>
           <Text style={styles.title}>BULLETIN DE PAIE</Text>
-          <Text style={styles.date}>03/13</Text>
+          <Text style={styles.date}>
+            {data.payroll.month.toString().padStart(2, '0')}/{data.payroll.year}
+          </Text>
         </View>
 
         {/* Company and Employee Info */}
@@ -197,8 +206,8 @@ function PayslipDocument({ data }: { data: PayslipData }) {
             <Text>{data.company.name}</Text>
             <Text>{data.company.address}</Text>
             <View style={styles.infoRow}>
-              <Text style={styles.label}>RC:</Text>
-              <Text style={styles.value}>20 82 - IF 300011220006</Text>
+              <Text style={styles.label}>ICE:</Text>
+              <Text style={styles.value}>{data.company.ice}</Text>
             </View>
             <View style={styles.infoRow}>
               <Text style={styles.label}>CNSS:</Text>
@@ -211,10 +220,8 @@ function PayslipDocument({ data }: { data: PayslipData }) {
           </View>
 
           <View style={styles.employeeRight}>
-            <Text style={styles.sectionTitle}>SALARIE</Text>
+            <Text style={styles.sectionTitle}>SALARIÉ</Text>
             <Text>{data.employee.name}</Text>
-            <Text>85 RUE ABOU HASSANI</Text>
-            <Text>10000 RABAT</Text>
             <View style={styles.infoRow}>
               <Text style={styles.label}>Situation familiale:</Text>
               <Text style={styles.value}>{data.employee.marital_status}</Text>
@@ -261,29 +268,25 @@ function PayslipDocument({ data }: { data: PayslipData }) {
             <Text style={[styles.tableCellRight, { width: '22.5%' }]}>-</Text>
           </View>
 
-          <View style={styles.tableRow}>
-            <Text style={[styles.tableCell, { width: '25%' }]}>Prime d&apos;ancienneté</Text>
-            <Text style={[styles.tableCell, { width: '15%' }]}>-</Text>
-            <Text style={[styles.tableCell, { width: '15%' }]}>-</Text>
-            <Text style={[styles.tableCellRight, { width: '22.5%' }]}>200.00</Text>
-            <Text style={[styles.tableCellRight, { width: '22.5%' }]}>-</Text>
-          </View>
+          {data.payroll.bonuses > 0 && (
+            <View style={styles.tableRow}>
+              <Text style={[styles.tableCell, { width: '25%' }]}>Primes et gratifications</Text>
+              <Text style={[styles.tableCell, { width: '15%' }]}>-</Text>
+              <Text style={[styles.tableCell, { width: '15%' }]}>-</Text>
+              <Text style={[styles.tableCellRight, { width: '22.5%' }]}>{formatCurrency(data.payroll.bonuses)}</Text>
+              <Text style={[styles.tableCellRight, { width: '22.5%' }]}>-</Text>
+            </View>
+          )}
 
-          <View style={styles.tableRow}>
-            <Text style={[styles.tableCell, { width: '25%' }]}>Indemnité kilométrique</Text>
-            <Text style={[styles.tableCell, { width: '15%' }]}>-</Text>
-            <Text style={[styles.tableCell, { width: '15%' }]}>-</Text>
-            <Text style={[styles.tableCellRight, { width: '22.5%' }]}>300.00</Text>
-            <Text style={[styles.tableCellRight, { width: '22.5%' }]}>-</Text>
-          </View>
-
-          <View style={styles.tableRow}>
-            <Text style={[styles.tableCell, { width: '25%' }]}>Heures supplémentaires</Text>
-            <Text style={[styles.tableCell, { width: '15%' }]}>-</Text>
-            <Text style={[styles.tableCell, { width: '15%' }]}>-</Text>
-            <Text style={[styles.tableCellRight, { width: '22.5%' }]}>200.00</Text>
-            <Text style={[styles.tableCellRight, { width: '22.5%' }]}>-</Text>
-          </View>
+          {data.payroll.overtime_hours > 0 && (
+            <View style={styles.tableRow}>
+              <Text style={[styles.tableCell, { width: '25%' }]}>Heures supplémentaires</Text>
+              <Text style={[styles.tableCell, { width: '15%' }]}>{data.payroll.overtime_hours}h</Text>
+              <Text style={[styles.tableCell, { width: '15%' }]}>125%</Text>
+              <Text style={[styles.tableCellRight, { width: '22.5%' }]}>{formatCurrency(data.payroll.overtime_pay)}</Text>
+              <Text style={[styles.tableCellRight, { width: '22.5%' }]}>-</Text>
+            </View>
+          )}
 
           {/* Total Gross */}
           <View style={[styles.tableRow, styles.totalRow]}>
@@ -296,19 +299,19 @@ function PayslipDocument({ data }: { data: PayslipData }) {
 
           {/* Deductions Section */}
           <View style={styles.tableRow}>
-            <Text style={[styles.tableCell, { width: '25%' }]}>CNSS</Text>
+            <Text style={[styles.tableCell, { width: '25%' }]}>CNSS (Part salariale)</Text>
             <Text style={[styles.tableCell, { width: '15%' }]}>-</Text>
             <Text style={[styles.tableCell, { width: '15%' }]}>4.48%</Text>
             <Text style={[styles.tableCellRight, { width: '22.5%' }]}>-</Text>
-            <Text style={[styles.tableCellRight, { width: '22.5%' }]}>{formatCurrency(data.payroll.cnss_employee)}</Text>
+            <Text style={[styles.tableCellRight, { width: '22.5%' }]}>{formatCurrency(data.payroll.cnss)}</Text>
           </View>
 
           <View style={styles.tableRow}>
-            <Text style={[styles.tableCell, { width: '25%' }]}>AMO</Text>
+            <Text style={[styles.tableCell, { width: '25%' }]}>AMO (Part salariale)</Text>
             <Text style={[styles.tableCell, { width: '15%' }]}>-</Text>
-            <Text style={[styles.tableCell, { width: '15%' }]}>2.00%</Text>
+            <Text style={[styles.tableCell, { width: '15%' }]}>2.26%</Text>
             <Text style={[styles.tableCellRight, { width: '22.5%' }]}>-</Text>
-            <Text style={[styles.tableCellRight, { width: '22.5%' }]}>{formatCurrency(data.payroll.amo_employee)}</Text>
+            <Text style={[styles.tableCellRight, { width: '22.5%' }]}>{formatCurrency(data.payroll.amo)}</Text>
           </View>
 
           <View style={styles.tableRow}>
@@ -319,13 +322,13 @@ function PayslipDocument({ data }: { data: PayslipData }) {
             <Text style={[styles.tableCellRight, { width: '22.5%' }]}>{formatCurrency(data.payroll.igr)}</Text>
           </View>
 
-          {data.payroll.family_deductions > 0 && (
+          {data.payroll.other_deductions > 0 && (
             <View style={styles.tableRow}>
-              <Text style={[styles.tableCell, { width: '25%' }]}>Abattements familiaux</Text>
+              <Text style={[styles.tableCell, { width: '25%' }]}>Autres retenues</Text>
               <Text style={[styles.tableCell, { width: '15%' }]}>-</Text>
               <Text style={[styles.tableCell, { width: '15%' }]}>-</Text>
               <Text style={[styles.tableCellRight, { width: '22.5%' }]}>-</Text>
-              <Text style={[styles.tableCellRight, { width: '22.5%' }]}>{formatCurrency(data.payroll.family_deductions)}</Text>
+              <Text style={[styles.tableCellRight, { width: '22.5%' }]}>{formatCurrency(data.payroll.other_deductions)}</Text>
             </View>
           )}
 
@@ -336,7 +339,7 @@ function PayslipDocument({ data }: { data: PayslipData }) {
             <Text style={[styles.tableCell, { width: '15%' }]}>-</Text>
             <Text style={[styles.tableCellRight, { width: '22.5%' }]}>-</Text>
             <Text style={[styles.tableCellRight, { width: '22.5%' }]}>
-              {formatCurrency(data.payroll.cnss_employee + data.payroll.amo_employee + data.payroll.igr)}
+              {formatCurrency(data.payroll.cnss + data.payroll.amo + data.payroll.igr + data.payroll.other_deductions)}
             </Text>
           </View>
 
@@ -364,14 +367,14 @@ function PayslipDocument({ data }: { data: PayslipData }) {
               <View style={styles.summaryRow}>
                 <Text style={[styles.summaryCell, { width: '25%' }]}>Mois en cours</Text>
                 <Text style={[styles.summaryCell, { width: '25%' }]}>{formatCurrency(data.payroll.gross_salary)}</Text>
-                <Text style={[styles.summaryCell, { width: '25%' }]}>{formatCurrency(data.payroll.gross_salary)}</Text>
+                <Text style={[styles.summaryCell, { width: '25%' }]}>{formatCurrency(data.payroll.net_taxable)}</Text>
                 <Text style={[styles.summaryCell, { width: '25%' }]}>{formatCurrency(data.payroll.net_salary)}</Text>
                 <Text style={[styles.summaryCell, { width: '25%' }]}>{formatCurrency(data.payroll.igr)}</Text>
               </View>
               <View style={styles.summaryRow}>
                 <Text style={[styles.summaryCell, { width: '25%' }]}>Cumul annuel</Text>
                 <Text style={[styles.summaryCell, { width: '25%' }]}>{formatCurrency(data.payroll.gross_salary)}</Text>
-                <Text style={[styles.summaryCell, { width: '25%' }]}>{formatCurrency(data.payroll.gross_salary)}</Text>
+                <Text style={[styles.summaryCell, { width: '25%' }]}>{formatCurrency(data.payroll.net_taxable)}</Text>
                 <Text style={[styles.summaryCell, { width: '25%' }]}>{formatCurrency(data.payroll.net_salary)}</Text>
                 <Text style={[styles.summaryCell, { width: '25%' }]}>{formatCurrency(data.payroll.igr)}</Text>
               </View>
@@ -448,12 +451,19 @@ export function PayslipPDF({ company, result }: { company: Record<string, unknow
       base_salary: result?.base_salary as number || 0,
     },
     payroll: {
+      month: result?.month as number || new Date().getMonth() + 1,
+      year: result?.year as number || new Date().getFullYear(),
       base_salary: result?.base_salary as number || 0,
+      bonuses: result?.bonuses as number || 0,
+      overtime_hours: result?.overtimeHours as number || 0,
+      overtime_pay: result?.overtimePay as number || 0,
       gross_salary: result?.gross_salary as number || 0,
-      cnss_employee: result?.cnss as number || 0,
-      amo_employee: result?.amo as number || 0,
+      cnss: result?.cnss as number || 0,
+      amo: result?.amo as number || 0,
+      net_taxable: result?.net_taxable as number || 0,
       igr: result?.igr as number || 0,
       family_deductions: result?.family_deductions as number || 0,
+      other_deductions: result?.other_deductions as number || 0,
       net_salary: result?.net_salary as number || 0,
     },
   };
