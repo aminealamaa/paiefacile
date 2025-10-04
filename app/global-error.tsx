@@ -26,10 +26,10 @@ export default function GlobalError({
             </div>
             <div className="mt-4 text-center">
               <h1 className="text-lg font-medium text-gray-900">
-                Une erreur s'est produite
+                Une erreur s&apos;est produite
               </h1>
               <p className="mt-2 text-sm text-gray-500">
-                Désolé, quelque chose s'est mal passé. Notre équipe a été notifiée.
+                Désolé, quelque chose s&apos;est mal passé. Notre équipe a été notifiée.
               </p>
               <div className="mt-6">
                 <button

@@ -4,7 +4,8 @@ import { JSDOM } from 'jsdom';
 
 // Français: Créer une instance DOMPurify pour le serveur
 const window = new JSDOM('').window;
-const purify = DOMPurify(window as unknown as Window);
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const purify = DOMPurify(window as any);
 
 /**
  * Sanitize user input to prevent XSS attacks
