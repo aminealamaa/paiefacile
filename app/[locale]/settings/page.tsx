@@ -1,11 +1,12 @@
 import { redirect } from "next/navigation";
-import { useTranslations } from 'next-intl';
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { createSupabaseServerClient } from "@/lib/supabaseServer";
 import { z } from "zod";
 import { revalidatePath } from "next/cache";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Building2, ArrowLeft, CheckCircle } from "lucide-react";
+import Link from "next/link";
 
 const CompanySchema = z.object({
   name: z.string().min(2, "Name is required"),
@@ -85,18 +86,107 @@ export default async function SettingsPage() {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      <div className="max-w-2xl mx-auto p-6 space-y-6">
-        <Card>
-          <CardHeader>
-            <CardTitle>Configuration de l&apos;entreprise</CardTitle>
-            <CardDescription>
-              Configurez les informations de votre entreprise pour commencer à utiliser PaieFacile.
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            <CompanyForm company={company} />
-          </CardContent>
-        </Card>
+      {/* Header */}
+      <div className="bg-white border-b border-gray-200">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex items-center justify-between h-16">
+            <div className="flex items-center space-x-4">
+              <Link href="/dashboard" className="flex items-center text-gray-600 hover:text-gray-900">
+                <ArrowLeft className="h-5 w-5 mr-2" />
+                Retour au tableau de bord
+              </Link>
+            </div>
+            <div className="flex items-center space-x-2">
+              <Building2 className="h-8 w-8 text-blue-600" />
+              <span className="text-xl font-bold text-gray-900">PaieFacile</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Main Content */}
+      <div className="max-w-4xl mx-auto py-8 px-4 sm:px-6 lg:px-8">
+        <div className="mb-8">
+          <div className="flex items-center space-x-3 mb-4">
+            <div className="flex items-center justify-center w-12 h-12 bg-blue-100 rounded-lg">
+              <Building2 className="h-6 w-6 text-blue-600" />
+            </div>
+            <div>
+              <h1 className="text-3xl font-bold text-gray-900">Configuration de l&apos;entreprise</h1>
+              <p className="text-gray-600 mt-1">Configurez les informations de votre entreprise pour commencer à utiliser PaieFacile</p>
+            </div>
+          </div>
+        </div>
+
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+          {/* Main Form */}
+          <div className="lg:col-span-2">
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center space-x-2">
+                  <CheckCircle className="h-5 w-5 text-green-600" />
+                  <span>Informations de l&apos;entreprise</span>
+                </CardTitle>
+                <CardDescription>
+                  Remplissez les informations de base de votre entreprise. Seul le nom est obligatoire.
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <CompanyForm company={company} />
+              </CardContent>
+            </Card>
+          </div>
+
+          {/* Sidebar */}
+          <div className="space-y-6">
+            <Card>
+              <CardHeader>
+                <CardTitle className="text-lg">Pourquoi ces informations ?</CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <div className="flex items-start space-x-3">
+                  <div className="flex-shrink-0 w-6 h-6 bg-blue-100 rounded-full flex items-center justify-center">
+                    <span className="text-xs font-semibold text-blue-600">1</span>
+                  </div>
+                  <div>
+                    <h4 className="font-medium text-gray-900">Conformité légale</h4>
+                    <p className="text-sm text-gray-600">Respect des réglementations marocaines</p>
+                  </div>
+                </div>
+                <div className="flex items-start space-x-3">
+                  <div className="flex-shrink-0 w-6 h-6 bg-blue-100 rounded-full flex items-center justify-center">
+                    <span className="text-xs font-semibold text-blue-600">2</span>
+                  </div>
+                  <div>
+                    <h4 className="font-medium text-gray-900">Calculs précis</h4>
+                    <p className="text-sm text-gray-600">CNSS, AMO et IGR selon les règles marocaines</p>
+                  </div>
+                </div>
+                <div className="flex items-start space-x-3">
+                  <div className="flex-shrink-0 w-6 h-6 bg-blue-100 rounded-full flex items-center justify-center">
+                    <span className="text-xs font-semibold text-blue-600">3</span>
+                  </div>
+                  <div>
+                    <h4 className="font-medium text-gray-900">Documents officiels</h4>
+                    <p className="text-sm text-gray-600">Génération automatique des bulletins de paie</p>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+
+            <Card className="bg-blue-50 border-blue-200">
+              <CardContent className="pt-6">
+                <div className="flex items-center space-x-3">
+                  <CheckCircle className="h-6 w-6 text-blue-600" />
+                  <div>
+                    <h4 className="font-semibold text-blue-900">Sécurisé et confidentiel</h4>
+                    <p className="text-sm text-blue-700 mt-1">Vos données sont protégées par un chiffrement de niveau bancaire</p>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+        </div>
       </div>
     </div>
   );
@@ -104,10 +194,10 @@ export default async function SettingsPage() {
 
 function CompanyForm({ company }: { company: Record<string, unknown> | null }) {
   return (
-    <form action={updateCompanyAction} className="space-y-4">
-      <div className="space-y-4">
-        <div>
-          <label htmlFor="name" className="block text-sm font-medium mb-1">
+    <form action={updateCompanyAction} className="space-y-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div className="md:col-span-2">
+          <label htmlFor="name" className="block text-sm font-semibold text-gray-700 mb-2">
             Nom de l&apos;entreprise *
           </label>
           <Input 
@@ -115,44 +205,52 @@ function CompanyForm({ company }: { company: Record<string, unknown> | null }) {
             name="name" 
             defaultValue={company?.name as string ?? ""} 
             required 
+            className="h-12 text-lg"
+            placeholder="Ex: Mon Entreprise SARL"
           />
         </div>
 
         <div>
-          <label htmlFor="rc_number" className="block text-sm font-medium mb-1">
+          <label htmlFor="rc_number" className="block text-sm font-semibold text-gray-700 mb-2">
             Numéro RC
           </label>
           <Input 
             id="rc_number" 
             name="rc_number" 
             defaultValue={company?.rc_number as string ?? ""} 
+            placeholder="Ex: RC123456"
+            className="h-11"
           />
         </div>
 
         <div>
-          <label htmlFor="if_number" className="block text-sm font-medium mb-1">
+          <label htmlFor="if_number" className="block text-sm font-semibold text-gray-700 mb-2">
             Numéro IF
           </label>
           <Input 
             id="if_number" 
             name="if_number" 
             defaultValue={company?.if_number as string ?? ""} 
+            placeholder="Ex: IF123456789"
+            className="h-11"
           />
         </div>
 
         <div>
-          <label htmlFor="cnss_affiliation_number" className="block text-sm font-medium mb-1">
+          <label htmlFor="cnss_affiliation_number" className="block text-sm font-semibold text-gray-700 mb-2">
             Numéro d&apos;affiliation CNSS
           </label>
           <Input 
             id="cnss_affiliation_number" 
             name="cnss_affiliation_number" 
             defaultValue={company?.cnss_affiliation_number as string ?? ""} 
+            placeholder="Ex: CNSS123456"
+            className="h-11"
           />
         </div>
 
         <div>
-          <label htmlFor="ice" className="block text-sm font-medium mb-1">
+          <label htmlFor="ice" className="block text-sm font-semibold text-gray-700 mb-2">
             ICE (Identifiant Commun de l&apos;Entreprise)
           </label>
           <Input 
@@ -160,22 +258,25 @@ function CompanyForm({ company }: { company: Record<string, unknown> | null }) {
             name="ice" 
             defaultValue={company?.ice as string ?? ""} 
             placeholder="000000000000000"
+            className="h-11"
           />
         </div>
 
         <div>
-          <label htmlFor="patente" className="block text-sm font-medium mb-1">
+          <label htmlFor="patente" className="block text-sm font-semibold text-gray-700 mb-2">
             Patente
           </label>
           <Input 
             id="patente" 
             name="patente" 
             defaultValue={company?.patente as string ?? ""} 
+            placeholder="Ex: PAT123456"
+            className="h-11"
           />
         </div>
 
-        <div>
-          <label htmlFor="address" className="block text-sm font-medium mb-1">
+        <div className="md:col-span-2">
+          <label htmlFor="address" className="block text-sm font-semibold text-gray-700 mb-2">
             Adresse de l&apos;entreprise
           </label>
           <Input 
@@ -183,10 +284,19 @@ function CompanyForm({ company }: { company: Record<string, unknown> | null }) {
             name="address" 
             defaultValue={company?.address as string ?? ""} 
             placeholder="Adresse complète de l&apos;entreprise"
+            className="h-11"
           />
         </div>
+      </div>
 
-        <Button type="submit">Enregistrer et continuer</Button>
+      <div className="flex items-center justify-between pt-6 border-t border-gray-200">
+        <div className="text-sm text-gray-500">
+          * Champs obligatoires
+        </div>
+        <Button type="submit" size="lg" className="bg-blue-600 hover:bg-blue-700 text-white px-8 py-3">
+          <CheckCircle className="h-5 w-5 mr-2" />
+          Enregistrer et continuer
+        </Button>
       </div>
     </form>
   );

@@ -55,7 +55,7 @@ export function AddEmployeeDialog() {
           {t('newEmployee')}
         </Button>
       </DialogTrigger>
-      <DialogContent className="sm:max-w-[500px]">
+      <DialogContent className="sm:max-w-[500px] max-h-[90vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle>{t('addEmployee')}</DialogTitle>
         </DialogHeader>
@@ -182,12 +182,14 @@ export function AddEmployeeDialog() {
           </div>
 
           <DialogFooter>
-            <Button type="button" variant="outline" onClick={() => setIsOpen(false)}>
-              {t('cancel')}
-            </Button>
-            <Button type="submit">
-              {t('save')}
-            </Button>
+            <div className="flex justify-end space-x-2 w-full">
+              <Button type="button" variant="outline" onClick={() => setIsOpen(false)}>
+                {t('cancel')}
+              </Button>
+              <Button type="submit" className="bg-blue-600 hover:bg-blue-700">
+                {t('save')}
+              </Button>
+            </div>
           </DialogFooter>
         </form>
       </DialogContent>
