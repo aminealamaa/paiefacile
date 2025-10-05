@@ -46,11 +46,11 @@ export function MobileNavigation({ navigation }: MobileNavigationProps) {
           <Link
             key={item.name}
             href={item.href}
-            className="group flex items-center px-2 py-2 text-sm font-medium rounded-md text-gray-600 hover:bg-gray-50 hover:text-gray-900"
+            className="group flex items-center px-3 py-3 text-sm font-medium rounded-lg text-gray-600 hover:bg-gray-50 hover:text-gray-900 transition-colors duration-200 active:bg-gray-100"
             onClick={handleLinkClick}
           >
             {getIcon(item.icon)}
-            {t(item.name)}
+            <span className="truncate">{t(item.name)}</span>
           </Link>
         );
       })}

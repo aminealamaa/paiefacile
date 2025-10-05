@@ -63,8 +63,8 @@ function DashboardContent({
         </p>
       </div>
 
-      {/* Summary Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+      {/* Summary Cards - Mobile Optimized */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">
@@ -126,35 +126,35 @@ function DashboardContent({
         </Card>
       </div>
 
-      {/* Quick Actions */}
+      {/* Quick Actions - Mobile Optimized */}
       <div className="space-y-4">
         <h2 className="text-xl font-semibold text-gray-900">{t('quickActions')}</h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
           <Link href="/dashboard/employees">
-            <Button variant="outline" className="w-full h-20 flex flex-col items-center justify-center space-y-2">
-              <Users className="h-6 w-6" />
-              <span>{tNav('employees')}</span>
+            <Button variant="outline" className="w-full h-16 sm:h-20 flex flex-col items-center justify-center space-y-1 sm:space-y-2 p-3">
+              <Users className="h-5 w-5 sm:h-6 sm:w-6" />
+              <span className="text-xs sm:text-sm font-medium">{tNav('employees')}</span>
             </Button>
           </Link>
           
           <Link href="/dashboard/payroll">
-            <Button variant="outline" className="w-full h-20 flex flex-col items-center justify-center space-y-2">
-              <Calculator className="h-6 w-6" />
-              <span>{tNav('payroll')}</span>
+            <Button variant="outline" className="w-full h-16 sm:h-20 flex flex-col items-center justify-center space-y-1 sm:space-y-2 p-3">
+              <Calculator className="h-5 w-5 sm:h-6 sm:w-6" />
+              <span className="text-xs sm:text-sm font-medium">{tNav('payroll')}</span>
             </Button>
           </Link>
           
           <Link href="/dashboard/leaves">
-            <Button variant="outline" className="w-full h-20 flex flex-col items-center justify-center space-y-2">
-              <CalendarDays className="h-6 w-6" />
-              <span>{tNav('leaves')}</span>
+            <Button variant="outline" className="w-full h-16 sm:h-20 flex flex-col items-center justify-center space-y-1 sm:space-y-2 p-3">
+              <CalendarDays className="h-5 w-5 sm:h-6 sm:w-6" />
+              <span className="text-xs sm:text-sm font-medium">{tNav('leaves')}</span>
             </Button>
           </Link>
           
           <Link href="/dashboard/settings">
-            <Button variant="outline" className="w-full h-20 flex flex-col items-center justify-center space-y-2">
-              <Settings className="h-6 w-6" />
-              <span>{tNav('settings')}</span>
+            <Button variant="outline" className="w-full h-16 sm:h-20 flex flex-col items-center justify-center space-y-1 sm:space-y-2 p-3">
+              <Settings className="h-5 w-5 sm:h-6 sm:w-6" />
+              <span className="text-xs sm:text-sm font-medium">{tNav('settings')}</span>
             </Button>
           </Link>
         </div>

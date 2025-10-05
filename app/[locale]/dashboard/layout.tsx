@@ -35,7 +35,7 @@ export default async function DashboardLayout({
   const company = companies?.[0] || null;
 
   if (!company) {
-    redirect("/dashboard/settings");
+    redirect("/settings");
   }
 
   async function handleSignOut() {
@@ -55,19 +55,25 @@ export default async function DashboardLayout({
 
   return (
     <div className="min-h-screen bg-gray-50">
-      {/* Mobile sidebar overlay */}
+      {/* Mobile header */}
       <div className="lg:hidden">
-        <input type="checkbox" id="sidebar-toggle" className="hidden" />
-        <label htmlFor="sidebar-toggle" className="fixed inset-0 z-40 bg-gray-600 bg-opacity-75 opacity-0 pointer-events-none transition-opacity duration-300 peer-checked:opacity-100 peer-checked:pointer-events-auto"></label>
-        
-        <div className="fixed inset-y-0 left-0 z-50 w-64 bg-white shadow-lg transform -translate-x-full transition-transform duration-300 peer-checked:translate-x-0">
-          <div className="flex items-center justify-between h-16 px-4 border-b border-gray-200">
-            <h1 className="text-xl font-bold text-gray-900">PaieFacile</h1>
-            <label htmlFor="sidebar-toggle">
-              <X className="h-6 w-6 text-gray-400 cursor-pointer" />
+        <div className="bg-white shadow-sm border-b border-gray-200 px-4 py-3">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center">
+              <label htmlFor="sidebar-toggle" className="btn btn-square btn-ghost">
+                <Menu className="h-6 w-6" />
             </label>
+              <h1 className="ml-3 text-lg font-semibold text-gray-900">PaieFacile</h1>
+            </div>
+            <div className="flex items-center space-x-2">
+              <LanguageSwitcher />
+              <form action={handleSignOut}>
+                <Button type="submit" variant="ghost" size="sm">
+                  <LogOut className="h-4 w-4" />
+                </Button>
+              </form>
+            </div>
           </div>
-          <MobileNavigation navigation={navigation} />
         </div>
       </div>
 
@@ -80,55 +86,83 @@ export default async function DashboardLayout({
           <div className="mt-5 flex-grow flex flex-col">
             <nav className="flex-1 px-2 space-y-1">
               {navigation.map((item) => {
-                const getIcon = (iconName: string) => {
-                  switch (iconName) {
-                    case "LayoutDashboard": return <LayoutDashboard className="mr-3 flex-shrink-0 h-5 w-5" />;
-                    case "Users": return <Users className="mr-3 flex-shrink-0 h-5 w-5" />;
-                    case "Calculator": return <Calculator className="mr-3 flex-shrink-0 h-5 w-5" />;
-                    case "CalendarDays": return <CalendarDays className="mr-3 flex-shrink-0 h-5 w-5" />;
-                    case "Settings": return <Settings className="mr-3 flex-shrink-0 h-5 w-5" />;
-                    default: return null;
-                  }
-                };
+                const IconComponent = getIcon(item.icon);
                 return (
-                  <NavigationLink
+                  <Link
                     key={item.name}
                     href={item.href}
-                    icon={getIcon(item.icon)}
-                    translationKey={item.name}
-                  />
+                    className="group flex items-center px-2 py-2 text-sm font-medium rounded-md text-gray-600 hover:bg-gray-50 hover:text-gray-900"
+                  >
+                    {IconComponent}
+                    <NavigationText translationKey={item.name} />
+                  </Link>
                 );
               })}
             </nav>
-            
-            {/* Language Switcher and Logout */}
-            <div className="px-2 space-y-2 border-t border-gray-200 pt-4">
-              <div className="px-2">
+            <div className="flex-shrink-0 flex border-t border-gray-200 p-4">
+              <div className="flex-shrink-0 w-full group block">
+                <div className="flex items-center">
+                  <div>
+                    <div className="text-sm font-medium text-gray-700 group-hover:text-gray-900">
+                      {user.email}
+                    </div>
+                  </div>
+                </div>
+                <div className="mt-3 flex space-x-2">
                 <LanguageSwitcher />
+                  <form action={handleSignOut} className="flex-1">
+                    <Button type="submit" variant="outline" size="sm" className="w-full">
+                      <LogOut className="h-4 w-4 mr-2" />
+                      <NavigationText translationKey="navigation.logout" />
+                    </Button>
+                  </form>
+                </div>
               </div>
-              <form action={handleSignOut}>
-                <Button
-                  type="submit"
-                  variant="ghost"
-                  className="w-full justify-start text-gray-600 hover:text-gray-900 hover:bg-gray-50"
-                >
-                  <LogOut className="mr-3 flex-shrink-0 h-5 w-5" />
-                  <LogoutText />
-                </Button>
-              </form>
             </div>
           </div>
         </div>
       </div>
 
-      {/* Mobile header */}
+      {/* Mobile sidebar */}
       <div className="lg:hidden">
-        <div className="flex items-center justify-between h-16 px-4 bg-white border-b border-gray-200">
-          <label htmlFor="sidebar-toggle">
-            <Menu className="h-6 w-6 text-gray-400 cursor-pointer" />
+        <input type="checkbox" id="sidebar-toggle" className="hidden peer" />
+        <div className="fixed inset-0 z-40 peer-checked:block hidden">
+          <div className="fixed inset-0 bg-gray-600 bg-opacity-75" aria-hidden="true"></div>
+          <div className="relative flex-1 flex flex-col max-w-xs w-full bg-white">
+            <div className="absolute top-0 right-0 -mr-12 pt-2">
+              <label htmlFor="sidebar-toggle" className="ml-1 flex items-center justify-center h-10 w-10 rounded-full focus:outline-none focus:ring-2 focus:ring-inset focus:ring-white">
+                <X className="h-6 w-6 text-white" />
           </label>
+            </div>
+            <div className="flex-1 h-0 pt-5 pb-4 overflow-y-auto">
+              <div className="flex-shrink-0 flex items-center px-4">
           <h1 className="text-xl font-bold text-gray-900">PaieFacile</h1>
+              </div>
+              <nav className="mt-5 px-2 space-y-1">
+                <MobileNavigation navigation={navigation} />
+              </nav>
+            </div>
+            <div className="flex-shrink-0 flex border-t border-gray-200 p-4">
+              <div className="flex-shrink-0 w-full group block">
+                <div className="flex items-center">
+                  <div>
+                    <div className="text-sm font-medium text-gray-700">
+                      {user.email}
+                    </div>
+                  </div>
+                </div>
+                <div className="mt-3 flex space-x-2">
           <LanguageSwitcher />
+                  <form action={handleSignOut} className="flex-1">
+                    <Button type="submit" variant="outline" size="sm" className="w-full">
+                      <LogOut className="h-4 w-4 mr-2" />
+                      <NavigationText translationKey="navigation.logout" />
+                    </Button>
+                  </form>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
 
@@ -146,29 +180,18 @@ export default async function DashboardLayout({
   );
 }
 
-function NavigationLink({ 
-  href, 
-  icon, 
-  translationKey 
-}: { 
-  href: string; 
-  icon: React.ReactNode; 
-  translationKey: string;
-}) {
-  const t = useTranslations();
-  
-  return (
-    <Link
-      href={href}
-      className="group flex items-center px-2 py-2 text-sm font-medium rounded-md text-gray-600 hover:bg-gray-50 hover:text-gray-900"
-    >
-      {icon}
-      {t(translationKey)}
-    </Link>
-  );
+function getIcon(iconName: string) {
+  switch (iconName) {
+    case "LayoutDashboard": return <LayoutDashboard className="mr-3 flex-shrink-0 h-5 w-5" />;
+    case "Users": return <Users className="mr-3 flex-shrink-0 h-5 w-5" />;
+    case "Calculator": return <Calculator className="mr-3 flex-shrink-0 h-5 w-5" />;
+    case "CalendarDays": return <CalendarDays className="mr-3 flex-shrink-0 h-5 w-5" />;
+    case "Settings": return <Settings className="mr-3 flex-shrink-0 h-5 w-5" />;
+    default: return null;
+  }
 }
 
-function LogoutText() {
-  const t = useTranslations('navigation');
-  return <span>{t('logout')}</span>;
+function NavigationText({ translationKey }: { translationKey: string }) {
+  const t = useTranslations();
+  return <span>{t(translationKey)}</span>;
 }

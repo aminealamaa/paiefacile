@@ -4,6 +4,8 @@ import { Button } from "@/components/ui/button";
 import { Table, TableHeader, TableBody, TableRow, TableHead, TableCell } from "@/components/ui/table";
 import { createSupabaseServerClient } from "@/lib/supabaseServer";
 import { AddEmployeeDialog } from "@/components/AddEmployeeDialog";
+import { ResponsiveTable } from "@/components/MobileTable";
+import { MoroccanCurrency } from "@/components/MoroccanCurrency";
 
 export default async function EmployeesPage() {
   const supabase = await createSupabaseServerClient();
