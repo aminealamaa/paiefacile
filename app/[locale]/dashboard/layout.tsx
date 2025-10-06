@@ -50,7 +50,7 @@ export default async function DashboardLayout({
     { name: "navigation.employees", href: "/dashboard/employees", icon: "Users" },
     { name: "navigation.payroll", href: "/dashboard/payroll", icon: "Calculator" },
     { name: "navigation.leaves", href: "/dashboard/leaves", icon: "CalendarDays" },
-    { name: "navigation.settings", href: "/dashboard/settings", icon: "Settings" },
+    { name: "navigation.settings", href: "/settings", icon: "Settings" },
   ];
 
   return (
