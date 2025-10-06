@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useTranslations } from 'next-intl';
+import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogTrigger, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
@@ -14,27 +15,46 @@ export function AddEmployeeDialog() {
   const [isOpen, setIsOpen] = useState(false);
   const [contractType, setContractType] = useState<string>("");
   const [maritalStatus, setMaritalStatus] = useState<string>("");
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
   const t = useTranslations('employees');
+  const router = useRouter();
 
   const handleSubmit = async (formData: FormData) => {
-    // Add the select values to form data since Select component doesn't automatically add them
-    if (contractType) {
-      formData.set('contract_type', contractType);
-    }
-    if (maritalStatus) {
-      formData.set('marital_status', maritalStatus);
-    }
+    setIsLoading(true);
+    setError(null);
     
-    const result = await addEmployeeAction(formData);
-    if (result?.success) {
-      setIsOpen(false);
-      // Reset form
-      setContractType("");
-      setMaritalStatus("");
-      // Refresh the page to show the new employee
-      window.location.reload();
-    } else if (result?.error) {
-      alert(result.error);
+    try {
+      // Add the select values to form data since Select component doesn't automatically add them
+      if (contractType) {
+        formData.set('contract_type', contractType);
+      }
+      if (maritalStatus) {
+        formData.set('marital_status', maritalStatus);
+      }
+      
+      const result = await addEmployeeAction(formData);
+      
+      if (result?.success) {
+        setIsOpen(false);
+        // Reset form
+        setContractType("");
+        setMaritalStatus("");
+        // Refresh the page to show the new employee
+        window.location.reload();
+      } else if (result?.error) {
+        if (result.redirectTo) {
+          // If we need to redirect to settings, do it
+          router.push(result.redirectTo);
+        } else {
+          setError(result.error);
+        }
+      }
+    } catch (err: unknown) {
+      const errorMessage = err instanceof Error ? err.message : "Une erreur inattendue s'est produite";
+      setError(errorMessage);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -181,13 +201,19 @@ export function AddEmployeeDialog() {
             </div>
           </div>
 
+          {error && (
+            <div className="text-sm text-red-600 bg-red-50 p-3 rounded-md">
+              {error}
+            </div>
+          )}
+
           <DialogFooter>
             <div className="flex justify-end space-x-2 w-full">
-              <Button type="button" variant="outline" onClick={() => setIsOpen(false)}>
+              <Button type="button" variant="outline" onClick={() => setIsOpen(false)} disabled={isLoading}>
                 {t('cancel')}
               </Button>
-              <Button type="submit" className="bg-blue-600 hover:bg-blue-700">
-                {t('save')}
+              <Button type="submit" className="bg-blue-600 hover:bg-blue-700" disabled={isLoading}>
+                {isLoading ? "Enregistrement..." : t('save')}
               </Button>
             </div>
           </DialogFooter>
