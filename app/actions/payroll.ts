@@ -139,12 +139,13 @@ export async function calculatePayroll(
     const { employeeId, month, year, bonuses, overtimeHours } = parsed.data;
 
     // Français: Récupérer l'entreprise pour scoper les données
-  const { data: company } = await supabase
+  const { data: companies } = await supabase
     .from("companies")
     .select("id, name, ice, patente, cnss_affiliation_number, address")
-    .eq("user_id", user.id)
-    .single();
-    if (!company) return { error: "Company not found" };
+    .eq("user_id", user.id);
+    
+  if (!companies || companies.length === 0) return { error: "Company not found" };
+  const company = companies[0];
 
     // Français: Charger l'employé avec ses informations familiales, scoping par company_id
     const { data: employee, error: empErr } = await supabase
@@ -159,25 +160,31 @@ export async function calculatePayroll(
     const overtimePay = computeOvertimePay(baseSalary, overtimeHours);
     const grossSalary = round2(baseSalary + bonuses + overtimePay);
 
-    // Français: CNSS plafonnée à 6000 MAD d'assiette
-    const cnssBase = Math.min(grossSalary, CNSS_CEILING);
-    const cnss = round2(cnssBase * CNSS_EMPLOYEE_RATE);
-
-    // Français: AMO sur salaire brut
-    const amo = round2(grossSalary * AMO_EMPLOYEE_RATE);
-
-    // Français: SNI = Brut - cotisations sociales déductibles (CNSS + AMO)
-    const netTaxable = Math.max(0, round2(grossSalary - cnss - amo));
-
     // Français: Récupérer les informations familiales pour le calcul de l'IGR avec abattements
     const maritalStatus = (employee.marital_status as string) || 'single';
     const childrenCount = Number(employee.children_count) || 0;
+
+    // Français: Utiliser les nouvelles fonctions de calcul modulaires
+    const cnssResult = calculateMoroccanPayroll(
+      baseSalary,
+      bonuses,
+      overtimeHours,
+      1.25, // overtime rate
+      maritalStatus as 'single' | 'married' | 'divorced' | 'widowed',
+      childrenCount
+    );
+
+    const cnss = cnssResult.cnssEmployee;
+    const amo = cnssResult.amoEmployee;
+
+    // Français: SNI = Brut - cotisations sociales déductibles (CNSS + AMO)
+    const netTaxable = Math.max(0, round2(grossSalary - cnss - amo));
     
-    // Français: IGR selon barème progressif avec abattements familiaux
-    const igr = computeIGRFromNetTaxable(netTaxable, maritalStatus, childrenCount);
+    // Français: Utiliser la nouvelle fonction IGR modulaire
+    const igr = cnssResult.igr;
 
     const otherDeductions = 0; // Français: autre retenues (avances, saisies) à intégrer si besoin
-    const netSalary = round2(grossSalary - cnss - amo - igr - otherDeductions);
+    const netSalary = cnssResult.netSalary;
 
     const result: PayrollCalculationResult = {
       employeeId,

@@ -5,7 +5,7 @@ import { createSupabaseServerClient } from "@/lib/supabaseServer";
 import { z } from "zod";
 import { revalidatePath } from "next/cache";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Building2, ArrowLeft, CheckCircle } from "lucide-react";
+import { ArrowLeft } from "lucide-react";
 import Link from "next/link";
 
 const CompanySchema = z.object({
@@ -54,10 +54,32 @@ async function updateCompanyAction(formData: FormData): Promise<void> {
     } as Record<string, unknown>;
     console.log("Payload to insert:", payload);
     
-    const { data, error } = await supabase
+    // First, check if company already exists
+    const { data: existingCompany } = await supabase
       .from("companies")
-      .insert(payload)
-      .select();
+      .select("id")
+      .eq("user_id", user.id)
+      .single();
+
+    let data, error;
+    if (existingCompany) {
+      // Update existing company
+      const result = await supabase
+        .from("companies")
+        .update(payload)
+        .eq("user_id", user.id)
+        .select();
+      data = result.data;
+      error = result.error;
+    } else {
+      // Insert new company
+      const result = await supabase
+        .from("companies")
+        .insert(payload)
+        .select();
+      data = result.data;
+      error = result.error;
+    }
 
     if (error) {
       console.log("Supabase error:", error);
@@ -97,7 +119,9 @@ export default async function SettingsPage() {
               </Link>
             </div>
             <div className="flex items-center space-x-2">
-              <Building2 className="h-8 w-8 text-blue-600" />
+              <div className="w-8 h-8 bg-black rounded-lg flex items-center justify-center">
+                <span className="text-white font-bold text-sm">PF</span>
+              </div>
               <span className="text-xl font-bold text-gray-900">PaieFacile</span>
             </div>
           </div>
@@ -108,8 +132,8 @@ export default async function SettingsPage() {
       <div className="max-w-4xl mx-auto py-8 px-4 sm:px-6 lg:px-8">
         <div className="mb-8">
           <div className="flex items-center space-x-3 mb-4">
-            <div className="flex items-center justify-center w-12 h-12 bg-blue-100 rounded-lg">
-              <Building2 className="h-6 w-6 text-blue-600" />
+            <div className="flex items-center justify-center w-12 h-12 bg-black rounded-lg">
+              <span className="text-white font-bold text-lg">PF</span>
             </div>
             <div>
               <h1 className="text-3xl font-bold text-gray-900">Configuration de l&apos;entreprise</h1>
@@ -124,7 +148,9 @@ export default async function SettingsPage() {
             <Card>
               <CardHeader>
                 <CardTitle className="flex items-center space-x-2">
-                  <CheckCircle className="h-5 w-5 text-green-600" />
+                  <div className="w-5 h-5 bg-black rounded-full flex items-center justify-center">
+                    <span className="text-white text-xs font-bold">PF</span>
+                  </div>
                   <span>Informations de l&apos;entreprise</span>
                 </CardTitle>
                 <CardDescription>
@@ -145,8 +171,8 @@ export default async function SettingsPage() {
               </CardHeader>
               <CardContent className="space-y-4">
                 <div className="flex items-start space-x-3">
-                  <div className="flex-shrink-0 w-6 h-6 bg-blue-100 rounded-full flex items-center justify-center">
-                    <span className="text-xs font-semibold text-blue-600">1</span>
+                  <div className="flex-shrink-0 w-6 h-6 bg-black rounded-full flex items-center justify-center">
+                    <span className="text-xs font-semibold text-white">1</span>
                   </div>
                   <div>
                     <h4 className="font-medium text-gray-900">Conformité légale</h4>
@@ -154,8 +180,8 @@ export default async function SettingsPage() {
                   </div>
                 </div>
                 <div className="flex items-start space-x-3">
-                  <div className="flex-shrink-0 w-6 h-6 bg-blue-100 rounded-full flex items-center justify-center">
-                    <span className="text-xs font-semibold text-blue-600">2</span>
+                  <div className="flex-shrink-0 w-6 h-6 bg-black rounded-full flex items-center justify-center">
+                    <span className="text-xs font-semibold text-white">2</span>
                   </div>
                   <div>
                     <h4 className="font-medium text-gray-900">Calculs précis</h4>
@@ -163,8 +189,8 @@ export default async function SettingsPage() {
                   </div>
                 </div>
                 <div className="flex items-start space-x-3">
-                  <div className="flex-shrink-0 w-6 h-6 bg-blue-100 rounded-full flex items-center justify-center">
-                    <span className="text-xs font-semibold text-blue-600">3</span>
+                  <div className="flex-shrink-0 w-6 h-6 bg-black rounded-full flex items-center justify-center">
+                    <span className="text-xs font-semibold text-white">3</span>
                   </div>
                   <div>
                     <h4 className="font-medium text-gray-900">Documents officiels</h4>
@@ -174,13 +200,15 @@ export default async function SettingsPage() {
               </CardContent>
             </Card>
 
-            <Card className="bg-blue-50 border-blue-200">
+            <Card className="bg-gray-50 border-gray-200">
               <CardContent className="pt-6">
                 <div className="flex items-center space-x-3">
-                  <CheckCircle className="h-6 w-6 text-blue-600" />
+                  <div className="w-6 h-6 bg-black rounded-full flex items-center justify-center">
+                    <span className="text-white text-xs font-bold">PF</span>
+                  </div>
                   <div>
-                    <h4 className="font-semibold text-blue-900">Sécurisé et confidentiel</h4>
-                    <p className="text-sm text-blue-700 mt-1">Vos données sont protégées par un chiffrement de niveau bancaire</p>
+                    <h4 className="font-semibold text-gray-900">Sécurisé et confidentiel</h4>
+                    <p className="text-sm text-gray-700 mt-1">Vos données sont protégées par un chiffrement de niveau bancaire</p>
                   </div>
                 </div>
               </CardContent>
@@ -293,8 +321,10 @@ function CompanyForm({ company }: { company: Record<string, unknown> | null }) {
         <div className="text-sm text-gray-500">
           * Champs obligatoires
         </div>
-        <Button type="submit" size="lg" className="bg-blue-600 hover:bg-blue-700 text-white px-8 py-3">
-          <CheckCircle className="h-5 w-5 mr-2" />
+        <Button type="submit" size="lg" className="bg-black hover:bg-gray-800 text-white px-8 py-3">
+          <div className="w-5 h-5 bg-white rounded-full flex items-center justify-center mr-2">
+            <span className="text-black text-xs font-bold">PF</span>
+          </div>
           Enregistrer et continuer
         </Button>
       </div>

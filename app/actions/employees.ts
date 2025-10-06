@@ -38,12 +38,22 @@ export async function addEmployeeAction(formData: FormData) {
   if (!parsed.success) return { error: parsed.error.flatten().formErrors.join("\n") };
 
   // Français: Récupérer l'entreprise pour lier l'employé
-  const { data: company } = await supabase
+  const { data: companies, error: companyError } = await supabase
     .from("companies")
     .select("id")
-    .eq("user_id", user.id)
-    .single();
-  if (!company) return { error: "Company not found" };
+    .eq("user_id", user.id);
+  
+  if (companyError) {
+    console.log("Company query error:", companyError);
+    return { error: `Database error: ${companyError.message}` };
+  }
+  
+  if (!companies || companies.length === 0) {
+    console.log("No company found for user:", user.id);
+    return { error: "Company not found. Please complete your company setup in Settings first." };
+  }
+  
+  const company = companies[0];
 
   const payload: Record<string, unknown> = { ...parsed.data, company_id: company.id };
   if (payload.hire_date) payload.hire_date = new Date(payload.hire_date as string).toISOString();
