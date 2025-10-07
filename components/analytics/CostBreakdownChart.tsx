@@ -110,7 +110,6 @@ export function CostBreakdownChart({
                   cx="50%"
                   cy="50%"
                   labelLine={false}
-                  label={(entry: { name: string; percentage: number }) => `${entry.name}: ${entry.percentage.toFixed(1)}%`}
                   outerRadius={80}
                   fill="#8884d8"
                   dataKey="value"
