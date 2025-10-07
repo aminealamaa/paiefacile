@@ -92,12 +92,13 @@ export function calculateIGR(
 /**
  * Calculate CNSS contributions with ceiling - 2025 Rules
  * Français: Calculer les cotisations CNSS avec plafond - Règles 2025
+ * CNSS is capped at 6,000 MAD base salary according to Moroccan law
  */
 export function calculateCNSS(grossSalary: number): {
   employee: number;
   employer: number;
 } {
-  // Apply ceiling of 6000 MAD for CNSS base
+  // Apply ceiling of 6000 MAD for CNSS base (Moroccan law requirement)
   const cnssBase = Math.min(grossSalary, MOROCCAN_TAX_RATES.cnssCeiling);
   
   return {

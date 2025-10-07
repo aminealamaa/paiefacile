@@ -5,6 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import {Link} from "@/lib/navigation";
 import { Users, Calculator, CalendarDays, Settings } from "lucide-react";
+import { CNSSDeclarationDialog } from "@/components/CNSSDeclarationDialog";
 
 export default async function DashboardPage() {
   const supabase = await createSupabaseServerClient();
@@ -157,6 +158,14 @@ function DashboardContent({
               <span className="text-xs sm:text-sm font-medium">{tNav('settings')}</span>
             </Button>
           </Link>
+        </div>
+      </div>
+
+      {/* CNSS Declaration Section */}
+      <div className="space-y-4">
+        <h2 className="text-xl font-semibold text-gray-900">Déclarations CNSS</h2>
+        <div className="flex justify-center">
+          <CNSSDeclarationDialog />
         </div>
       </div>
     </div>

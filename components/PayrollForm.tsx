@@ -9,6 +9,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { PayslipPDF } from "@/components/PayslipPDF";
+import { EmailPayslipDialog } from "@/components/EmailPayslipDialog";
 
 export function PayrollForm({ employees, company }: { employees: Record<string, unknown>[]; company: Record<string, unknown> }) {
   const t = useTranslations('payroll');
@@ -124,7 +125,23 @@ export function PayrollForm({ employees, company }: { employees: Record<string, 
             </Table>
           </div>
 
-          <PayslipPDF company={company} result={state.result as any} />
+          <div className="flex flex-wrap gap-3">
+            <PayslipPDF company={company} result={state.result as any} />
+            <EmailPayslipDialog 
+              employeeId={(state.result as any).employeeId as string}
+              employeeName={(state.result as any).employee_name as string}
+              month={(state.result as any).month as number}
+              year={(state.result as any).year as number}
+              payrollData={{
+                base_salary: (state.result as any).base_salary as number,
+                gross_salary: (state.result as any).gross_salary as number,
+                cnss: (state.result as any).cnss as number,
+                amo: (state.result as any).amo as number,
+                igr: (state.result as any).igr as number,
+                net_salary: (state.result as any).net_salary as number,
+              }}
+            />
+          </div>
         </div>
       ) : null}
     </div>

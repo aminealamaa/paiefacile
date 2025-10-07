@@ -13,7 +13,8 @@ import {
   CalendarDays,
   LogOut,
   Menu,
-  X
+  X,
+  BarChart3
 } from "lucide-react";
 
 export default async function DashboardLayout({
@@ -49,6 +50,7 @@ export default async function DashboardLayout({
     { name: "navigation.overview", href: "/dashboard", icon: "LayoutDashboard" },
     { name: "navigation.employees", href: "/dashboard/employees", icon: "Users" },
     { name: "navigation.payroll", href: "/dashboard/payroll", icon: "Calculator" },
+    { name: "navigation.analytics", href: "/dashboard/analytics", icon: "BarChart3" },
     { name: "navigation.leaves", href: "/dashboard/leaves", icon: "CalendarDays" },
     { name: "navigation.settings", href: "/settings", icon: "Settings" },
   ];
@@ -185,6 +187,7 @@ function getIcon(iconName: string) {
     case "LayoutDashboard": return <LayoutDashboard className="mr-3 flex-shrink-0 h-5 w-5" />;
     case "Users": return <Users className="mr-3 flex-shrink-0 h-5 w-5" />;
     case "Calculator": return <Calculator className="mr-3 flex-shrink-0 h-5 w-5" />;
+    case "BarChart3": return <BarChart3 className="mr-3 flex-shrink-0 h-5 w-5" />;
     case "CalendarDays": return <CalendarDays className="mr-3 flex-shrink-0 h-5 w-5" />;
     case "Settings": return <Settings className="mr-3 flex-shrink-0 h-5 w-5" />;
     default: return null;
