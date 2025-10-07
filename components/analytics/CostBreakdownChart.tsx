@@ -119,9 +119,9 @@ export function CostBreakdownChart({
                   ))}
                 </Pie>
                 <Tooltip 
-                  formatter={(value: number, name: string, props: { payload: { name: string; percentage: number } }) => [
-                    `${value.toLocaleString('fr-MA')} MAD`,
-                    props.payload.name
+                  formatter={(value: number, name: string) => [     
+                    `${value.toLocaleString('fr-MA')} MAD`,                                                                   
+                    name        
                   ]}
                 />
                 <Legend />
