@@ -2,7 +2,7 @@
 
 import { z } from "zod";
 import { createSupabaseServerClient } from "@/lib/supabaseServer";
-import { calculateMoroccanPayroll, formatMAD } from "@/lib/moroccan-taxes";
+import { calculateMoroccanPayroll } from "@/lib/moroccan-taxes";
 
 // Français: Schéma de validation des entrées pour sécuriser l'action serveur
 const PayrollInputSchema = z.object({
@@ -42,28 +42,7 @@ export type PayrollCalculationResult = {
 
 // Français: Constantes officielles pour le calcul de la paie au Maroc
 // Taux de cotisations sociales (part salariale uniquement)
-const CNSS_EMPLOYEE_RATE = 0.0448; // 4.48% (part employé)
-const CNSS_CEILING = 6000; // MAD - Plafond CNSS
-const AMO_EMPLOYEE_RATE = 0.0226; // 2.26% (part employé)
 
-// Français: Barème IGR mensuel officiel (tranches en MAD) avec taux et abattement
-// Source: Code Général des Impôts - Barème progressif mensuel
-// Exemple pour 15,000 MAD (employé marié avec 2 enfants):
-// - CNSS = 15,000 × 4.48% = 672.00 MAD
-// - AMO = 15,000 × 2.26% = 339.00 MAD
-// - Salaire Imposable = 15,000 - (672 + 339) = 13,989.00 MAD
-// - IGR de base = (13,989 × 34%) - 1,433.33 = 3,329.93 MAD
-// - Abattements familiaux = 30 MAD (conjoint) + (2 × 30 MAD) (enfants) = 90 MAD
-// - IGR final = 3,329.93 - 90 = 3,239.93 MAD
-// - Net = 15,000 - (672 + 339 + 3,239.93) = 10,749.07 MAD
-const IGR_BRACKETS = [
-  { upTo: 2500, rate: 0, rebate: 0 },
-  { upTo: 4166, rate: 0.1, rebate: 250 },
-  { upTo: 5000, rate: 0.2, rebate: 666.67 },
-  { upTo: 6666, rate: 0.3, rebate: 1166.67 },
-  { upTo: 15000, rate: 0.34, rebate: 1433.33 },
-  { upTo: Infinity, rate: 0.38, rebate: 2033.33 },
-] as const;
 
 function round2(value: number): number {
   return Math.round((value + Number.EPSILON) * 100) / 100;
@@ -87,23 +66,6 @@ function computeFamilyDeductions(maritalStatus: string, childrenCount: number): 
   return round2(deductions);
 }
 
-// Français: Calcul de l'IGR selon le SNI (Salaire Net Imposable) avec abattements familiaux
-function computeIGRFromNetTaxable(netTaxable: number, maritalStatus: string = 'single', childrenCount: number = 0): number {
-  // Calculer l'IGR de base selon le barème
-  let igr = 0;
-  for (const bracket of IGR_BRACKETS) {
-    if (netTaxable <= bracket.upTo) {
-      igr = netTaxable * bracket.rate - bracket.rebate;
-      break;
-    }
-  }
-  
-  // Appliquer les abattements familiaux
-  const familyDeductions = computeFamilyDeductions(maritalStatus, childrenCount);
-  const finalIGR = Math.max(0, igr - familyDeductions);
-  
-  return round2(finalIGR);
-}
 
 // Français: Calcul des heures supplémentaires.
 // Hypothèse: taux horaire = salaire de base / 191h; majoration par défaut 25%.

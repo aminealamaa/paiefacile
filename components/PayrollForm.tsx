@@ -1,8 +1,7 @@
 "use client";
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { useActionState } from "react";
-import { useTranslations } from 'next-intl';
+import { useActionState, useEffect } from "react";
 import { calculatePayroll } from "@/app/actions/payroll";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -10,18 +9,32 @@ import { Label } from "@/components/ui/label";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { PayslipPDF } from "@/components/PayslipPDF";
 import { EmailPayslipDialog } from "@/components/EmailPayslipDialog";
+import { trackPayrollGeneration } from "@/components/MetaPixel";
 
 export function PayrollForm({ employees, company }: { employees: Record<string, unknown>[]; company: Record<string, unknown> }) {
-  const t = useTranslations('payroll');
   const initialState: Record<string, unknown> = { };
   const [state, formAction] = useActionState(calculatePayroll, initialState);
+
+  // Track payroll generation when result is available
+  useEffect(() => {
+    if (state?.result) {
+      trackPayrollGeneration({
+        employeeId: (state.result as any).employeeId,
+        employeeName: (state.result as any).employee_name,
+        grossSalary: (state.result as any).gross_salary,
+        netSalary: (state.result as any).net_salary,
+        month: (state.result as any).month,
+        year: (state.result as any).year
+      });
+    }
+  }, [state?.result]);
 
   return (
     <div className="space-y-6">
       <form action={formAction} className="space-y-4">
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
           <div className="space-y-2">
-            <Label htmlFor="employeeId">{t('employee')}</Label>
+            <Label htmlFor="employeeId">Employé</Label>
             <select 
               id="employeeId"
               name="employeeId" 
@@ -64,7 +77,7 @@ export function PayrollForm({ employees, company }: { employees: Record<string, 
 
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div className="space-y-2">
-            <Label htmlFor="bonuses">{t('bonuses')}</Label>
+            <Label htmlFor="bonuses">Prime</Label>
             <Input 
               id="bonuses"
               type="number" 
@@ -76,7 +89,7 @@ export function PayrollForm({ employees, company }: { employees: Record<string, 
             />
           </div>
           <div className="space-y-2">
-            <Label htmlFor="overtimeHours">{t('overtimeHours')}</Label>
+            <Label htmlFor="overtimeHours">Heures supplémentaires</Label>
             <Input 
               id="overtimeHours"
               type="number" 
@@ -89,7 +102,7 @@ export function PayrollForm({ employees, company }: { employees: Record<string, 
           </div>
         </div>
 
-        <Button type="submit">{t('calculatePayroll')}</Button>
+        <Button type="submit">Calculer la paie</Button>
       </form>
 
       {state?.error ? (
@@ -108,10 +121,10 @@ export function PayrollForm({ employees, company }: { employees: Record<string, 
                 </TableRow>
               </TableHeader>
               <TableBody>
-                <TableRow><TableCell>{t('baseSalary')}</TableCell><TableCell>{(state.result as any).base_salary as number}</TableCell></TableRow>
-                <TableRow><TableCell>{t('bonuses')}</TableCell><TableCell>{(state.result as any).bonuses as number}</TableCell></TableRow>
+                <TableRow><TableCell>Salaire de base</TableCell><TableCell>{(state.result as any).base_salary as number}</TableCell></TableRow>
+                <TableRow><TableCell>Prime</TableCell><TableCell>{(state.result as any).bonuses as number}</TableCell></TableRow>
                 <TableRow><TableCell>Heures supplémentaires</TableCell><TableCell>{(state.result as any).overtimePay as number}</TableCell></TableRow>
-                <TableRow><TableCell><strong>{t('grossSalary')}</strong></TableCell><TableCell><strong>{(state.result as any).gross_salary as number}</strong></TableCell></TableRow>
+                <TableRow><TableCell><strong>Salaire brut</strong></TableCell><TableCell><strong>{(state.result as any).gross_salary as number}</strong></TableCell></TableRow>
                 <TableRow><TableCell>CNSS</TableCell><TableCell>-{(state.result as any).cnss as number}</TableCell></TableRow>
                 <TableRow><TableCell>AMO</TableCell><TableCell>-{(state.result as any).amo as number}</TableCell></TableRow>
                 <TableRow><TableCell>Net imposable</TableCell><TableCell>{(state.result as any).net_taxable as number}</TableCell></TableRow>
@@ -120,7 +133,7 @@ export function PayrollForm({ employees, company }: { employees: Record<string, 
                 )}
                 <TableRow><TableCell>IGR</TableCell><TableCell>-{(state.result as any).igr as number}</TableCell></TableRow>
                 <TableRow><TableCell>Autres déductions</TableCell><TableCell>-{(state.result as any).other_deductions as number}</TableCell></TableRow>
-                <TableRow><TableCell><strong>{t('netSalary')}</strong></TableCell><TableCell><strong>{(state.result as any).net_salary as number}</strong></TableCell></TableRow>
+                <TableRow><TableCell><strong>Salaire net</strong></TableCell><TableCell><strong>{(state.result as any).net_salary as number}</strong></TableCell></TableRow>
               </TableBody>
             </Table>
           </div>

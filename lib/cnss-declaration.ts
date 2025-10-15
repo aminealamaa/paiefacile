@@ -1,6 +1,5 @@
 import * as XLSX from 'xlsx';
 import { createSupabaseServerClient } from "@/lib/supabaseServer";
-import { calculateMoroccanPayroll } from "@/lib/moroccan-taxes";
 
 export interface CNSSEmployeeData {
   matricule_cnss: string;
@@ -70,15 +69,6 @@ export async function generateCNSSDeclaration(
   for (const employee of employees) {
     const baseSalary = employee.base_salary || 0;
     
-    // Calculate payroll using existing logic
-    const payrollResult = calculateMoroccanPayroll(
-      baseSalary,
-      0, // bonuses
-      0, // overtime hours
-      1.25, // overtime rate
-      employee.marital_status || "single",
-      employee.children_count || 0
-    );
 
     // Apply CNSS ceiling (6000 MAD)
     const cnssSalary = Math.min(baseSalary, 6000);

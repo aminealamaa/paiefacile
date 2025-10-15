@@ -1,6 +1,4 @@
-import Link from 'next/link';
-
-export default function NotFound() {
+export default function SimplePage() {
   return (
     <div style={{ 
       display: 'flex', 
@@ -18,22 +16,17 @@ export default function NotFound() {
       <p style={{ fontSize: '1.2rem', marginBottom: '2rem', textAlign: 'center', color: '#6b7280' }}>
         La paie de vos salariés, enfin simple et 100% conforme à la loi marocaine
       </p>
-      <Link 
-        href="/fr"
-        style={{
-          padding: '12px 24px',
-          backgroundColor: '#16a34a',
-          color: 'white',
-          border: 'none',
-          borderRadius: '8px',
-          cursor: 'pointer',
-          fontSize: '16px',
-          textDecoration: 'none',
-          display: 'inline-block'
-        }}
-      >
-        Accéder à PaieFacile
-        </Link>
+      <button style={{
+        padding: '12px 24px',
+        backgroundColor: '#16a34a',
+        color: 'white',
+        border: 'none',
+        borderRadius: '8px',
+        cursor: 'pointer',
+        fontSize: '16px'
+      }}>
+        Commencer mon essai gratuit
+      </button>
     </div>
   );
 }

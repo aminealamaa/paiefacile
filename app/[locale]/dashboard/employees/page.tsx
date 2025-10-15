@@ -1,11 +1,8 @@
 import { redirect } from "next/navigation";
-import { getTranslations } from 'next-intl/server';
 import { Button } from "@/components/ui/button";
 import { Table, TableHeader, TableBody, TableRow, TableHead, TableCell } from "@/components/ui/table";
 import { createSupabaseServerClient } from "@/lib/supabaseServer";
 import { AddEmployeeDialog } from "@/components/AddEmployeeDialog";
-import { ResponsiveTable } from "@/components/MobileTable";
-import { MoroccanCurrency } from "@/components/MoroccanCurrency";
 
 export default async function EmployeesPage() {
   const supabase = await createSupabaseServerClient();
@@ -27,30 +24,23 @@ export default async function EmployeesPage() {
     .eq("company_id", company.id)
     .order("created_at", { ascending: false });
 
-  const t = await getTranslations('employees');
-  const tCommon = await getTranslations('common');
-
   return (
-    <EmployeesContent employees={employees || []} t={t} tCommon={tCommon} />
+    <EmployeesContent employees={employees || []} />
   );
 }
 
 function EmployeesContent({ 
-  employees, 
-  t, 
-  tCommon 
+  employees
 }: { 
   employees: Record<string, unknown>[];
-  t: (key: string) => string;
-  tCommon: (key: string) => string;
 }) {
 
   return (
     <div className="p-6 space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold text-gray-900">{t('title')}</h1>
-          <p className="text-gray-600 mt-2">{t('subtitle')}</p>
+          <h1 className="text-3xl font-bold text-gray-900">Gestion des Employés</h1>
+          <p className="text-gray-600 mt-2">Gérez les informations de vos employés</p>
         </div>
         <AddEmployeeDialog />
       </div>
@@ -59,11 +49,11 @@ function EmployeesContent({
         <Table>
           <TableHeader>
             <TableRow>
-              <TableHead>{t('firstName')}</TableHead>
-              <TableHead>{t('lastName')}</TableHead>
-              <TableHead>{t('position')}</TableHead>
-              <TableHead>{t('salary')}</TableHead>
-              <TableHead>{t('actions')}</TableHead>
+              <TableHead>Prénom</TableHead>
+              <TableHead>Nom</TableHead>
+              <TableHead>Poste</TableHead>
+              <TableHead>Salaire</TableHead>
+              <TableHead>Actions</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -75,7 +65,7 @@ function EmployeesContent({
                 <TableCell>{emp.base_salary as number} MAD</TableCell>
                 <TableCell>
                   <Button variant="outline" size="sm" disabled>
-                    {tCommon('edit')}
+                    Modifier
                   </Button>
                 </TableCell>
               </TableRow>

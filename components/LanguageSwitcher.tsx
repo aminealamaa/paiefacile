@@ -22,7 +22,9 @@ export function LanguageSwitcher() {
   };
 
   const getCurrentLanguageLabel = () => {
-    return locale === 'fr' ? t('french') : t('english');
+    if (locale === 'fr') return t('french');
+    if (locale === 'ar') return t('arabic');
+    return t('english');
   };
 
   return (
@@ -45,6 +47,12 @@ export function LanguageSwitcher() {
           className={locale === 'fr' ? 'bg-accent' : ''}
         >
           {t('french')}
+        </DropdownMenuItem>
+        <DropdownMenuItem 
+          onClick={() => handleLanguageChange('ar')}
+          className={locale === 'ar' ? 'bg-accent' : ''}
+        >
+          {t('arabic')}
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>

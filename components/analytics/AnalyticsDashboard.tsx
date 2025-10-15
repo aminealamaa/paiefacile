@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
@@ -35,7 +35,7 @@ export function AnalyticsDashboard({ companyId, initialData }: AnalyticsDashboar
   const [period, setPeriod] = useState("12");
   const [chartType, setChartType] = useState<"pie" | "bar">("bar");
 
-  const loadAnalyticsData = async () => {
+  const loadAnalyticsData = useCallback(async () => {
     setLoading(true);
     try {
       // In a real implementation, you would call your analytics API here
@@ -56,7 +56,7 @@ export function AnalyticsDashboard({ companyId, initialData }: AnalyticsDashboar
     } finally {
       setLoading(false);
     }
-  };
+  }, [companyId]);
 
   useEffect(() => {
     if (!initialData) {

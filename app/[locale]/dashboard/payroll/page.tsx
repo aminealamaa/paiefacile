@@ -1,5 +1,4 @@
 import { redirect } from "next/navigation";
-import { useTranslations } from 'next-intl';
 import { createSupabaseServerClient } from "@/lib/supabaseServer";
 import { PayrollForm } from "@/components/PayrollForm";
 
@@ -31,13 +30,11 @@ export default async function PayrollPage() {
 }
 
 function PayrollContent({ employees, company }: { employees: Record<string, unknown>[]; company: Record<string, unknown> }) {
-  const t = useTranslations('payroll');
-
   return (
     <div className="p-6 space-y-6">
       <div>
-        <h1 className="text-3xl font-bold text-gray-900">{t('title')}</h1>
-        <p className="text-gray-600 mt-2">{t('subtitle')}</p>
+        <h1 className="text-3xl font-bold text-gray-900">Gestion de la Paie</h1>
+        <p className="text-gray-600 mt-2">Générez et gérez les bulletins de paie de vos employés</p>
       </div>
       <PayrollForm employees={employees} company={company} />
     </div>

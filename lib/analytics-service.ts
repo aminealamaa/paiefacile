@@ -301,7 +301,7 @@ export async function getDepartmentAnalysis(companyId: string): Promise<Departme
         emp.marital_status || "single",
         emp.children_count || 0
       );
-      deptTaxBurden += payrollResult.cnss + payrollResult.amo + payrollResult.igr;
+      deptTaxBurden += payrollResult.cnssEmployee + payrollResult.amoEmployee + payrollResult.igr;
     });
 
     analysis.push({

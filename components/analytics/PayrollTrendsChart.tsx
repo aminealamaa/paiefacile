@@ -2,7 +2,7 @@
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend } from "recharts";
-import { TrendingUp, Users, DollarSign } from "lucide-react";
+import { TrendingUp } from "lucide-react";
 import { PayrollTrend } from "@/lib/analytics-service";
 
 interface PayrollTrendsChartProps {
@@ -142,7 +142,7 @@ export function PayrollTrendsMiniChart({ data }: { data: PayrollTrend[] }) {
               <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
               <XAxis 
                 dataKey="month" 
-                tickFormatter={(value, index) => {
+                tickFormatter={(value) => {
                   const months = ["J", "F", "M", "A", "M", "J", "J", "A", "S", "O", "N", "D"];
                   return months[value - 1];
                 }}

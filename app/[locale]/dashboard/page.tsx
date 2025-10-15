@@ -1,9 +1,8 @@
 import { redirect } from "next/navigation";
 import { createSupabaseServerClient } from "@/lib/supabaseServer";
-import { getTranslations } from 'next-intl/server';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import {Link} from "@/lib/navigation";
+import Link from "next/link";
 import { Users, Calculator, CalendarDays, Settings } from "lucide-react";
 import { CNSSDeclarationDialog } from "@/components/CNSSDeclarationDialog";
 
@@ -30,37 +29,28 @@ export default async function DashboardPage() {
     employeeCount = count || 0;
   }
 
-  const t = await getTranslations('dashboard');
-  const tNav = await getTranslations('navigation');
-
   return (
     <DashboardContent 
       companyName={company?.name || "Votre entreprise"} 
       employeeCount={employeeCount}
-      t={t}
-      tNav={tNav}
     />
   );
 }
 
 function DashboardContent({ 
   companyName, 
-  employeeCount,
-  t,
-  tNav
+  employeeCount
 }: { 
   companyName: string; 
   employeeCount: number;
-  t: (key: string) => string;
-  tNav: (key: string) => string;
 }) {
 
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-3xl font-bold text-gray-900">{t('title')}</h1>
+        <h1 className="text-3xl font-bold text-gray-900">Tableau de bord</h1>
         <p className="text-gray-600 mt-2">
-          {t('welcome')}, {companyName}
+          Bienvenue, {companyName}
         </p>
       </div>
 
@@ -69,7 +59,7 @@ function DashboardContent({
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">
-              {t('totalEmployees')}
+              Total Employés
             </CardTitle>
             <Users className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
@@ -84,7 +74,7 @@ function DashboardContent({
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">
-              {t('nextPayrollRun')}
+              Prochaine Paie
             </CardTitle>
             <Calculator className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
@@ -99,7 +89,7 @@ function DashboardContent({
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">
-              {t('companyStatus')}
+              Statut Entreprise
             </CardTitle>
             <Settings className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
@@ -114,7 +104,7 @@ function DashboardContent({
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">
-              {t('payrollProcessing')}
+              Traitement Paie
             </CardTitle>
             <CalendarDays className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
@@ -129,33 +119,33 @@ function DashboardContent({
 
       {/* Quick Actions - Mobile Optimized */}
       <div className="space-y-4">
-        <h2 className="text-xl font-semibold text-gray-900">{t('quickActions')}</h2>
+        <h2 className="text-xl font-semibold text-gray-900">Actions Rapides</h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
           <Link href="/dashboard/employees">
             <Button variant="outline" className="w-full h-16 sm:h-20 flex flex-col items-center justify-center space-y-1 sm:space-y-2 p-3">
               <Users className="h-5 w-5 sm:h-6 sm:w-6" />
-              <span className="text-xs sm:text-sm font-medium">{tNav('employees')}</span>
+              <span className="text-xs sm:text-sm font-medium">Employés</span>
             </Button>
           </Link>
           
           <Link href="/dashboard/payroll">
             <Button variant="outline" className="w-full h-16 sm:h-20 flex flex-col items-center justify-center space-y-1 sm:space-y-2 p-3">
               <Calculator className="h-5 w-5 sm:h-6 sm:w-6" />
-              <span className="text-xs sm:text-sm font-medium">{tNav('payroll')}</span>
+              <span className="text-xs sm:text-sm font-medium">Paie</span>
             </Button>
           </Link>
           
           <Link href="/dashboard/leaves">
             <Button variant="outline" className="w-full h-16 sm:h-20 flex flex-col items-center justify-center space-y-1 sm:space-y-2 p-3">
               <CalendarDays className="h-5 w-5 sm:h-6 sm:w-6" />
-              <span className="text-xs sm:text-sm font-medium">{tNav('leaves')}</span>
+              <span className="text-xs sm:text-sm font-medium">Congés</span>
             </Button>
           </Link>
           
           <Link href="/dashboard/settings">
             <Button variant="outline" className="w-full h-16 sm:h-20 flex flex-col items-center justify-center space-y-1 sm:space-y-2 p-3">
               <Settings className="h-5 w-5 sm:h-6 sm:w-6" />
-              <span className="text-xs sm:text-sm font-medium">{tNav('settings')}</span>
+              <span className="text-xs sm:text-sm font-medium">Paramètres</span>
             </Button>
           </Link>
         </div>

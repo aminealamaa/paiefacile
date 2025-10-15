@@ -1,10 +1,7 @@
 import { redirect } from "next/navigation";
 import { createSupabaseServerClient } from "@/lib/supabaseServer";
-import { useTranslations } from 'next-intl';
 import { Button } from "@/components/ui/button";
-import {Link} from "@/lib/navigation";
-import { MobileNavigation } from "@/components/MobileNavigation";
-import { LanguageSwitcher } from "@/components/LanguageSwitcher";
+import Link from "next/link";
 import { 
   LayoutDashboard, 
   Users, 
@@ -47,12 +44,12 @@ export default async function DashboardLayout({
   }
 
   const navigation = [
-    { name: "navigation.overview", href: "/dashboard", icon: "LayoutDashboard" },
-    { name: "navigation.employees", href: "/dashboard/employees", icon: "Users" },
-    { name: "navigation.payroll", href: "/dashboard/payroll", icon: "Calculator" },
-    { name: "navigation.analytics", href: "/dashboard/analytics", icon: "BarChart3" },
-    { name: "navigation.leaves", href: "/dashboard/leaves", icon: "CalendarDays" },
-    { name: "navigation.settings", href: "/settings", icon: "Settings" },
+    { name: "Vue d'ensemble", href: "/fr/dashboard", icon: "LayoutDashboard" },
+    { name: "Employés", href: "/fr/dashboard/employees", icon: "Users" },
+    { name: "Paie", href: "/fr/dashboard/payroll", icon: "Calculator" },
+    { name: "Analyses", href: "/fr/dashboard/analytics", icon: "BarChart3" },
+    { name: "Congés", href: "/fr/dashboard/leaves", icon: "CalendarDays" },
+    { name: "Paramètres", href: "/fr/settings", icon: "Settings" },
   ];
 
   return (
@@ -68,7 +65,6 @@ export default async function DashboardLayout({
               <h1 className="ml-3 text-lg font-semibold text-gray-900">PaieFacile</h1>
             </div>
             <div className="flex items-center space-x-2">
-              <LanguageSwitcher />
               <form action={handleSignOut}>
                 <Button type="submit" variant="ghost" size="sm">
                   <LogOut className="h-4 w-4" />
@@ -96,7 +92,7 @@ export default async function DashboardLayout({
                     className="group flex items-center px-2 py-2 text-sm font-medium rounded-md text-gray-600 hover:bg-gray-50 hover:text-gray-900"
                   >
                     {IconComponent}
-                    <NavigationText translationKey={item.name} />
+                    <span>{item.name}</span>
                   </Link>
                 );
               })}
@@ -111,11 +107,10 @@ export default async function DashboardLayout({
                   </div>
                 </div>
                 <div className="mt-3 flex space-x-2">
-                <LanguageSwitcher />
                   <form action={handleSignOut} className="flex-1">
                     <Button type="submit" variant="outline" size="sm" className="w-full">
                       <LogOut className="h-4 w-4 mr-2" />
-                      <NavigationText translationKey="navigation.logout" />
+                      Déconnexion
                     </Button>
                   </form>
                 </div>
@@ -141,7 +136,19 @@ export default async function DashboardLayout({
           <h1 className="text-xl font-bold text-gray-900">PaieFacile</h1>
               </div>
               <nav className="mt-5 px-2 space-y-1">
-                <MobileNavigation navigation={navigation} />
+                {navigation.map((item) => {
+                  const IconComponent = getIcon(item.icon);
+                  return (
+                    <Link
+                      key={item.name}
+                      href={item.href}
+                      className="group flex items-center px-2 py-2 text-sm font-medium rounded-md text-gray-600 hover:bg-gray-50 hover:text-gray-900"
+                    >
+                      {IconComponent}
+                      <span>{item.name}</span>
+                    </Link>
+                  );
+                })}
               </nav>
             </div>
             <div className="flex-shrink-0 flex border-t border-gray-200 p-4">
@@ -154,11 +161,10 @@ export default async function DashboardLayout({
                   </div>
                 </div>
                 <div className="mt-3 flex space-x-2">
-          <LanguageSwitcher />
                   <form action={handleSignOut} className="flex-1">
                     <Button type="submit" variant="outline" size="sm" className="w-full">
                       <LogOut className="h-4 w-4 mr-2" />
-                      <NavigationText translationKey="navigation.logout" />
+                      Déconnexion
                     </Button>
                   </form>
                 </div>
@@ -194,7 +200,3 @@ function getIcon(iconName: string) {
   }
 }
 
-function NavigationText({ translationKey }: { translationKey: string }) {
-  const t = useTranslations();
-  return <span>{t(translationKey)}</span>;
-}

@@ -23,13 +23,6 @@ export function CostBreakdownChart({
   title = "Répartition des Coûts",
   chartType = "pie"
 }: CostBreakdownChartProps) {
-  const formatCurrency = (value: number) => {
-    return `${value.toLocaleString('fr-MA')} MAD`;
-  };
-
-  const formatPercentage = (value: number) => {
-    return `${value.toFixed(1)}%`;
-  };
 
   // Prepare data for charts
   const pieData = [
@@ -160,12 +153,12 @@ export function CostBreakdownChart({
                 fontSize={12}
               />
               <Tooltip 
-                formatter={(value: number, name: string, props: { payload: { category: string; percentage: number } }) => [
+                formatter={(value: number, name: string, item: { payload?: { category?: string; percentage?: number } }) => [
                   [
                     `${value.toLocaleString('fr-MA')} MAD`,
-                    `${props.payload.percentage.toFixed(1)}% du total`
+                    `${item.payload?.percentage?.toFixed(1) || '0'}% du total`
                   ],
-                  props.payload.category
+                  item.payload?.category || name
                 ]}
                 contentStyle={{
                   backgroundColor: 'white',
@@ -189,7 +182,6 @@ export function CostBreakdownChart({
 
 // Cost summary cards
 export function CostSummaryCards({ data }: { data: CostBreakdown }) {
-  const totalCosts = data.salaries.gross + data.taxes.total + data.benefits.total + data.overhead.total;
   
   return (
     <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">

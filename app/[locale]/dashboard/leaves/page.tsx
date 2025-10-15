@@ -1,5 +1,4 @@
 import { redirect } from "next/navigation";
-import { getTranslations } from 'next-intl/server';
 import { createSupabaseServerClient } from "@/lib/supabaseServer";
 import { getLeaveRequests, getApprovedLeavesForCalendar } from "@/app/actions/leave";
 import { LeaveManagementTabs } from "@/components/LeaveManagementTabs";
@@ -56,14 +55,11 @@ export default async function LeavesPage() {
     employees: Array.isArray(leave.employees) ? leave.employees[0] : leave.employees
   }));
 
-  const t = await getTranslations('leaves');
-
   return (
     <LeavesContent 
       employees={employees || []}
       leaveRequests={leaveRequests}
       approvedLeaves={approvedLeaves}
-      t={t}
     />
   );
 }
@@ -71,20 +67,18 @@ export default async function LeavesPage() {
 function LeavesContent({ 
   employees, 
   leaveRequests, 
-  approvedLeaves,
-  t
+  approvedLeaves
 }: { 
   employees: Record<string, unknown>[]; 
   leaveRequests: Record<string, unknown>[]; 
   approvedLeaves: Record<string, unknown>[];
-  t: (key: string) => string;
 }) {
 
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-3xl font-bold text-gray-900">{t('title')}</h1>
-        <p className="text-gray-600 mt-2">{t('subtitle')}</p>
+        <h1 className="text-3xl font-bold text-gray-900">Gestion des Congés</h1>
+        <p className="text-gray-600 mt-2">Gérez les demandes de congés de vos employés</p>
       </div>
 
       <LeaveManagementTabs

@@ -1,14 +1,25 @@
-import createMiddleware from 'next-intl/middleware';
-import {routing} from './i18n/routing';
- 
-export default createMiddleware(routing);
- 
+import { NextRequest, NextResponse } from 'next/server';
+
+export function middleware(request: NextRequest) {
+  // Simple redirect to /fr for now
+  if (request.nextUrl.pathname === '/') {
+    return NextResponse.redirect(new URL('/fr', request.url));
+  }
+  
+  // Handle /en and /ar routes
+  if (request.nextUrl.pathname === '/en') {
+    return NextResponse.rewrite(new URL('/fr', request.url));
+  }
+  
+  if (request.nextUrl.pathname === '/ar') {
+    return NextResponse.rewrite(new URL('/fr', request.url));
+  }
+  
+  return NextResponse.next();
+}
+
 export const config = {
-  // Match only internationalized pathnames
   matcher: [
-    // Match all pathnames except for
-    // - … if they start with `/api`, `/_next` or `/_vercel`
-    // - … the ones containing a dot (e.g. `favicon.ico`)
     '/((?!api|_next|_vercel|.*\\..*).*)'
   ]
 };

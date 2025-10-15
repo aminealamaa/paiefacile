@@ -1,9 +1,9 @@
 "use client";
 
 import { useState } from "react";
-import { useTranslations } from 'next-intl';
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
+import { trackEmployeeAdded } from "@/components/MetaPixel";
 import { Dialog, DialogTrigger, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -17,7 +17,6 @@ export function AddEmployeeDialog() {
   const [maritalStatus, setMaritalStatus] = useState<string>("");
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const t = useTranslations('employees');
   const router = useRouter();
 
   const handleSubmit = async (formData: FormData) => {
@@ -36,6 +35,9 @@ export function AddEmployeeDialog() {
       const result = await addEmployeeAction(formData);
       
       if (result?.success) {
+        // Track employee addition
+        trackEmployeeAdded();
+        
         setIsOpen(false);
         // Reset form
         setContractType("");
@@ -72,30 +74,30 @@ export function AddEmployeeDialog() {
       <DialogTrigger>
         <Button>
           <Plus className="w-4 h-4 mr-2" />
-          {t('newEmployee')}
+          Nouvel Employé
         </Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[500px] max-h-[90vh] overflow-y-auto">
         <DialogHeader>
-          <DialogTitle>{t('addEmployee')}</DialogTitle>
+          <DialogTitle>Ajouter un Employé</DialogTitle>
         </DialogHeader>
         <form action={handleSubmit} className="space-y-4">
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
             <div className="space-y-2">
-              <Label htmlFor="first_name">{t('firstName')}</Label>
+              <Label htmlFor="first_name">Prénom</Label>
               <Input 
                 id="first_name"
                 name="first_name" 
-                placeholder={t('firstName')} 
+                placeholder="Prénom" 
                 required 
               />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="last_name">{t('lastName')}</Label>
+              <Label htmlFor="last_name">Nom</Label>
               <Input 
                 id="last_name"
                 name="last_name" 
-                placeholder={t('lastName')} 
+                placeholder="Nom" 
                 required 
               />
             </div>
@@ -122,19 +124,19 @@ export function AddEmployeeDialog() {
 
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
             <div className="space-y-2">
-              <Label htmlFor="job_title">{t('position')}</Label>
+              <Label htmlFor="job_title">Poste</Label>
               <Input 
                 id="job_title"
                 name="job_title" 
-                placeholder={t('position')} 
+                placeholder="Poste" 
               />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="base_salary">{t('salary')}</Label>
+              <Label htmlFor="base_salary">Salaire</Label>
               <Input 
                 id="base_salary"
                 name="base_salary" 
-                placeholder={t('salary')} 
+                placeholder="Salaire" 
                 type="number" 
                 min="0" 
                 step="0.01" 
@@ -158,7 +160,7 @@ export function AddEmployeeDialog() {
               </Select>
             </div>
             <div className="space-y-2">
-              <Label htmlFor="hire_date">{t('hireDate')}</Label>
+              <Label htmlFor="hire_date">Date d'embauche</Label>
               <Input 
                 id="hire_date"
                 name="hire_date" 
@@ -169,24 +171,24 @@ export function AddEmployeeDialog() {
 
           {/* Family Information Section */}
           <div className="border-t pt-4">
-            <h3 className="text-sm font-medium text-gray-900 mb-3">{t('familyInfo')}</h3>
+            <h3 className="text-sm font-medium text-gray-900 mb-3">Informations Familiales</h3>
             <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
               <div className="space-y-2">
-                <Label htmlFor="marital_status">{t('maritalStatus')}</Label>
+                <Label htmlFor="marital_status">Situation familiale</Label>
                 <Select value={maritalStatus} onValueChange={setMaritalStatus}>
                   <SelectTrigger>
-                    <SelectValue placeholder={t('maritalStatus')} />
+                    <SelectValue placeholder="Situation familiale" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="single">{t('single')}</SelectItem>
-                    <SelectItem value="married">{t('married')}</SelectItem>
-                    <SelectItem value="divorced">{t('divorced')}</SelectItem>
-                    <SelectItem value="widowed">{t('widowed')}</SelectItem>
+                    <SelectItem value="single">Célibataire</SelectItem>
+                    <SelectItem value="married">Marié(e)</SelectItem>
+                    <SelectItem value="divorced">Divorcé(e)</SelectItem>
+                    <SelectItem value="widowed">Veuf/Veuve</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
               <div className="space-y-2">
-                <Label htmlFor="children_count">{t('childrenCount')}</Label>
+                <Label htmlFor="children_count">Nombre d'enfants</Label>
                 <Input 
                   id="children_count"
                   name="children_count" 
@@ -210,10 +212,10 @@ export function AddEmployeeDialog() {
           <DialogFooter>
             <div className="flex justify-end space-x-2 w-full">
               <Button type="button" variant="outline" onClick={() => setIsOpen(false)} disabled={isLoading}>
-                {t('cancel')}
+                Annuler
               </Button>
               <Button type="submit" className="bg-blue-600 hover:bg-blue-700" disabled={isLoading}>
-                {isLoading ? "Enregistrement..." : t('save')}
+                {isLoading ? "Enregistrement..." : "Enregistrer"}
               </Button>
             </div>
           </DialogFooter>

@@ -25,15 +25,16 @@ export function DepartmentAnalysisChart({
     return `${(value / 1000).toFixed(0)}k MAD`;
   };
 
-  const formatNumber = (value: number) => {
-    return value.toLocaleString('fr-MA');
-  };
-
-  const formatPercentage = (value: number) => {
-    return `${value.toFixed(1)}%`;
-  };
 
   if (chartType === "pie") {
+    // Transform data for Recharts PieChart
+    const pieData = data.map((item, index) => ({
+      name: item.department,
+      value: item.total_salary,
+      percentage: item.percentage_of_total,
+      color: COLORS[index % COLORS.length]
+    }));
+
     return (
       <Card>
         <CardHeader>
@@ -47,23 +48,22 @@ export function DepartmentAnalysisChart({
             <ResponsiveContainer width="100%" height="100%">
               <PieChart>
                 <Pie
-                  data={data}
+                  data={pieData}
                   cx="50%"
                   cy="50%"
                   labelLine={false}
-                  label={({ department, percentage_of_total }) => `${department}: ${percentage_of_total.toFixed(1)}%`}
                   outerRadius={80}
                   fill="#8884d8"
-                  dataKey="total_salary"
+                  dataKey="value"
                 >
-                  {data.map((entry, index) => (
-                    <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                  {pieData.map((entry, index) => (
+                    <Cell key={`cell-${index}`} fill={entry.color} />
                   ))}
                 </Pie>
                 <Tooltip 
-                  formatter={(value: number, name: string, props: { payload: { department: string; employee_count: number; average_salary: number; percentage_of_total: number } }) => [
+                  formatter={(value: number, name: string, item: { payload?: { name?: string; percentage?: number } }) => [
                     `${value.toLocaleString('fr-MA')} MAD`,
-                    props.payload.department
+                    item.payload?.name || name
                   ]}
                 />
               </PieChart>
@@ -101,14 +101,14 @@ export function DepartmentAnalysisChart({
                 fontSize={12}
               />
               <Tooltip 
-                formatter={(value: number, name: string, props: { payload: { department: string; employee_count: number; average_salary: number; percentage_of_total: number } }) => {
-                  const data = props.payload;
+                formatter={(value: number, name: string, item: { payload?: { department?: string; employee_count?: number; average_salary?: number; percentage_of_total?: number } }) => {
+                  const data = item.payload;
                   return [
                     [
                       `${value.toLocaleString('fr-MA')} MAD`,
-                      `${data.employee_count} employés`,
-                      `Moyenne: ${data.average_salary.toLocaleString('fr-MA')} MAD`,
-                      `${data.percentage_of_total.toFixed(1)}% du total`
+                      `${data?.employee_count || 0} employés`,
+                      `Moyenne: ${data?.average_salary?.toLocaleString('fr-MA') || '0'} MAD`,
+                      `${data?.percentage_of_total?.toFixed(1) || '0'}% du total`
                     ],
                     name === "total_salary" ? "Salaire Total" : "Employés"
                   ];
