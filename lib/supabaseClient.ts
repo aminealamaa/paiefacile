@@ -5,12 +5,12 @@ import { createBrowserClient } from '@supabase/ssr';
 // Français: Ce fichier est désormais strictement côté navigateur pour éviter l'import de `next/headers`.
 
 // Important: These env vars must be defined in `.env.local`
-const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL as string;
-const SUPABASE_ANON_KEY = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY as string;
+const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL || 'https://placeholder.supabase.co';
+const SUPABASE_ANON_KEY = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || 'placeholder_key';
 
-if (!SUPABASE_URL || !SUPABASE_ANON_KEY) {
-  // Note: We throw early to fail fast in misconfigured environments.
-  throw new Error('Missing NEXT_PUBLIC_SUPABASE_URL or NEXT_PUBLIC_SUPABASE_ANON_KEY');
+// Log warning if using placeholder values
+if (SUPABASE_URL === 'https://placeholder.supabase.co' || SUPABASE_ANON_KEY === 'placeholder_key') {
+  console.warn('Supabase environment variables not configured. Using placeholder values.');
 }
 
 // Browser client (to be used in Client Components)

@@ -26,6 +26,12 @@ export function LoginForm() {
         return;
       }
 
+      // Check if Supabase is properly configured
+      if (!process.env.NEXT_PUBLIC_SUPABASE_URL || !process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY) {
+        setError("Configuration Supabase manquante. Veuillez configurer les variables d'environnement.");
+        return;
+      }
+
       const { error } = await supabase.auth.signInWithPassword({
         email,
         password,
