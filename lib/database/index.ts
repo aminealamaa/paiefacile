@@ -1,5 +1,6 @@
 import { SupabaseAdapter } from './supabase-adapter';
 import { DatabaseAdapter } from './types';
+import { config } from '../config';
 
 // Use Supabase adapter for web deployment
 const dbAdapter: DatabaseAdapter = new SupabaseAdapter();
