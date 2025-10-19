@@ -1,7 +1,7 @@
 "use client";
 
-import { useLocale, useTranslations } from 'next-intl';
-import { usePathname, useRouter } from '@/lib/navigation';
+// Removed next-intl imports
+import { usePathname, useRouter } from 'next/navigation';
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,

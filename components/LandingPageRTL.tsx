@@ -1,10 +1,10 @@
 "use client";
 
-import { Link } from "@/lib/navigation";
+import Link from "next/link";
 import { useState } from "react";
 import { DemoFormRTL } from "@/components/DemoFormRTL";
 import { Button } from "@/components/ui/button";
-import { useTranslations } from 'next-intl';
+// Removed next-intl import
 
 export function LandingPageRTL() {
   const [showDemoForm, setShowDemoForm] = useState(false);

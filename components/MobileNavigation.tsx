@@ -1,7 +1,7 @@
 "use client";
 
-import {Link} from "@/lib/navigation";
-import { useTranslations } from 'next-intl';
+import Link from "next/link";
+// Removed next-intl import
 import { 
   LayoutDashboard, 
   Users, 

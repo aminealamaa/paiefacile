@@ -6,7 +6,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { submitDemoRequest } from "@/app/actions/demo-request";
-import { useTranslations } from 'next-intl';
+// Removed next-intl import
 
 interface DemoFormRTLProps {
   onClose?: () => void;

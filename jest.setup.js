@@ -24,11 +24,7 @@ jest.mock('next/navigation', () => ({
   },
 }))
 
-// Mock next-intl
-jest.mock('next-intl', () => ({
-  useTranslations: () => (key) => key,
-  getTranslations: () => (key) => key,
-}))
+// Removed next-intl mocks
 
 // Mock environment variables
 process.env.NEXT_PUBLIC_SUPABASE_URL = 'https://test.supabase.co'
