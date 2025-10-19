@@ -21,7 +21,7 @@ interface MobileNavigationProps {
 }
 
 export function MobileNavigation({ navigation }: MobileNavigationProps) {
-  const t = useTranslations();
+  // Removed useTranslations - using static text
   
   const handleLinkClick = () => {
     const checkbox = document.getElementById('sidebar-toggle') as HTMLInputElement;
@@ -50,7 +50,7 @@ export function MobileNavigation({ navigation }: MobileNavigationProps) {
             onClick={handleLinkClick}
           >
             {getIcon(item.icon)}
-            <span className="truncate">{t(item.name)}</span>
+            <span className="truncate">{item.name}</span>
           </Link>
         );
       })}
