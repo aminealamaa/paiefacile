@@ -12,8 +12,7 @@ import {
 import { Globe } from "lucide-react";
 
 export function LanguageSwitcher() {
-  const t = useTranslations('language');
-  const locale = useLocale();
+  // Removed useTranslations and useLocale - using static text
   const pathname = usePathname();
   const router = useRouter();
 
@@ -22,9 +21,8 @@ export function LanguageSwitcher() {
   };
 
   const getCurrentLanguageLabel = () => {
-    if (locale === 'fr') return t('french');
-    if (locale === 'ar') return t('arabic');
-    return t('english');
+    // Simplified language switcher - always show French
+    return 'Français';
   };
 
   return (
@@ -38,21 +36,18 @@ export function LanguageSwitcher() {
       <DropdownMenuContent align="end">
         <DropdownMenuItem 
           onClick={() => handleLanguageChange('en')}
-          className={locale === 'en' ? 'bg-accent' : ''}
         >
-          {t('english')}
+          English
         </DropdownMenuItem>
         <DropdownMenuItem 
           onClick={() => handleLanguageChange('fr')}
-          className={locale === 'fr' ? 'bg-accent' : ''}
         >
-          {t('french')}
+          Français
         </DropdownMenuItem>
         <DropdownMenuItem 
           onClick={() => handleLanguageChange('ar')}
-          className={locale === 'ar' ? 'bg-accent' : ''}
         >
-          {t('arabic')}
+          العربية
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>

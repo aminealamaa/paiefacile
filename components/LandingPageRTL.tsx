@@ -1,6 +1,6 @@
 "use client";
 
-import Link from "next/link";
+// Removed unused Link import
 import { useState } from "react";
 import { DemoFormRTL } from "@/components/DemoFormRTL";
 import { Button } from "@/components/ui/button";
@@ -238,3 +238,4 @@ export function LandingPageRTL() {
     </div>
   );
 }
+
