@@ -24,7 +24,7 @@ export function DemoFormRTL({ onClose }: DemoFormRTLProps) {
     employeeCount: ""
   });
   
-  const t = useTranslations('demoForm');
+  // Removed useTranslations - using static text
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -58,7 +58,7 @@ export function DemoFormRTL({ onClose }: DemoFormRTLProps) {
         employeeCount: ""
       });
 
-      alert(t('success'));
+      alert('تم إرسال طلبك بنجاح!');
       onClose?.();
     } catch (error) {
       console.error('Error submitting demo request:', error);
@@ -72,7 +72,7 @@ export function DemoFormRTL({ onClose }: DemoFormRTLProps) {
     <div className="bg-white p-8 rounded-xl shadow-2xl max-w-md w-full mx-4" dir="rtl">
       <div className="text-center mb-8">
         <h2 className="text-2xl font-bold text-gray-900 mb-2">
-          {t('title')}
+          طلب عرض توضيحي مجاني
         </h2>
       </div>
 
@@ -80,7 +80,7 @@ export function DemoFormRTL({ onClose }: DemoFormRTLProps) {
         <div className="grid grid-cols-2 gap-4">
           <div>
             <Label htmlFor="firstName" className="text-sm font-medium text-gray-700">
-              {t('firstName')}
+              الاسم الأول
             </Label>
             <Input
               id="firstName"
@@ -94,7 +94,7 @@ export function DemoFormRTL({ onClose }: DemoFormRTLProps) {
           </div>
           <div>
             <Label htmlFor="lastName" className="text-sm font-medium text-gray-700">
-              {t('lastName')}
+              الاسم الأخير
             </Label>
             <Input
               id="lastName"
@@ -110,7 +110,7 @@ export function DemoFormRTL({ onClose }: DemoFormRTLProps) {
 
         <div>
           <Label htmlFor="email" className="text-sm font-medium text-gray-700">
-            {t('email')}
+            البريد الإلكتروني
           </Label>
           <Input
             id="email"
@@ -125,7 +125,7 @@ export function DemoFormRTL({ onClose }: DemoFormRTLProps) {
 
         <div>
           <Label htmlFor="phone" className="text-sm font-medium text-gray-700">
-            {t('phone')}
+            الهاتف
           </Label>
           <Input
             id="phone"
@@ -140,7 +140,7 @@ export function DemoFormRTL({ onClose }: DemoFormRTLProps) {
 
         <div>
           <Label htmlFor="company" className="text-sm font-medium text-gray-700">
-            {t('company')}
+            الشركة
           </Label>
           <Input
             id="company"
@@ -155,7 +155,7 @@ export function DemoFormRTL({ onClose }: DemoFormRTLProps) {
 
         <div>
           <Label htmlFor="country" className="text-sm font-medium text-gray-700">
-            {t('country')}
+            البلد
           </Label>
           <Input
             id="country"
@@ -170,7 +170,7 @@ export function DemoFormRTL({ onClose }: DemoFormRTLProps) {
 
         <div>
           <Label htmlFor="employeeCount" className="text-sm font-medium text-gray-700">
-            {t('employeeCount')}
+            عدد الموظفين
           </Label>
           <Select
             value={formData.employeeCount}
@@ -178,7 +178,7 @@ export function DemoFormRTL({ onClose }: DemoFormRTLProps) {
             required
           >
             <SelectTrigger className="mt-1">
-              <SelectValue placeholder={t('selectOption')} />
+              <SelectValue placeholder="اختر عدد الموظفين" />
             </SelectTrigger>
             <SelectContent>
               <SelectItem value="1-5">1-5 موظفين</SelectItem>
@@ -196,10 +196,10 @@ export function DemoFormRTL({ onClose }: DemoFormRTLProps) {
           className="w-full bg-green-600 hover:bg-green-700 text-white py-3 px-6 rounded-lg font-semibold text-lg transition-colors flex items-center justify-center space-x-2 space-x-reverse"
         >
           {isSubmitting ? (
-            <span>{t('submitting')}</span>
+            <span>جاري الإرسال...</span>
           ) : (
             <>
-              <span>{t('submit')}</span>
+              <span>إرسال الطلب</span>
               <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
               </svg>
