@@ -189,7 +189,7 @@ export function LeaveManagementTabs({
 
       <TabsContent value="calendar" className="space-y-4">
         <div className="flex justify-between items-center">
-          <h2 className="text-xl font-semibold">Calendrier d'Équipe</h2>
+          <h2 className="text-xl font-semibold">Calendrier d&apos;Équipe</h2>
           <p className="text-sm text-gray-600">Voir les demandes de congés approuvées</p>
         </div>
 

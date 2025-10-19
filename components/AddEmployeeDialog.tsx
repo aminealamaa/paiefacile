@@ -160,7 +160,7 @@ export function AddEmployeeDialog() {
               </Select>
             </div>
             <div className="space-y-2">
-              <Label htmlFor="hire_date">Date d'embauche</Label>
+              <Label htmlFor="hire_date">Date d&apos;embauche</Label>
               <Input 
                 id="hire_date"
                 name="hire_date" 
@@ -188,7 +188,7 @@ export function AddEmployeeDialog() {
                 </Select>
               </div>
               <div className="space-y-2">
-                <Label htmlFor="children_count">Nombre d'enfants</Label>
+                <Label htmlFor="children_count">Nombre d&apos;enfants</Label>
                 <Input 
                   id="children_count"
                   name="children_count" 

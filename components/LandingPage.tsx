@@ -120,7 +120,7 @@ export function LandingPage() {
         <div className="container mx-auto px-4 sm:px-6">
           <div className="text-center mb-12 sm:mb-16">
             <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-black mb-4 sm:mb-6">
-              Le casse-tête de la paie, c'est terminé
+              Le casse-tête de la paie, c&apos;est terminé
             </h2>
             <p className="text-lg sm:text-xl text-gray-600 max-w-3xl mx-auto">
               Dites adieu aux calculs complexes, aux erreurs coûteuses et au temps perdu
@@ -145,7 +145,7 @@ export function LandingPage() {
                   <path fillRule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
                 </svg>
               </div>
-              <h3 className="font-semibold text-black mb-2 text-sm sm:text-base">Risque d'Erreurs</h3>
+              <h3 className="font-semibold text-black mb-2 text-sm sm:text-base">Risque d&apos;Erreurs</h3>
                 <p className="text-gray-600 text-sm sm:text-base">Une simple erreur peut coûter cher en pénalités. La conformité n&apos;est pas une option.</p>
             </div>
             
@@ -192,7 +192,7 @@ export function LandingPage() {
                 </svg>
               </div>
               <h3 className="text-lg sm:text-xl font-semibold text-black mb-3 sm:mb-4">Simplicité Radicale</h3>
-              <p className="text-gray-600 text-sm sm:text-base">Une interface claire et intuitive. Pas besoin d'être un expert-comptable pour gérer la paie de vos employés.</p>
+              <p className="text-gray-600 text-sm sm:text-base">Une interface claire et intuitive. Pas besoin d&apos;être un expert-comptable pour gérer la paie de vos employés.</p>
             </div>
             
             <div className="text-center sm:col-span-2 lg:col-span-1">
@@ -360,7 +360,7 @@ export function LandingPage() {
             <div>
               <h4 className="font-semibold mb-3 sm:mb-4 text-sm sm:text-base">Support</h4>
               <ul className="space-y-2 text-gray-400 text-sm sm:text-base">
-                <li><a href="#" className="hover:text-white transition-colors">Centre d'aide</a></li>
+                <li><a href="#" className="hover:text-white transition-colors">Centre d&apos;aide</a></li>
                 <li><a href="#" className="hover:text-white transition-colors">Guides</a></li>
                 <li><a href="#" className="hover:text-white transition-colors">Contact</a></li>
                 <li><a href="#" className="hover:text-white transition-colors">Formation</a></li>
@@ -384,7 +384,7 @@ export function LandingPage() {
               © 2024 PaieFacile. Tous droits réservés.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 sm:gap-6">
-              <a href="#" className="text-gray-400 hover:text-white transition-colors text-xs sm:text-sm">Conditions d'utilisation</a>
+              <a href="#" className="text-gray-400 hover:text-white transition-colors text-xs sm:text-sm">Conditions d&apos;utilisation</a>
               <a href="#" className="text-gray-400 hover:text-white transition-colors text-xs sm:text-sm">Confidentialité</a>
               <a href="#" className="text-gray-400 hover:text-white transition-colors text-xs sm:text-sm">Mentions légales</a>
             </div>

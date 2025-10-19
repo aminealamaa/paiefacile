@@ -55,25 +55,25 @@ export function MetaPixel({ pixelId }: MetaPixelProps) {
 // Global Facebook Pixel interface
 declare global {
   interface Window {
-    fbq: (action: string, event: string, data?: any) => void;
+    fbq: (action: string, event: string, data?: Record<string, unknown>) => void;
   }
 }
 
 // Helper functions for tracking events
-export const trackEvent = (eventName: string, data?: any) => {
+export const trackEvent = (eventName: string, data?: Record<string, unknown>) => {
   if (typeof window !== 'undefined' && window.fbq) {
     window.fbq('track', eventName, data);
   }
 };
 
-export const trackCustomEvent = (eventName: string, data?: any) => {
+export const trackCustomEvent = (eventName: string, data?: Record<string, unknown>) => {
   if (typeof window !== 'undefined' && window.fbq) {
     window.fbq('trackCustom', eventName, data);
   }
 };
 
 // Specific conversion tracking functions for PaieFacile
-export const trackDemoRequest = (formData: any) => {
+export const trackDemoRequest = (formData: Record<string, unknown>) => {
   trackEvent('Lead', {
     content_name: 'Demo Request',
     content_category: 'Lead Generation',
@@ -82,7 +82,7 @@ export const trackDemoRequest = (formData: any) => {
   });
 };
 
-export const trackSignup = (userData: any) => {
+export const trackSignup = (userData: Record<string, unknown>) => {
   trackEvent('CompleteRegistration', {
     content_name: 'User Registration',
     content_category: 'User Acquisition',
@@ -98,7 +98,7 @@ export const trackLogin = () => {
   });
 };
 
-export const trackPayrollGeneration = (payrollData: any) => {
+export const trackPayrollGeneration = (payrollData: Record<string, unknown>) => {
   trackEvent('Purchase', {
     content_name: 'Payroll Generation',
     content_category: 'Core Feature Usage',

@@ -29,7 +29,7 @@ export function SignupForm({ onSignup }: SignupFormProps) {
         firstName: formData.get("firstName"),
         lastName: formData.get("lastName")
       });
-    } catch (err) {
+    } catch {
       setError("Une erreur s'est produite lors de l'inscription.");
     } finally {
       setIsSubmitting(false);
