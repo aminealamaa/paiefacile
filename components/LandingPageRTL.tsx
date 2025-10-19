@@ -8,7 +8,7 @@ import { Button } from "@/components/ui/button";
 
 export function LandingPageRTL() {
   const [showDemoForm, setShowDemoForm] = useState(false);
-  const t = useTranslations('landing');
+  // Removed useTranslations - using static text
 
   return (
     <div className="bg-white" dir="rtl">
@@ -50,7 +50,7 @@ export function LandingPageRTL() {
                 onClick={() => setShowDemoForm(true)}
                 className="bg-green-600 hover:bg-green-700 text-white px-6 py-2 rounded-lg transition-colors font-medium flex items-center space-x-2 space-x-reverse"
               >
-                <span>{t('hero.bookDemo')}</span>
+                <span>احجز عرض توضيحي</span>
                 <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
                 </svg>
@@ -66,13 +66,13 @@ export function LandingPageRTL() {
           <div className="grid lg:grid-cols-2 gap-12 items-center">
             <div className="text-gray-900">
               <h1 className="text-4xl lg:text-6xl font-bold mb-6 leading-tight">
-                {t('hero.title')}{" "}
+                إدارة الرواتب{" "}
                 <span className="text-green-600 underline decoration-green-600 decoration-2">
-                  {t('hero.titleHighlight')}
+                  أصبحت سهلة
                 </span>
               </h1>
               <p className="text-xl lg:text-2xl mb-8 text-gray-600 leading-relaxed">
-                {t('hero.subtitle')}
+                حل شامل لإدارة رواتب الموظفين في المغرب مع الامتثال الكامل للقوانين المحلية
               </p>
               
               {/* Abstract illustrations */}
