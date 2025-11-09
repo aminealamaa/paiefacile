@@ -1,0 +1,165 @@
+{
+  "navigation": {
+    "overview": "نظرة عامة",
+    "employees": "الموظفين",
+    "payroll": "كشف الرواتب",
+    "leaves": "الإجازات",
+    "settings": "الإعدادات",
+    "logout": "تسجيل الخروج"
+  },
+  "dashboard": {
+    "title": "لوحة التحكم",
+    "totalEmployees": "إجمالي الموظفين",
+    "nextPayrollRun": "تشغيل كشف الرواتب التالي",
+    "companyStatus": "حالة الشركة",
+    "payrollProcessing": "معالجة الرواتب",
+    "quickActions": "إجراءات سريعة",
+    "welcome": "مرحباً بك في باي فاسيل"
+  },
+  "employees": {
+    "title": "الموظفين",
+    "subtitle": "إدارة موظفي شركتك",
+    "newEmployee": "موظف جديد",
+    "addEmployee": "إضافة موظف جديد",
+    "firstName": "الاسم الأول",
+    "lastName": "الاسم الأخير",
+    "email": "البريد الإلكتروني",
+    "position": "المنصب",
+    "hireDate": "تاريخ التوظيف",
+    "familyInfo": "معلومات العائلة",
+    "maritalStatus": "الحالة الاجتماعية",
+    "childrenCount": "عدد الأطفال",
+    "single": "أعزب",
+    "married": "متزوج",
+    "divorced": "مطلق",
+    "widowed": "أرمل",
+    "salary": "الراتب",
+    "actions": "الإجراءات",
+    "cancel": "إلغاء",
+    "save": "حفظ"
+  },
+  "payroll": {
+    "title": "كشف الرواتب",
+    "subtitle": "حساب وإدارة الرواتب",
+    "calculatePayroll": "حساب الراتب",
+    "baseSalary": "الراتب الأساسي",
+    "overtimeHours": "ساعات العمل الإضافي",
+    "bonuses": "المكافآت",
+    "deductions": "الخصومات",
+    "downloadPayslip": "تحميل كشف الراتب",
+    "employee": "الموظف",
+    "grossSalary": "الراتب الإجمالي",
+    "netSalary": "الراتب الصافي",
+    "cnssEmployee": "مساهمة CNSS للموظف",
+    "cnssEmployer": "مساهمة CNSS لصاحب العمل",
+    "amoEmployee": "مساهمة AMO للموظف",
+    "amoEmployer": "مساهمة AMO لصاحب العمل",
+    "igr": "ضريبة الدخل (IGR)",
+    "familyDeductions": "خصومات العائلة"
+  },
+  "leaves": {
+    "title": "إدارة الإجازات",
+    "subtitle": "إدارة طلبات الإجازة",
+    "requestLeave": "طلب إجازة",
+    "leaveType": "نوع الإجازة",
+    "startDate": "تاريخ البداية",
+    "endDate": "تاريخ النهاية",
+    "reason": "السبب",
+    "annual": "سنوية",
+    "sick": "مرضية",
+    "unpaid": "بدون راتب",
+    "other": "أخرى",
+    "status": "الحالة",
+    "pending": "في الانتظار",
+    "approved": "موافق عليها",
+    "rejected": "مرفوضة"
+  },
+  "company": {
+    "title": "إعدادات الشركة",
+    "companyName": "اسم الشركة",
+    "rcNumber": "رقم السجل التجاري",
+    "ifNumber": "رقم الضريبة",
+    "cnssNumber": "رقم CNSS",
+    "ice": "رقم ICE",
+    "patente": "الرخصة",
+    "address": "العنوان"
+  },
+  "landing": {
+    "hero": {
+      "title": "عرض تجريبي مجاني و",
+      "titleHighlight": "بدون التزام",
+      "subtitle": "فريقنا سيكون سعيداً للتواصل معك لتحديد احتياجاتك وتحويل تجربة موظفيك",
+      "bookDemo": "احجز عرضاً تجريبياً"
+    },
+    "features": {
+      "title": "كل ما تحتاجه لرواتب هادئة",
+      "saveTime": "وفر ساعات ثمينة",
+      "saveTimeDesc": "أتمت المهام المتكررة وقلل وقت المعالجة بنسبة 90%",
+      "avoidErrors": "تجنب الأخطاء المكلفة",
+      "avoidErrorsDesc": "حسابات 100% متوافقة مع التشريع المغربي، محدثة تلقائياً",
+      "stayCompliant": "ابق 100% متوافق",
+      "stayCompliantDesc": "تحديثات تلقائية لأسعار CNSS و IGR واللوائح",
+      "clearPayslips": "كشوف رواتب واضحة",
+      "clearPayslipsDesc": "أنشئ كشوف رواتب مهنية متوافقة مع المعايير",
+      "centralized": "المركزية والأمان",
+      "centralizedDesc": "أرشف وثائقك على السحابة مع أمان مصرفي",
+      "expertSupport": "دعم الخبراء",
+      "expertSupportDesc": "فريق مغربي في خدمتك لمرافقتك"
+    },
+    "testimonials": {
+      "title": "يثقون بنا لرواتبهم"
+    },
+    "pricing": {
+      "title": "أسعار شفافة، بدون مفاجآت",
+      "subtitle": "اختر الصيغة التي تناسب شركتك",
+      "starter": "البداية",
+      "business": "الأعمال",
+      "enterprise": "المؤسسات",
+      "popular": "الأكثر شعبية",
+      "tryFree": "جرب مجاناً"
+    },
+    "cta": {
+      "title": "بسط رواتبك اليوم",
+      "subtitle": "انضم إلى مئات الشركات الصغيرة والمتوسطة المغربية التي اختارت الهدوء. احجز عرضك التجريبي المجاني الآن.",
+      "bookDemo": "احجز عرضاً تجريبياً",
+      "freeTrial": "عرض تجريبي مجاني • بدون التزام • بدون بطاقة ائتمان"
+    }
+  },
+  "demoForm": {
+    "title": "للاستفادة من عرض تجريبي مجاني، املأ النموذج أدناه",
+    "firstName": "الاسم الأول *",
+    "lastName": "الاسم الأخير *",
+    "email": "البريد الإلكتروني المهني *",
+    "phone": "الهاتف *",
+    "company": "الشركة *",
+    "country": "البلد *",
+    "employeeCount": "عدد الموظفين *",
+    "selectOption": "اختر",
+    "submit": "احجز عرضاً تجريبياً",
+    "submitting": "جاري الإرسال...",
+    "success": "شكراً! سنتواصل معك قريباً لجدولة عرضك التجريبي."
+  },
+  "common": {
+    "loading": "جاري التحميل...",
+    "error": "خطأ",
+    "success": "نجح",
+    "save": "حفظ",
+    "cancel": "إلغاء",
+    "edit": "تعديل",
+    "delete": "حذف",
+    "confirm": "تأكيد",
+    "back": "رجوع",
+    "next": "التالي",
+    "previous": "السابق",
+    "search": "بحث",
+    "filter": "تصفية",
+    "export": "تصدير",
+    "import": "استيراد"
+  },
+  "language": {
+    "english": "English",
+    "french": "Français",
+    "arabic": "العربية",
+    "switchLanguage": "تغيير اللغة"
+  }
+}

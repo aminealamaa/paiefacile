@@ -1,0 +1,714 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PaieFacile - La Paie Marocaine, Enfin Simplifiée</title>
+    <meta name="description" content="Automatisez vos calculs de paie CNSS, IGR et heures supplémentaires. Essai gratuit 14 jours pour PME marocaines.">
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+    <!-- Icons -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        .gradient-bg { background: linear-gradient(135deg, #0D9488 0%, #14B8A6 100%); }
+        .hero-pattern { background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.05'%3E%3Ccircle cx='30' cy='30' r='2'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E"); }
+        .animate-float { animation: float 6s ease-in-out infinite; }
+        @keyframes float { 0%, 100% { transform: translateY(0px); } 50% { transform: translateY(-20px); } }
+        .feature-card:hover { transform: translateY(-5px); transition: all 0.3s ease; }
+        .testimonial-card { background: linear-gradient(145deg, #ffffff 0%, #f8fafc 100%); }
+    </style>
+</head>
+<body class="bg-stone-50">
+    <!-- Header -->
+    <header class="sticky top-0 z-50 bg-white/95 backdrop-blur-sm border-b border-gray-200">
+        <nav class="container mx-auto px-6 py-4">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center space-x-2">
+                    <div class="w-8 h-8 bg-teal-600 rounded-lg flex items-center justify-center">
+                        <i class="fas fa-calculator text-white text-sm"></i>
+                    </div>
+                    <span class="text-2xl font-bold text-gray-900">PaieFacile</span>
+                </div>
+                
+                <div class="hidden md:flex items-center space-x-8">
+                    <a href="#fonctionnalites" class="text-gray-600 hover:text-teal-600 transition-colors">Fonctionnalités</a>
+                    <a href="#tarifs" class="text-gray-600 hover:text-teal-600 transition-colors">Tarifs</a>
+                    <a href="#testimonials" class="text-gray-600 hover:text-teal-600 transition-colors">Témoignages</a>
+                    <button onclick="startTrial()" class="bg-teal-600 text-white px-6 py-2 rounded-lg hover:bg-teal-700 transition-colors font-medium">
+                        Démarrer l'essai gratuit
+                    </button>
+                </div>
+                
+                <!-- Mobile menu button -->
+                <button class="md:hidden" onclick="toggleMobileMenu()">
+                    <i class="fas fa-bars text-gray-600"></i>
+                </button>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="gradient-bg hero-pattern py-20 lg:py-32">
+        <div class="container mx-auto px-6">
+            <div class="grid lg:grid-cols-2 gap-12 items-center">
+                <div class="text-white">
+                    <h1 class="text-4xl lg:text-6xl font-bold mb-6 leading-tight">
+                        La Paie Marocaine, <span class="text-teal-200">Enfin Simplifiée</span>
+                    </h1>
+                    <p class="text-xl lg:text-2xl mb-8 text-teal-50 leading-relaxed">
+                        PaieFacile automatise les calculs complexes de la CNSS, de l'IGR et des heures supplémentaires pour vous faire gagner du temps et vous garantir une conformité totale.
+                    </p>
+                    <div class="space-y-4">
+                        <button onclick="startTrial()" class="bg-white text-teal-600 px-8 py-4 rounded-lg text-lg font-semibold hover:bg-teal-50 transition-colors shadow-lg">
+                            Démarrer mon essai de 14 jours (Gratuit)
+                        </button>
+                        <p class="text-teal-100 text-sm">Aucune carte de crédit requise</p>
+                    </div>
+                </div>
+                
+                <div class="animate-float">
+                    <div class="bg-white rounded-2xl shadow-2xl p-6 max-w-md mx-auto">
+                        <div class="bg-teal-50 rounded-lg p-4 mb-4">
+                            <div class="flex items-center justify-between mb-3">
+                                <h3 class="font-semibold text-gray-900">Bulletin de Paie</h3>
+                                <span class="bg-green-100 text-green-800 px-2 py-1 rounded text-xs">Généré</span>
+                            </div>
+                            <div class="space-y-2 text-sm">
+                                <div class="flex justify-between">
+                                    <span class="text-gray-600">Salaire Brut</span>
+                                    <span class="font-medium">15,000 MAD</span>
+                                </div>
+                                <div class="flex justify-between">
+                                    <span class="text-gray-600">CNSS (4.48%)</span>
+                                    <span class="font-medium text-red-600">-672 MAD</span>
+                                </div>
+                                <div class="flex justify-between">
+                                    <span class="text-gray-600">IGR</span>
+                                    <span class="font-medium text-red-600">-3,240 MAD</span>
+                                </div>
+                                <hr class="my-2">
+                                <div class="flex justify-between font-bold">
+                                    <span>Net à Payer</span>
+                                    <span class="text-teal-600">11,088 MAD</span>
+                                </div>
+                            </div>
+                        </div>
+                        <button class="w-full bg-teal-600 text-white py-2 rounded-lg text-sm">
+                            <i class="fas fa-download mr-2"></i>Télécharger PDF
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Problem Section -->
+    <section class="py-20 bg-white">
+        <div class="container mx-auto px-6">
+            <div class="text-center mb-16">
+                <h2 class="text-4xl font-bold text-gray-900 mb-6">
+                    La gestion de la paie vous coûte plus cher que vous ne le pensez
+                </h2>
+                <p class="text-xl text-gray-600 max-w-3xl mx-auto">
+                    Les erreurs de paie peuvent coûter jusqu'à 30,000 MAD d'amendes par an à une PME marocaine
+                </p>
+            </div>
+            
+            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <div class="text-center p-6">
+                    <div class="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <i class="fas fa-calculator text-red-600 text-2xl"></i>
+                    </div>
+                    <h3 class="font-semibold text-gray-900 mb-2">Calculs Manuels Erronés</h3>
+                    <p class="text-gray-600">Les heures supplémentaires mal calculées coûtent en moyenne 2,500 MAD/mois</p>
+                </div>
+                
+                <div class="text-center p-6">
+                    <div class="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <i class="fas fa-university text-red-600 text-2xl"></i>
+                    </div>
+                    <h3 class="font-semibold text-gray-900 mb-2">Pénalités CNSS</h3>
+                    <p class="text-gray-600">Déclarations incorrectes = amendes de 5,000 à 15,000 MAD</p>
+                </div>
+                
+                <div class="text-center p-6">
+                    <div class="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <i class="fas fa-calendar-times text-red-600 text-2xl"></i>
+                    </div>
+                    <h3 class="font-semibold text-gray-900 mb-2">Gestion des Congés</h3>
+                    <p class="text-gray-600">Suivi complexe et erreurs dans les soldes de congés</p>
+                </div>
+                
+                <div class="text-center p-6">
+                    <div class="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <i class="fas fa-receipt text-red-600 text-2xl"></i>
+                    </div>
+                    <h3 class="font-semibold text-gray-900 mb-2">Calcul IGR Complexe</h3>
+                    <p class="text-gray-600">Risque de redressement fiscal pour mauvais calculs</p>
+                </div>
+                
+                <div class="text-center p-6">
+                    <div class="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <i class="fas fa-clock text-red-600 text-2xl"></i>
+                    </div>
+                    <h3 class="font-semibold text-gray-900 mb-2">Perte de Temps</h3>
+                    <p class="text-gray-600">20+ heures/mois perdues en calculs et paperasse</p>
+                </div>
+                
+                <div class="text-center p-6">
+                    <div class="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <i class="fas fa-file-archive text-red-600 text-2xl"></i>
+                    </div>
+                    <h3 class="font-semibold text-gray-900 mb-2">Documents Non Sécurisés</h3>
+                    <p class="text-gray-600">Risque de perte de données et non-conformité</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Solution Section -->
+    <section class="py-20 bg-gray-50">
+        <div class="container mx-auto px-6">
+            <div class="text-center mb-16">
+                <h2 class="text-4xl font-bold text-gray-900 mb-6">
+                    Découvrez PaieFacile : Votre Expert Paie Automatisé
+                </h2>
+                <p class="text-xl text-gray-600 max-w-3xl mx-auto">
+                    Transformez votre gestion de paie en 3 étapes simples
+                </p>
+            </div>
+            
+            <div class="grid md:grid-cols-3 gap-8">
+                <div class="text-center">
+                    <div class="w-20 h-20 bg-teal-100 rounded-full flex items-center justify-center mx-auto mb-6">
+                        <span class="text-2xl font-bold text-teal-600">1</span>
+                    </div>
+                    <h3 class="text-xl font-semibold text-gray-900 mb-4">Ajoutez vos employés</h3>
+                    <p class="text-gray-600">Importez ou saisissez les informations de vos employés en quelques clics</p>
+                </div>
+                
+                <div class="text-center">
+                    <div class="w-20 h-20 bg-teal-100 rounded-full flex items-center justify-center mx-auto mb-6">
+                        <span class="text-2xl font-bold text-teal-600">2</span>
+                    </div>
+                    <h3 class="text-xl font-semibold text-gray-900 mb-4">Entrez les variables du mois</h3>
+                    <p class="text-gray-600">Heures supplémentaires, primes, absences - tout est calculé automatiquement</p>
+                </div>
+                
+                <div class="text-center">
+                    <div class="w-20 h-20 bg-teal-100 rounded-full flex items-center justify-center mx-auto mb-6">
+                        <span class="text-2xl font-bold text-teal-600">3</span>
+                    </div>
+                    <h3 class="text-xl font-semibold text-gray-900 mb-4">Générez les bulletins en 1 clic</h3>
+                    <p class="text-gray-600">Bulletins conformes, déclarations CNSS et archivage automatique</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section id="fonctionnalites" class="py-20 bg-white">
+        <div class="container mx-auto px-6">
+            <div class="text-center mb-16">
+                <h2 class="text-4xl font-bold text-gray-900 mb-6">
+                    Tout ce dont vous avez besoin pour une paie sereine
+                </h2>
+            </div>
+            
+            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <div class="feature-card bg-white p-8 rounded-xl shadow-lg border border-gray-100">
+                    <div class="w-12 h-12 bg-teal-100 rounded-lg flex items-center justify-center mb-6">
+                        <i class="fas fa-clock text-teal-600 text-xl"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold text-gray-900 mb-4">Gagnez des heures précieuses</h3>
+                    <p class="text-gray-600">Automatisez les tâches répétitives et réduisez le temps de traitement de 90%</p>
+                </div>
+                
+                <div class="feature-card bg-white p-8 rounded-xl shadow-lg border border-gray-100">
+                    <div class="w-12 h-12 bg-teal-100 rounded-lg flex items-center justify-center mb-6">
+                        <i class="fas fa-shield-alt text-teal-600 text-xl"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold text-gray-900 mb-4">Évitez les erreurs coûteuses</h3>
+                    <p class="text-gray-600">Calculs 100% conformes à la législation marocaine, mis à jour automatiquement</p>
+                </div>
+                
+                <div class="feature-card bg-white p-8 rounded-xl shadow-lg border border-gray-100">
+                    <div class="w-12 h-12 bg-teal-100 rounded-lg flex items-center justify-center mb-6">
+                        <i class="fas fa-balance-scale text-teal-600 text-xl"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold text-gray-900 mb-4">Restez 100% conforme</h3>
+                    <p class="text-gray-600">Mises à jour automatiques des taux CNSS, IGR et réglementations</p>
+                </div>
+                
+                <div class="feature-card bg-white p-8 rounded-xl shadow-lg border border-gray-100">
+                    <div class="w-12 h-12 bg-teal-100 rounded-lg flex items-center justify-center mb-6">
+                        <i class="fas fa-file-invoice text-teal-600 text-xl"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold text-gray-900 mb-4">Bulletins de paie clairs</h3>
+                    <p class="text-gray-600">Générez des fiches de paie professionnelles conformes aux standards</p>
+                </div>
+                
+                <div class="feature-card bg-white p-8 rounded-xl shadow-lg border border-gray-100">
+                    <div class="w-12 h-12 bg-teal-100 rounded-lg flex items-center justify-center mb-6">
+                        <i class="fas fa-cloud text-teal-600 text-xl"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold text-gray-900 mb-4">Centralisation & Sécurité</h3>
+                    <p class="text-gray-600">Archivez vos documents sur le cloud avec sécurité bancaire</p>
+                </div>
+                
+                <div class="feature-card bg-white p-8 rounded-xl shadow-lg border border-gray-100">
+                    <div class="w-12 h-12 bg-teal-100 rounded-lg flex items-center justify-center mb-6">
+                        <i class="fas fa-headset text-teal-600 text-xl"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold text-gray-900 mb-4">Support d'experts</h3>
+                    <p class="text-gray-600">Une équipe marocaine à votre écoute pour vous accompagner</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Interactive Demo Section -->
+    <section class="py-20 bg-gray-50">
+        <div class="container mx-auto px-6">
+            <div class="text-center mb-16">
+                <h2 class="text-4xl font-bold text-gray-900 mb-6">
+                    Visualisez la Différence
+                </h2>
+                <p class="text-xl text-gray-600">
+                    Découvrez comment PaieFacile calcule automatiquement les cotisations CNSS
+                </p>
+            </div>
+            
+            <div class="max-w-4xl mx-auto bg-white rounded-2xl shadow-xl p-8">
+                <div class="grid md:grid-cols-2 gap-8">
+                    <div>
+                        <h3 class="text-xl font-semibold text-gray-900 mb-6">Simulateur CNSS</h3>
+                        <div class="space-y-4">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Salaire Brut (MAD)</label>
+                                <input type="range" id="salarySlider" min="3000" max="15000" value="8000" 
+                                       class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer slider">
+                                <div class="flex justify-between text-sm text-gray-500 mt-1">
+                                    <span>3,000</span>
+                                    <span id="salaryValue" class="font-medium text-teal-600">8,000 MAD</span>
+                                    <span>15,000</span>
+                                </div>
+                            </div>
+                            
+                            <div class="bg-gray-50 p-4 rounded-lg">
+                                <div class="flex justify-between items-center mb-2">
+                                    <span class="text-sm text-gray-600">Plafond CNSS</span>
+                                    <span class="text-sm font-medium">6,000 MAD</span>
+                                </div>
+                                <div class="flex justify-between items-center mb-2">
+                                    <span class="text-sm text-gray-600">Taux employé</span>
+                                    <span class="text-sm font-medium">4.48%</span>
+                                </div>
+                                <div class="flex justify-between items-center">
+                                    <span class="text-sm font-semibold text-gray-900">CNSS à payer</span>
+                                    <span id="cnssAmount" class="text-sm font-semibold text-teal-600">358.40 MAD</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div>
+                        <h3 class="text-xl font-semibold text-gray-900 mb-6">Comparaison Visuelle</h3>
+                        <canvas id="cnssChart" width="400" height="300"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Testimonials Section -->
+    <section id="testimonials" class="py-20 bg-white">
+        <div class="container mx-auto px-6">
+            <div class="text-center mb-16">
+                <h2 class="text-4xl font-bold text-gray-900 mb-6">
+                    Ils nous font confiance pour leur paie
+                </h2>
+            </div>
+            
+            <div class="grid md:grid-cols-3 gap-8 mb-16">
+                <div class="testimonial-card p-8 rounded-xl shadow-lg">
+                    <div class="flex items-center mb-4">
+                        <div class="flex text-yellow-400">
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                        </div>
+                    </div>
+                    <p class="text-gray-600 mb-6 italic">
+                        "PaieFacile a transformé notre gestion administrative. Ce qui nous prenait des jours se fait maintenant en une heure. Indispensable pour une PME au Maroc."
+                    </p>
+                    <div class="flex items-center">
+                        <div class="w-12 h-12 bg-teal-100 rounded-full flex items-center justify-center mr-4">
+                            <span class="font-semibold text-teal-600">KA</span>
+                        </div>
+                        <div>
+                            <div class="font-semibold text-gray-900">Khalid Alami</div>
+                            <div class="text-sm text-gray-600">DG, TechnoMaroc SARL</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="testimonial-card p-8 rounded-xl shadow-lg">
+                    <div class="flex items-center mb-4">
+                        <div class="flex text-yellow-400">
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                        </div>
+                    </div>
+                    <p class="text-gray-600 mb-6 italic">
+                        "Fini les erreurs de calcul et les nuits blanches avant les déclarations CNSS. PaieFacile nous fait économiser 15,000 MAD par an en évitant les pénalités."
+                    </p>
+                    <div class="flex items-center">
+                        <div class="w-12 h-12 bg-teal-100 rounded-full flex items-center justify-center mr-4">
+                            <span class="font-semibold text-teal-600">SB</span>
+                        </div>
+                        <div>
+                            <div class="font-semibold text-gray-900">Samira Benali</div>
+                            <div class="text-sm text-gray-600">RH, Atlas Distribution</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="testimonial-card p-8 rounded-xl shadow-lg">
+                    <div class="flex items-center mb-4">
+                        <div class="flex text-yellow-400">
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                        </div>
+                    </div>
+                    <p class="text-gray-600 mb-6 italic">
+                        "Interface intuitive et support client exceptionnel. Même sans formation comptable, je gère la paie de mes 25 employés en toute sérénité."
+                    </p>
+                    <div class="flex items-center">
+                        <div class="w-12 h-12 bg-teal-100 rounded-full flex items-center justify-center mr-4">
+                            <span class="font-semibold text-teal-600">YE</span>
+                        </div>
+                        <div>
+                            <div class="font-semibold text-gray-900">Youssef El Fassi</div>
+                            <div class="text-sm text-gray-600">Fondateur, InnovateCasa</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="text-center">
+                <p class="text-gray-600 mb-8">Nos clients incluent :</p>
+                <div class="flex flex-wrap justify-center items-center gap-8 opacity-60">
+                    <div class="bg-gray-200 px-6 py-3 rounded-lg">TechnoMaroc</div>
+                    <div class="bg-gray-200 px-6 py-3 rounded-lg">Atlas Distribution</div>
+                    <div class="bg-gray-200 px-6 py-3 rounded-lg">InnovateCasa</div>
+                    <div class="bg-gray-200 px-6 py-3 rounded-lg">MediaPlus</div>
+                    <div class="bg-gray-200 px-6 py-3 rounded-lg">BuildMaroc</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Pricing Section -->
+    <section id="tarifs" class="py-20 bg-gray-50">
+        <div class="container mx-auto px-6">
+            <div class="text-center mb-16">
+                <h2 class="text-4xl font-bold text-gray-900 mb-6">
+                    Tarifs Transparents, Sans Surprise
+                </h2>
+                <p class="text-xl text-gray-600">
+                    Choisissez la formule qui correspond à votre entreprise
+                </p>
+            </div>
+            
+            <div class="grid md:grid-cols-3 gap-8 max-w-5xl mx-auto">
+                <div class="bg-white p-8 rounded-xl shadow-lg border border-gray-200">
+                    <h3 class="text-xl font-semibold text-gray-900 mb-4">Starter</h3>
+                    <div class="mb-6">
+                        <span class="text-4xl font-bold text-gray-900">299</span>
+                        <span class="text-gray-600"> MAD/mois</span>
+                    </div>
+                    <ul class="space-y-3 mb-8">
+                        <li class="flex items-center">
+                            <i class="fas fa-check text-teal-600 mr-3"></i>
+                            <span class="text-gray-600">Jusqu'à 10 employés</span>
+                        </li>
+                        <li class="flex items-center">
+                            <i class="fas fa-check text-teal-600 mr-3"></i>
+                            <span class="text-gray-600">Bulletins de paie illimités</span>
+                        </li>
+                        <li class="flex items-center">
+                            <i class="fas fa-check text-teal-600 mr-3"></i>
+                            <span class="text-gray-600">Calculs automatiques</span>
+                        </li>
+                        <li class="flex items-center">
+                            <i class="fas fa-check text-teal-600 mr-3"></i>
+                            <span class="text-gray-600">Support email</span>
+                        </li>
+                    </ul>
+                    <button onclick="startTrial()" class="w-full bg-gray-900 text-white py-3 rounded-lg hover:bg-gray-800 transition-colors">
+                        Essayer gratuitement
+                    </button>
+                </div>
+                
+                <div class="bg-white p-8 rounded-xl shadow-xl border-2 border-teal-600 relative">
+                    <div class="absolute -top-4 left-1/2 transform -translate-x-1/2">
+                        <span class="bg-teal-600 text-white px-4 py-1 rounded-full text-sm font-medium">Populaire</span>
+                    </div>
+                    <h3 class="text-xl font-semibold text-gray-900 mb-4">Business</h3>
+                    <div class="mb-6">
+                        <span class="text-4xl font-bold text-gray-900">599</span>
+                        <span class="text-gray-600"> MAD/mois</span>
+                    </div>
+                    <ul class="space-y-3 mb-8">
+                        <li class="flex items-center">
+                            <i class="fas fa-check text-teal-600 mr-3"></i>
+                            <span class="text-gray-600">Jusqu'à 50 employés</span>
+                        </li>
+                        <li class="flex items-center">
+                            <i class="fas fa-check text-teal-600 mr-3"></i>
+                            <span class="text-gray-600">Gestion des congés</span>
+                        </li>
+                        <li class="flex items-center">
+                            <i class="fas fa-check text-teal-600 mr-3"></i>
+                            <span class="text-gray-600">Déclarations CNSS</span>
+                        </li>
+                        <li class="flex items-center">
+                            <i class="fas fa-check text-teal-600 mr-3"></i>
+                            <span class="text-gray-600">Support prioritaire</span>
+                        </li>
+                    </ul>
+                    <button onclick="startTrial()" class="w-full bg-teal-600 text-white py-3 rounded-lg hover:bg-teal-700 transition-colors">
+                        Essayer gratuitement
+                    </button>
+                </div>
+                
+                <div class="bg-white p-8 rounded-xl shadow-lg border border-gray-200">
+                    <h3 class="text-xl font-semibold text-gray-900 mb-4">Enterprise</h3>
+                    <div class="mb-6">
+                        <span class="text-4xl font-bold text-gray-900">999</span>
+                        <span class="text-gray-600"> MAD/mois</span>
+                    </div>
+                    <ul class="space-y-3 mb-8">
+                        <li class="flex items-center">
+                            <i class="fas fa-check text-teal-600 mr-3"></i>
+                            <span class="text-gray-600">Employés illimités</span>
+                        </li>
+                        <li class="flex items-center">
+                            <i class="fas fa-check text-teal-600 mr-3"></i>
+                            <span class="text-gray-600">API & intégrations</span>
+                        </li>
+                        <li class="flex items-center">
+                            <i class="fas fa-check text-teal-600 mr-3"></i>
+                            <span class="text-gray-600">Rapports avancés</span>
+                        </li>
+                        <li class="flex items-center">
+                            <i class="fas fa-check text-teal-600 mr-3"></i>
+                            <span class="text-gray-600">Support dédié</span>
+                        </li>
+                    </ul>
+                    <button onclick="startTrial()" class="w-full bg-gray-900 text-white py-3 rounded-lg hover:bg-gray-800 transition-colors">
+                        Essayer gratuitement
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Final CTA Section -->
+    <section class="gradient-bg py-20">
+        <div class="container mx-auto px-6 text-center">
+            <h2 class="text-4xl font-bold text-white mb-6">
+                Simplifiez votre paie dès aujourd'hui
+            </h2>
+            <p class="text-xl text-teal-50 mb-8 max-w-3xl mx-auto">
+                Rejoignez les centaines de PME marocaines qui ont choisi la sérénité. 
+                Lancez votre essai gratuit de 14 jours maintenant.
+            </p>
+            <button onclick="startTrial()" class="bg-white text-teal-600 px-8 py-4 rounded-lg text-lg font-semibold hover:bg-teal-50 transition-colors shadow-lg mb-4">
+                Démarrer mon essai gratuit de 14 jours
+            </button>
+            <p class="text-teal-100 text-sm">Essai gratuit • Sans engagement • Sans carte de crédit</p>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-gray-900 text-white py-16">
+        <div class="container mx-auto px-6">
+            <div class="grid md:grid-cols-4 gap-8">
+                <div>
+                    <div class="flex items-center space-x-2 mb-6">
+                        <div class="w-8 h-8 bg-teal-600 rounded-lg flex items-center justify-center">
+                            <i class="fas fa-calculator text-white text-sm"></i>
+                        </div>
+                        <span class="text-2xl font-bold">PaieFacile</span>
+                    </div>
+                    <p class="text-gray-400 mb-6">
+                        La solution de paie automatisée pour les PME marocaines. 
+                        Conformité garantie, simplicité assurée.
+                    </p>
+                </div>
+                
+                <div>
+                    <h4 class="font-semibold mb-4">Produit</h4>
+                    <ul class="space-y-2 text-gray-400">
+                        <li><a href="#fonctionnalites" class="hover:text-white transition-colors">Fonctionnalités</a></li>
+                        <li><a href="#tarifs" class="hover:text-white transition-colors">Tarifs</a></li>
+                        <li><a href="#" class="hover:text-white transition-colors">Sécurité</a></li>
+                        <li><a href="#" class="hover:text-white transition-colors">API</a></li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h4 class="font-semibold mb-4">Support</h4>
+                    <ul class="space-y-2 text-gray-400">
+                        <li><a href="#" class="hover:text-white transition-colors">Centre d'aide</a></li>
+                        <li><a href="#" class="hover:text-white transition-colors">Guides</a></li>
+                        <li><a href="#" class="hover:text-white transition-colors">Contact</a></li>
+                        <li><a href="#" class="hover:text-white transition-colors">Formation</a></li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h4 class="font-semibold mb-4">Contact</h4>
+                    <ul class="space-y-2 text-gray-400">
+                        <li><i class="fas fa-envelope mr-2"></i>contact@paiefacile.ma</li>
+                        <li><i class="fas fa-phone mr-2"></i>+212 5 22 XX XX XX</li>
+                        <li><i class="fas fa-map-marker-alt mr-2"></i>Casablanca, Maroc</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <hr class="border-gray-800 my-8">
+            
+            <div class="flex flex-col md:flex-row justify-between items-center">
+                <p class="text-gray-400 text-sm">
+                    © 2024 PaieFacile. Tous droits réservés.
+                </p>
+                <div class="flex space-x-6 mt-4 md:mt-0">
+                    <a href="#" class="text-gray-400 hover:text-white transition-colors">Conditions d'utilisation</a>
+                    <a href="#" class="text-gray-400 hover:text-white transition-colors">Confidentialité</a>
+                    <a href="#" class="text-gray-400 hover:text-white transition-colors">Mentions légales</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Mobile menu toggle
+        function toggleMobileMenu() {
+            // Implementation for mobile menu
+            console.log('Mobile menu toggled');
+        }
+
+        // Start trial function
+        function startTrial() {
+            // Redirect to your actual signup page
+            window.open('http://localhost:3005/fr/signup', '_blank');
+        }
+
+        // CNSS Calculator
+        const salarySlider = document.getElementById('salarySlider');
+        const salaryValue = document.getElementById('salaryValue');
+        const cnssAmount = document.getElementById('cnssAmount');
+        let cnssChart;
+
+        function updateCNSSCalculation() {
+            const salary = parseInt(salarySlider.value);
+            salaryValue.textContent = salary.toLocaleString() + ' MAD';
+            
+            // CNSS calculation (4.48% with 6000 MAD ceiling)
+            const cnssBase = Math.min(salary, 6000);
+            const cnss = cnssBase * 0.0448;
+            cnssAmount.textContent = cnss.toFixed(2) + ' MAD';
+            
+            // Update chart
+            updateChart(salary, cnss);
+        }
+
+        function updateChart(salary, cnss) {
+            const ctx = document.getElementById('cnssChart').getContext('2d');
+            
+            if (cnssChart) {
+                cnssChart.destroy();
+            }
+            
+            cnssChart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: ['Salaire Brut', 'CNSS à Payer', 'Net (après CNSS)'],
+                    datasets: [{
+                        data: [salary, cnss, salary - cnss],
+                        backgroundColor: [
+                            '#14B8A6',
+                            '#EF4444',
+                            '#10B981'
+                        ],
+                        borderRadius: 8,
+                        borderSkipped: false,
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            display: false
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: {
+                                callback: function(value) {
+                                    return value.toLocaleString() + ' MAD';
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        // Initialize calculator
+        salarySlider.addEventListener('input', updateCNSSCalculation);
+        
+        // Initialize on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            updateCNSSCalculation();
+        });
+
+        // Smooth scrolling for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+    </script>
+</body>
+</html>
