@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter, usePathname } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { trackEmployeeAdded } from "@/components/MetaPixel";
 import { Dialog, DialogTrigger, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
@@ -10,8 +10,12 @@ import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Plus } from "lucide-react";
 import { addEmployeeAction } from "@/app/actions/employees";
+import { t, type Locale } from "@/lib/translations";
+import { extractLocaleFromPath } from "@/lib/i18n-utils";
 
-export function AddEmployeeDialog() {
+export function AddEmployeeDialog({ locale: propLocale }: { locale?: Locale }) {
+  const pathname = usePathname();
+  const locale = propLocale || extractLocaleFromPath(pathname);
   const [isOpen, setIsOpen] = useState(false);
   const [contractType, setContractType] = useState<string>("");
   const [maritalStatus, setMaritalStatus] = useState<string>("");
@@ -53,7 +57,7 @@ export function AddEmployeeDialog() {
         }
       }
     } catch (err: unknown) {
-      const errorMessage = err instanceof Error ? err.message : "Une erreur inattendue s'est produite";
+      const errorMessage = err instanceof Error ? err.message : t(locale, "common.unexpectedError");
       setError(errorMessage);
     } finally {
       setIsLoading(false);
@@ -74,30 +78,30 @@ export function AddEmployeeDialog() {
       <DialogTrigger>
         <Button>
           <Plus className="w-4 h-4 mr-2" />
-          Nouvel Employé
+          {t(locale, "employees.newEmployee")}
         </Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[500px] max-h-[90vh] overflow-y-auto">
         <DialogHeader>
-          <DialogTitle>Ajouter un Employé</DialogTitle>
+          <DialogTitle>{t(locale, "employees.addEmployee")}</DialogTitle>
         </DialogHeader>
         <form action={handleSubmit} className="space-y-4">
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
             <div className="space-y-2">
-              <Label htmlFor="first_name">Prénom</Label>
+              <Label htmlFor="first_name">{t(locale, "employees.firstName")}</Label>
               <Input 
                 id="first_name"
                 name="first_name" 
-                placeholder="Prénom" 
+                placeholder={t(locale, "employees.firstName")} 
                 required 
               />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="last_name">Nom</Label>
+              <Label htmlFor="last_name">{t(locale, "employees.lastName")}</Label>
               <Input 
                 id="last_name"
                 name="last_name" 
-                placeholder="Nom" 
+                placeholder={t(locale, "employees.lastName")} 
                 required 
               />
             </div>
@@ -105,38 +109,38 @@ export function AddEmployeeDialog() {
 
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
             <div className="space-y-2">
-              <Label htmlFor="cin_number">CIN</Label>
+              <Label htmlFor="cin_number">{t(locale, "employees.cin")}</Label>
               <Input 
                 id="cin_number"
                 name="cin_number" 
-                placeholder="CIN number" 
+                placeholder={t(locale, "employees.cinPlaceholder")} 
               />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="cnss_number">CNSS</Label>
+              <Label htmlFor="cnss_number">{t(locale, "employees.cnss")}</Label>
               <Input 
                 id="cnss_number"
                 name="cnss_number" 
-                placeholder="CNSS number" 
+                placeholder={t(locale, "employees.cnssPlaceholder")} 
               />
             </div>
           </div>
 
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
             <div className="space-y-2">
-              <Label htmlFor="job_title">Poste</Label>
+              <Label htmlFor="job_title">{t(locale, "employees.position")}</Label>
               <Input 
                 id="job_title"
                 name="job_title" 
-                placeholder="Poste" 
+                placeholder={t(locale, "employees.position")} 
               />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="base_salary">Salaire</Label>
+              <Label htmlFor="base_salary">{t(locale, "employees.salary")}</Label>
               <Input 
                 id="base_salary"
                 name="base_salary" 
-                placeholder="Salaire" 
+                placeholder={t(locale, "employees.salary")} 
                 type="number" 
                 min="0" 
                 step="0.01" 
@@ -147,10 +151,10 @@ export function AddEmployeeDialog() {
 
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
             <div className="space-y-2">
-              <Label htmlFor="contract_type">Type de contrat</Label>
+              <Label htmlFor="contract_type">{t(locale, "employees.contractType")}</Label>
               <Select value={contractType} onValueChange={setContractType} required>
                 <SelectTrigger>
-                  <SelectValue placeholder="Sélectionner le type" />
+                  <SelectValue placeholder={t(locale, "employees.selectContractType")} />
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value="CDI">CDI</SelectItem>
@@ -160,7 +164,7 @@ export function AddEmployeeDialog() {
               </Select>
             </div>
             <div className="space-y-2">
-              <Label htmlFor="hire_date">Date d&apos;embauche</Label>
+              <Label htmlFor="hire_date">{t(locale, "employees.hireDate")}</Label>
               <Input 
                 id="hire_date"
                 name="hire_date" 
@@ -171,24 +175,24 @@ export function AddEmployeeDialog() {
 
           {/* Family Information Section */}
           <div className="border-t pt-4">
-            <h3 className="text-sm font-medium text-gray-900 mb-3">Informations Familiales</h3>
+            <h3 className="text-sm font-medium text-gray-900 mb-3">{t(locale, "employees.familyInfo")}</h3>
             <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
               <div className="space-y-2">
-                <Label htmlFor="marital_status">Situation familiale</Label>
+                <Label htmlFor="marital_status">{t(locale, "employees.maritalStatus")}</Label>
                 <Select value={maritalStatus} onValueChange={setMaritalStatus}>
                   <SelectTrigger>
-                    <SelectValue placeholder="Situation familiale" />
+                    <SelectValue placeholder={t(locale, "employees.maritalStatus")} />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="single">Célibataire</SelectItem>
-                    <SelectItem value="married">Marié(e)</SelectItem>
-                    <SelectItem value="divorced">Divorcé(e)</SelectItem>
-                    <SelectItem value="widowed">Veuf/Veuve</SelectItem>
+                    <SelectItem value="single">{t(locale, "employees.single")}</SelectItem>
+                    <SelectItem value="married">{t(locale, "employees.married")}</SelectItem>
+                    <SelectItem value="divorced">{t(locale, "employees.divorced")}</SelectItem>
+                    <SelectItem value="widowed">{t(locale, "employees.widowed")}</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
               <div className="space-y-2">
-                <Label htmlFor="children_count">Nombre d&apos;enfants</Label>
+                <Label htmlFor="children_count">{t(locale, "employees.childrenCount")}</Label>
                 <Input 
                   id="children_count"
                   name="children_count" 
@@ -198,7 +202,7 @@ export function AddEmployeeDialog() {
                   defaultValue="0"
                   placeholder="0"
                 />
-                <p className="text-xs text-gray-500">Maximum 6 enfants pour les déductions fiscales</p>
+                <p className="text-xs text-gray-500">{t(locale, "employees.maxChildrenNote")}</p>
               </div>
             </div>
           </div>
@@ -212,10 +216,10 @@ export function AddEmployeeDialog() {
           <DialogFooter>
             <div className="flex justify-end space-x-2 w-full">
               <Button type="button" variant="outline" onClick={() => setIsOpen(false)} disabled={isLoading}>
-                Annuler
+                {t(locale, "common.cancel")}
               </Button>
               <Button type="submit" className="bg-blue-600 hover:bg-blue-700" disabled={isLoading}>
-                {isLoading ? "Enregistrement..." : "Enregistrer"}
+                {isLoading ? t(locale, "employees.saving") : t(locale, "common.save")}
               </Button>
             </div>
           </DialogFooter>

@@ -24,6 +24,10 @@
     "firstName": "First Name",
     "lastName": "Last Name",
     "email": "Email",
+    "cin": "CIN",
+    "cinPlaceholder": "CIN number",
+    "cnss": "CNSS",
+    "cnssPlaceholder": "CNSS number",
     "position": "Position",
     "hireDate": "Hire Date",
     "familyInfo": "Family Information",
@@ -35,27 +39,45 @@
     "widowed": "Widowed",
     "salary": "Salary",
     "actions": "Actions",
+    "contractType": "Contract Type",
+    "selectContractType": "Select type",
+    "saving": "Saving...",
+    "maxChildrenNote": "Maximum 6 children for tax deductions"
+  },
+  "common": {
     "cancel": "Cancel",
-    "save": "Save"
+    "save": "Save",
+    "edit": "Edit",
+    "unexpectedError": "An unexpected error occurred"
   },
   "payroll": {
-    "title": "Payroll",
-    "subtitle": "Calculate and manage payroll",
+    "title": "Payroll Management",
+    "subtitle": "Generate and manage your employees' pay slips",
+    "aiSuggestions": "AI Suggestions",
     "calculatePayroll": "Calculate Payroll",
     "baseSalary": "Base Salary",
     "overtimeHours": "Overtime Hours",
-    "bonuses": "Bonuses",
+    "bonuses": "Bonus",
     "deductions": "Deductions",
     "downloadPayslip": "Download Payslip",
     "employee": "Employee",
+    "selectEmployee": "Select an employee",
     "grossSalary": "Gross Salary",
-    "netSalary": "Net Salary"
+    "netSalary": "Net Salary",
+    "month": "Month",
+    "year": "Year",
+    "results": "Results",
+    "label": "Label",
+    "amount": "Amount (MAD)",
+    "netTaxable": "Net Taxable",
+    "familyDeductions": "Family Deductions",
+    "otherDeductions": "Other Deductions"
   },
   "leaves": {
     "title": "Leave Management",
-    "subtitle": "Manage employee leave requests and view team availability",
-    "requestsList": "Requests List",
-    "teamCalendar": "Team Calendar",
+    "subtitle": "Manage your employees' leave requests",
+    "requestsList": "Requests",
+    "teamCalendar": "Calendar",
     "requestLeave": "Request Leave",
     "leaveRequests": "Leave Requests",
     "employee": "Employee",
@@ -75,10 +97,12 @@
     "unpaidLeave": "Unpaid Leave",
     "other": "Other",
     "reason": "Reason (Optional)",
-    "selectEmployee": "Select employee",
+    "selectEmployee": "Select an employee",
     "selectLeaveType": "Select leave type",
-    "enterReason": "Enter reason for leave",
-    "submitRequest": "Submit Request"
+    "enterReason": "Enter the reason for leave",
+    "submitRequest": "Submit Request",
+    "viewApproved": "View approved leave requests",
+    "submitError": "Failed to submit leave request"
   },
   "settings": {
     "title": "Company Settings",
@@ -120,6 +144,36 @@
     "open": "Open",
     "yes": "Yes",
     "no": "No"
+  },
+  "analytics": {
+    "title": "Analytics & Reports",
+    "subtitle": "Analytics dashboard for",
+    "noCompany": "No company found",
+    "noCompanyDesc": "Please configure your company in settings to access analytics.",
+    "loadError": "Error loading"
+  },
+  "ai": {
+    "title": "AI Assistant - Optimization & Compliance",
+    "subtitle": "Optimize your payroll management with artificial intelligence",
+    "chat": {
+      "title": "Chat Assistant",
+      "subtitle": "Our AI assistant specializes in Moroccan tax and social legislation. It can answer your questions about CNSS, AMO, IGR, and much more."
+    },
+    "optimization": {
+      "title": "Optimization"
+    },
+    "compliance": {
+      "title": "Compliance"
+    }
+  },
+  "payroll": {
+    "title": "Payroll Management",
+    "subtitle": "Generate and manage your employees' pay slips",
+    "aiSuggestions": "AI Suggestions"
+  },
+  "leaves": {
+    "title": "Leave Management",
+    "subtitle": "Manage your employees' leave requests"
   },
   "language": {
     "english": "English",

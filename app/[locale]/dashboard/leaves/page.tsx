@@ -2,6 +2,7 @@ import { redirect } from "next/navigation";
 import { createSupabaseServerClient } from "@/lib/supabaseServer";
 import { getLeaveRequests, getApprovedLeavesForCalendar } from "@/app/actions/leave";
 import { LeaveManagementTabs } from "@/components/LeaveManagementTabs";
+import { t, type Locale } from "@/lib/translations";
 
 interface Employee extends Record<string, unknown> {
   id: string;
@@ -19,10 +20,16 @@ interface LeaveRequest extends Record<string, unknown> {
   created_at: string;
 }
 
-export default async function LeavesPage() {
+export default async function LeavesPage({
+  params,
+}: {
+  params: Promise<{ locale: Locale }>;
+}) {
+  const { locale: localeParam } = await params;
   const supabase = await createSupabaseServerClient();
   const { data: { user } } = await supabase.auth.getUser();
-  if (!user) redirect("/login");
+  const locale = localeParam || 'fr';
+  if (!user) redirect(`/${locale}/login`);
 
   // Get company ID first
   const { data: companies } = await supabase
@@ -32,7 +39,7 @@ export default async function LeavesPage() {
     .limit(1);
   
   const company = companies?.[0] || null;
-  if (!company) redirect("/dashboard/settings");
+  if (!company) redirect(`/${locale}/settings`);
 
   // Get employees for the company
   const { data: employees } = await supabase
@@ -60,6 +67,7 @@ export default async function LeavesPage() {
       employees={employees || []}
       leaveRequests={leaveRequests}
       approvedLeaves={approvedLeaves}
+      locale={locale}
     />
   );
 }
@@ -67,24 +75,27 @@ export default async function LeavesPage() {
 function LeavesContent({ 
   employees, 
   leaveRequests, 
-  approvedLeaves
+  approvedLeaves,
+  locale
 }: { 
   employees: Record<string, unknown>[]; 
   leaveRequests: Record<string, unknown>[]; 
   approvedLeaves: Record<string, unknown>[];
+  locale: Locale;
 }) {
 
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-3xl font-bold text-gray-900">Gestion des Congés</h1>
-        <p className="text-gray-600 mt-2">Gérez les demandes de congés de vos employés</p>
+        <h1 className="text-3xl font-bold text-gray-900">{t(locale, "leaves.title")}</h1>
+        <p className="text-gray-600 mt-2">{t(locale, "leaves.subtitle")}</p>
       </div>
 
       <LeaveManagementTabs
         employees={employees as Employee[]}
         leaveRequests={leaveRequests as LeaveRequest[]}
         approvedLeaves={approvedLeaves as LeaveRequest[]}
+        locale={locale}
       />
     </div>
   );

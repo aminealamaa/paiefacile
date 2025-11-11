@@ -41,6 +41,13 @@ export enum AuditAction {
   UNAUTHORIZED_ACCESS = 'UNAUTHORIZED_ACCESS',
   RATE_LIMIT_EXCEEDED = 'RATE_LIMIT_EXCEEDED',
   INVALID_INPUT = 'INVALID_INPUT',
+  AUTH_FAILED = 'AUTH_FAILED',
+  NO_COMPANY_FOUND = 'NO_COMPANY_FOUND',
+  UNAUTHORIZED_COMPANY_ACCESS = 'UNAUTHORIZED_COMPANY_ACCESS',
+  COMPANY_ACCESS_ERROR = 'COMPANY_ACCESS_ERROR',
+  CSRF_TOKEN_INVALID = 'CSRF_TOKEN_INVALID',
+  DATA_ACCESS = 'DATA_ACCESS',
+  AI_QUERY = 'AI_QUERY',
 }
 
 export enum ResourceType {
@@ -52,34 +59,42 @@ export enum ResourceType {
 }
 
 /**
- * Log an audit event
- * Français: Enregistrer un événement d'audit
+ * Log an audit event (enhanced version with flexible parameters)
+ * Français: Enregistrer un événement d'audit (version améliorée)
  */
-export async function logAuditEvent(
-  action: AuditAction,
-  resourceType: ResourceType,
-  resourceId: string,
-  details: Record<string, unknown> = {},
-  ipAddress?: string,
-  userAgent?: string
-): Promise<void> {
+export async function logAuditEvent(params: {
+  action: AuditAction | string;
+  userId?: string | null;
+  resourceType?: ResourceType | string;
+  resourceId?: string;
+  details?: Record<string, unknown>;
+  ipAddress?: string;
+  userAgent?: string;
+}): Promise<void> {
   try {
     const supabase = await createSupabaseServerClient();
-    const { data: { user } } = await supabase.auth.getUser();
-    
-    if (!user) {
-      console.error('Cannot log audit event: No authenticated user');
+    let userId = params.userId;
+
+    // If userId not provided, try to get from auth
+    if (!userId) {
+      const { data: { user } } = await supabase.auth.getUser();
+      userId = user?.id || null;
+    }
+
+    // For security events, log even without user
+    if (!userId && !params.action.includes('AUTH') && !params.action.includes('SECURITY')) {
+      console.warn('Cannot log audit event: No user ID provided');
       return;
     }
 
     const auditLog: Omit<AuditLog, 'id' | 'created_at'> = {
-      user_id: user.id,
-      action,
-      resource_type: resourceType,
-      resource_id: resourceId,
-      details,
-      ip_address: ipAddress,
-      user_agent: userAgent,
+      user_id: userId || 'system',
+      action: params.action,
+      resource_type: params.resourceType || ResourceType.USER,
+      resource_id: params.resourceId || 'N/A',
+      details: params.details || {},
+      ip_address: params.ipAddress,
+      user_agent: params.userAgent,
     };
 
     const { error } = await supabase
@@ -87,11 +102,35 @@ export async function logAuditEvent(
       .insert(auditLog);
 
     if (error) {
+      // Don't throw, just log - audit failures shouldn't break the app
       console.error('Failed to log audit event:', error);
     }
   } catch (error) {
+    // Silent fail for audit logging
     console.error('Error in logAuditEvent:', error);
   }
+}
+
+/**
+ * Log an audit event (legacy version for backward compatibility)
+ * Français: Enregistrer un événement d'audit (version legacy)
+ */
+export async function logAuditEventLegacy(
+  action: AuditAction,
+  resourceType: ResourceType,
+  resourceId: string,
+  details: Record<string, unknown> = {},
+  ipAddress?: string,
+  userAgent?: string
+): Promise<void> {
+  return logAuditEvent({
+    action,
+    resourceType,
+    resourceId,
+    details,
+    ipAddress,
+    userAgent,
+  });
 }
 
 /**

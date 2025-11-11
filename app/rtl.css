@@ -1,0 +1,198 @@
+/* RTL (Right-to-Left) Support Styles */
+/* Français: Styles de support RTL (de droite à gauche) */
+
+[dir="rtl"] {
+  direction: rtl;
+  text-align: right;
+}
+
+[dir="rtl"] .text-left {
+  text-align: right;
+}
+
+[dir="rtl"] .text-right {
+  text-align: left;
+}
+
+[dir="rtl"] .ml-auto {
+  margin-left: 0;
+  margin-right: auto;
+}
+
+[dir="rtl"] .mr-auto {
+  margin-right: 0;
+  margin-left: auto;
+}
+
+[dir="rtl"] .space-x-2 > :not([hidden]) ~ :not([hidden]) {
+  --tw-space-x-reverse: 1;
+  margin-right: calc(0.5rem * var(--tw-space-x-reverse));
+  margin-left: calc(0.5rem * calc(1 - var(--tw-space-x-reverse)));
+}
+
+[dir="rtl"] .space-x-4 > :not([hidden]) ~ :not([hidden]) {
+  --tw-space-x-reverse: 1;
+  margin-right: calc(1rem * var(--tw-space-x-reverse));
+  margin-left: calc(1rem * calc(1 - var(--tw-space-x-reverse)));
+}
+
+[dir="rtl"] .space-x-6 > :not([hidden]) ~ :not([hidden]) {
+  --tw-space-x-reverse: 1;
+  margin-right: calc(1.5rem * var(--tw-space-x-reverse));
+  margin-left: calc(1.5rem * calc(1 - var(--tw-space-x-reverse)));
+}
+
+[dir="rtl"] .space-x-8 > :not([hidden]) ~ :not([hidden]) {
+  --tw-space-x-reverse: 1;
+  margin-right: calc(2rem * var(--tw-space-x-reverse));
+  margin-left: calc(2rem * calc(1 - var(--tw-space-x-reverse)));
+}
+
+/* Flexbox RTL support */
+[dir="rtl"] .flex-row {
+  flex-direction: row-reverse;
+}
+
+[dir="rtl"] .justify-start {
+  justify-content: flex-end;
+}
+
+[dir="rtl"] .justify-end {
+  justify-content: flex-start;
+}
+
+/* Table RTL support */
+[dir="rtl"] table {
+  direction: rtl;
+}
+
+[dir="rtl"] th,
+[dir="rtl"] td {
+  text-align: right;
+}
+
+/* Form RTL support */
+[dir="rtl"] input,
+[dir="rtl"] textarea,
+[dir="rtl"] select {
+  text-align: right;
+  direction: rtl;
+}
+
+[dir="rtl"] .pl-* {
+  padding-right: inherit;
+  padding-left: 0;
+}
+
+[dir="rtl"] .pr-* {
+  padding-left: inherit;
+  padding-right: 0;
+}
+
+/* Dropdown and menu RTL */
+[dir="rtl"] [data-radix-popper-content-wrapper] {
+  direction: rtl;
+}
+
+/* Icons and arrows RTL */
+[dir="rtl"] .rotate-180 {
+  transform: rotate(0deg);
+}
+
+/* Scrollbar RTL */
+[dir="rtl"] ::-webkit-scrollbar {
+  direction: rtl;
+}
+
+/* Main content spacing in RTL - ensures proper gap from sidebar */
+/* When using lg:pr-64 in RTL, ensure padding-right is applied correctly */
+[dir="rtl"] .lg\:pr-64 {
+  padding-right: 16rem !important; /* 64 * 0.25rem = 16rem = 256px */
+  padding-left: 0 !important;
+}
+
+/* Override any lg:pl-64 that might be applied in RTL */
+[dir="rtl"] .lg\:pl-64 {
+  padding-left: 0 !important;
+  padding-right: 16rem !important;
+}
+
+/* Sidebar border adjustment for RTL */
+[dir="rtl"] .border-r {
+  border-right: 0;
+  border-left: 1px solid;
+}
+
+[dir="rtl"] .border-l {
+  border-left: 0;
+  border-right: 1px solid;
+}
+
+/* Additional spacing for main content in RTL */
+[dir="rtl"] .max-w-7xl {
+  margin-right: auto;
+  margin-left: auto;
+}
+
+/* Ensure proper spacing between sidebar and main content */
+[dir="rtl"] .lg\:px-8 {
+  padding-left: 2rem;
+  padding-right: 2rem;
+}
+
+/* Add extra margin for better visual separation in RTL */
+[dir="rtl"] main {
+  margin-right: 0;
+  margin-left: 0;
+}
+
+/* Padding adjustments for RTL */
+[dir="rtl"] .px-4 {
+  padding-left: 1rem;
+  padding-right: 1rem;
+}
+
+[dir="rtl"] .px-6 {
+  padding-left: 1.5rem;
+  padding-right: 1.5rem;
+}
+
+[dir="rtl"] .px-8 {
+  padding-left: 2rem;
+  padding-right: 2rem;
+}
+
+/* Margin adjustments for RTL */
+[dir="rtl"] .ml-3 {
+  margin-left: 0;
+  margin-right: 0.75rem;
+}
+
+[dir="rtl"] .mr-2 {
+  margin-right: 0;
+  margin-left: 0.5rem;
+}
+
+/* Force proper spacing for main content wrapper in RTL */
+/* Only apply on large screens (lg breakpoint = 1024px) to match Tailwind's lg:pr-64 */
+@media (min-width: 1024px) {
+  .rtl-main-content {
+    padding-right: 16rem !important; /* 64 * 0.25rem = 16rem = 256px */
+    padding-left: 0 !important;
+  }
+}
+
+/* Additional fallback for RTL main content spacing */
+@media (min-width: 1024px) {
+  [dir="rtl"] .flex.flex-col.flex-1 {
+    padding-right: 16rem !important;
+    padding-left: 0 !important;
+  }
+}
+
+/* Ensure sidebar is properly positioned and spaced in RTL */
+.rtl-sidebar {
+  right: 0 !important;
+  left: auto !important;
+}
+

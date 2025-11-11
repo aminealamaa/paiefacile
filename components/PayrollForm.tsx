@@ -2,6 +2,7 @@
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { useActionState, useEffect } from "react";
+import { usePathname } from "next/navigation";
 import { calculatePayroll } from "@/app/actions/payroll";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -10,8 +11,12 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { PayslipPDF } from "@/components/PayslipPDF";
 import { EmailPayslipDialog } from "@/components/EmailPayslipDialog";
 import { trackPayrollGeneration } from "@/components/MetaPixel";
+import { t, type Locale } from "@/lib/translations";
+import { extractLocaleFromPath } from "@/lib/i18n-utils";
 
-export function PayrollForm({ employees, company }: { employees: Record<string, unknown>[]; company: Record<string, unknown> }) {
+export function PayrollForm({ employees, company, locale: propLocale }: { employees: Record<string, unknown>[]; company: Record<string, unknown>; locale?: Locale }) {
+  const pathname = usePathname();
+  const locale = propLocale || extractLocaleFromPath(pathname);
   const initialState: Record<string, unknown> = { };
   const [state, formAction] = useActionState(calculatePayroll, initialState);
 
@@ -34,14 +39,14 @@ export function PayrollForm({ employees, company }: { employees: Record<string, 
       <form action={formAction} className="space-y-4">
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
           <div className="space-y-2">
-            <Label htmlFor="employeeId">Employé</Label>
+            <Label htmlFor="employeeId">{t(locale, "payroll.employee")}</Label>
             <select 
               id="employeeId"
               name="employeeId" 
               className="w-full rounded-md border px-3 py-2" 
               required
             >
-              <option value="">Sélectionner un employé</option>
+              <option value="">{t(locale, "payroll.selectEmployee")}</option>
               {employees.map((e) => (
                 <option key={e.id as string} value={e.id as string}>
                   {e.last_name as string} {e.first_name as string} {e.job_title ? `- ${e.job_title as string}` : ""}
@@ -50,7 +55,7 @@ export function PayrollForm({ employees, company }: { employees: Record<string, 
             </select>
           </div>
           <div className="space-y-2">
-            <Label htmlFor="month">Mois</Label>
+            <Label htmlFor="month">{t(locale, "payroll.month")}</Label>
             <Input 
               id="month"
               type="number" 
@@ -62,7 +67,7 @@ export function PayrollForm({ employees, company }: { employees: Record<string, 
             />
           </div>
           <div className="space-y-2">
-            <Label htmlFor="year">Année</Label>
+            <Label htmlFor="year">{t(locale, "payroll.year")}</Label>
             <Input 
               id="year"
               type="number" 
@@ -77,7 +82,7 @@ export function PayrollForm({ employees, company }: { employees: Record<string, 
 
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div className="space-y-2">
-            <Label htmlFor="bonuses">Prime</Label>
+            <Label htmlFor="bonuses">{t(locale, "payroll.bonuses")}</Label>
             <Input 
               id="bonuses"
               type="number" 
@@ -89,7 +94,7 @@ export function PayrollForm({ employees, company }: { employees: Record<string, 
             />
           </div>
           <div className="space-y-2">
-            <Label htmlFor="overtimeHours">Heures supplémentaires</Label>
+            <Label htmlFor="overtimeHours">{t(locale, "payroll.overtimeHours")}</Label>
             <Input 
               id="overtimeHours"
               type="number" 
@@ -102,7 +107,7 @@ export function PayrollForm({ employees, company }: { employees: Record<string, 
           </div>
         </div>
 
-        <Button type="submit">Calculer la paie</Button>
+        <Button type="submit">{t(locale, "payroll.calculatePayroll")}</Button>
       </form>
 
       {state?.error ? (
@@ -111,29 +116,29 @@ export function PayrollForm({ employees, company }: { employees: Record<string, 
 
       {state?.result ? (
         <div className="space-y-4">
-          <h2 className="text-xl font-semibold">Résultats</h2>
+          <h2 className="text-xl font-semibold">{t(locale, "payroll.results")}</h2>
           <div className="overflow-x-auto rounded-md border">
             <Table>
               <TableHeader>
                 <TableRow>
-                  <TableHead>Libellé</TableHead>
-                  <TableHead>Montant (MAD)</TableHead>
+                  <TableHead>{t(locale, "payroll.label")}</TableHead>
+                  <TableHead>{t(locale, "payroll.amount")}</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
-                <TableRow><TableCell>Salaire de base</TableCell><TableCell>{(state.result as any).base_salary as number}</TableCell></TableRow>
-                <TableRow><TableCell>Prime</TableCell><TableCell>{(state.result as any).bonuses as number}</TableCell></TableRow>
-                <TableRow><TableCell>Heures supplémentaires</TableCell><TableCell>{(state.result as any).overtimePay as number}</TableCell></TableRow>
-                <TableRow><TableCell><strong>Salaire brut</strong></TableCell><TableCell><strong>{(state.result as any).gross_salary as number}</strong></TableCell></TableRow>
+                <TableRow><TableCell>{t(locale, "payroll.baseSalary")}</TableCell><TableCell>{(state.result as any).base_salary as number}</TableCell></TableRow>
+                <TableRow><TableCell>{t(locale, "payroll.bonuses")}</TableCell><TableCell>{(state.result as any).bonuses as number}</TableCell></TableRow>
+                <TableRow><TableCell>{t(locale, "payroll.overtimeHours")}</TableCell><TableCell>{(state.result as any).overtimePay as number}</TableCell></TableRow>
+                <TableRow><TableCell><strong>{t(locale, "payroll.grossSalary")}</strong></TableCell><TableCell><strong>{(state.result as any).gross_salary as number}</strong></TableCell></TableRow>
                 <TableRow><TableCell>CNSS</TableCell><TableCell>-{(state.result as any).cnss as number}</TableCell></TableRow>
                 <TableRow><TableCell>AMO</TableCell><TableCell>-{(state.result as any).amo as number}</TableCell></TableRow>
-                <TableRow><TableCell>Net imposable</TableCell><TableCell>{(state.result as any).net_taxable as number}</TableCell></TableRow>
+                <TableRow><TableCell>{t(locale, "payroll.netTaxable")}</TableCell><TableCell>{(state.result as any).net_taxable as number}</TableCell></TableRow>
                 {((state.result as any).family_deductions as number) > 0 && (
-                  <TableRow><TableCell>Abattements familiaux</TableCell><TableCell>-{(state.result as any).family_deductions as number}</TableCell></TableRow>
+                  <TableRow><TableCell>{t(locale, "payroll.familyDeductions")}</TableCell><TableCell>-{(state.result as any).family_deductions as number}</TableCell></TableRow>
                 )}
                 <TableRow><TableCell>IGR</TableCell><TableCell>-{(state.result as any).igr as number}</TableCell></TableRow>
-                <TableRow><TableCell>Autres déductions</TableCell><TableCell>-{(state.result as any).other_deductions as number}</TableCell></TableRow>
-                <TableRow><TableCell><strong>Salaire net</strong></TableCell><TableCell><strong>{(state.result as any).net_salary as number}</strong></TableCell></TableRow>
+                <TableRow><TableCell>{t(locale, "payroll.otherDeductions")}</TableCell><TableCell>-{(state.result as any).other_deductions as number}</TableCell></TableRow>
+                <TableRow><TableCell><strong>{t(locale, "payroll.netSalary")}</strong></TableCell><TableCell><strong>{(state.result as any).net_salary as number}</strong></TableCell></TableRow>
               </TableBody>
             </Table>
           </div>

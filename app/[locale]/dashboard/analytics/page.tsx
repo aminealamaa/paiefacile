@@ -2,11 +2,18 @@ import { redirect } from "next/navigation";
 import { createSupabaseServerClient } from "@/lib/supabaseServer";
 import { getAnalyticsData } from "@/app/actions/analytics";
 import { AnalyticsDashboard } from "@/components/analytics/AnalyticsDashboard";
+import { t, type Locale } from "@/lib/translations";
 
-export default async function AnalyticsPage() {
+export default async function AnalyticsPage({
+  params,
+}: {
+  params: Promise<{ locale: Locale }>;
+}) {
+  const { locale: localeParam } = await params;
   const supabase = await createSupabaseServerClient();
   const { data: { user } } = await supabase.auth.getUser();
-  if (!user) redirect("/login");
+  const locale = localeParam || 'fr';
+  if (!user) redirect(`/${locale}/login`);
 
   // Get company for the user
   const { data: company, error: companyError } = await supabase
@@ -20,10 +27,10 @@ export default async function AnalyticsPage() {
       <div className="flex items-center justify-center h-64">
         <div className="text-center">
           <h2 className="text-xl font-semibold text-gray-900 mb-2">
-            Aucune entreprise trouvée
+            {t(locale, "analytics.noCompany")}
           </h2>
           <p className="text-gray-600">
-            Veuillez configurer votre entreprise dans les paramètres pour accéder aux analyses.
+            {t(locale, "analytics.noCompanyDesc")}
           </p>
         </div>
       </div>
@@ -38,10 +45,10 @@ export default async function AnalyticsPage() {
       <div className="flex items-center justify-center h-64">
         <div className="text-center">
           <h2 className="text-xl font-semibold text-gray-900 mb-2">
-            Erreur lors du chargement
+            {t(locale, "analytics.loadError")}
           </h2>
           <p className="text-gray-600">
-            {analyticsResult.error || "Une erreur inattendue s'est produite."}
+            {analyticsResult.error || t(locale, "common.unexpectedError")}
           </p>
         </div>
       </div>
@@ -53,9 +60,9 @@ export default async function AnalyticsPage() {
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold text-gray-900">Analyses & Rapports</h1>
+          <h1 className="text-3xl font-bold text-gray-900">{t(locale, "analytics.title")}</h1>
           <p className="text-gray-600 mt-1">
-            Tableau de bord analytique pour {company.name}
+            {t(locale, "analytics.subtitle")} {company.name}
           </p>
         </div>
       </div>
@@ -63,6 +70,7 @@ export default async function AnalyticsPage() {
       <AnalyticsDashboard 
         companyId={company.id}
         initialData={analyticsResult.data}
+        locale={locale}
       />
     </div>
   );

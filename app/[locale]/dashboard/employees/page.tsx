@@ -3,11 +3,18 @@ import { Button } from "@/components/ui/button";
 import { Table, TableHeader, TableBody, TableRow, TableHead, TableCell } from "@/components/ui/table";
 import { createSupabaseServerClient } from "@/lib/supabaseServer";
 import { AddEmployeeDialog } from "@/components/AddEmployeeDialog";
+import { t, type Locale } from "@/lib/translations";
 
-export default async function EmployeesPage() {
+export default async function EmployeesPage({
+  params,
+}: {
+  params: Promise<{ locale: Locale }>;
+}) {
+  const { locale: localeParam } = await params;
   const supabase = await createSupabaseServerClient();
   const { data: { user } } = await supabase.auth.getUser();
-  if (!user) redirect("/login");
+  const locale = localeParam || 'fr';
+  if (!user) redirect(`/${locale}/login`);
 
   const { data: companies } = await supabase
     .from("companies")
@@ -16,7 +23,7 @@ export default async function EmployeesPage() {
     .limit(1);
   
   const company = companies?.[0] || null;
-  if (!company) redirect("/dashboard/settings");
+  if (!company) redirect(`/${locale}/settings`);
 
   const { data: employees } = await supabase
     .from("employees")
@@ -25,35 +32,37 @@ export default async function EmployeesPage() {
     .order("created_at", { ascending: false });
 
   return (
-    <EmployeesContent employees={employees || []} />
+    <EmployeesContent employees={employees || []} locale={locale} />
   );
 }
 
 function EmployeesContent({ 
-  employees
+  employees,
+  locale
 }: { 
   employees: Record<string, unknown>[];
+  locale: Locale;
 }) {
 
   return (
     <div className="p-6 space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold text-gray-900">Gestion des Employés</h1>
-          <p className="text-gray-600 mt-2">Gérez les informations de vos employés</p>
+          <h1 className="text-3xl font-bold text-gray-900">{t(locale, "employees.title")}</h1>
+          <p className="text-gray-600 mt-2">{t(locale, "employees.subtitle")}</p>
         </div>
-        <AddEmployeeDialog />
+        <AddEmployeeDialog locale={locale} />
       </div>
 
       <div className="overflow-x-auto rounded-md border">
         <Table>
           <TableHeader>
             <TableRow>
-              <TableHead>Prénom</TableHead>
-              <TableHead>Nom</TableHead>
-              <TableHead>Poste</TableHead>
-              <TableHead>Salaire</TableHead>
-              <TableHead>Actions</TableHead>
+              <TableHead>{t(locale, "employees.firstName")}</TableHead>
+              <TableHead>{t(locale, "employees.lastName")}</TableHead>
+              <TableHead>{t(locale, "employees.position")}</TableHead>
+              <TableHead>{t(locale, "employees.salary")}</TableHead>
+              <TableHead>{t(locale, "employees.actions")}</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -65,7 +74,7 @@ function EmployeesContent({
                 <TableCell>{emp.base_salary as number} MAD</TableCell>
                 <TableCell>
                   <Button variant="outline" size="sm" disabled>
-                    Modifier
+                    {t(locale, "common.edit")}
                   </Button>
                 </TableCell>
               </TableRow>

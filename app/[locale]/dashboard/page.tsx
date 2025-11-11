@@ -6,12 +6,19 @@ import Link from "next/link";
 import { Users, Calculator, CalendarDays, Settings } from "lucide-react";
 import { CNSSDeclarationDialog } from "@/components/CNSSDeclarationDialog";
 import { AIInsightsCard } from "@/components/ai/AIInsightsCard";
+import { t, type Locale } from "@/lib/translations";
 
-export default async function DashboardPage() {
+export default async function DashboardPage({
+  params,
+}: {
+  params: Promise<{ locale: Locale }>;
+}) {
   try {
+    const { locale: localeParam } = await params;
     const supabase = await createSupabaseServerClient();
     const { data: { user } } = await supabase.auth.getUser();
-    if (!user) redirect("/fr/login");
+    const locale = localeParam || 'fr';
+    if (!user) redirect(`/${locale}/login`);
 
     // Get company ID first
     const { data: companies, error: companyError } = await supabase
@@ -42,17 +49,20 @@ export default async function DashboardPage() {
 
     return (
       <DashboardContent 
-        companyName={company?.name || "Votre entreprise"} 
+        companyName={company?.name || t(locale, "dashboard.companyName")} 
         employeeCount={employeeCount}
+        locale={locale}
       />
     );
   } catch (error) {
     console.error("Error in DashboardPage:", error);
+    const locale = params.locale || 'fr';
     // Return a fallback UI instead of crashing
     return (
       <DashboardContent 
-        companyName="Votre entreprise" 
+        companyName={t(locale, "dashboard.companyName")} 
         employeeCount={0}
+        locale={locale}
       />
     );
   }
@@ -60,18 +70,20 @@ export default async function DashboardPage() {
 
 function DashboardContent({ 
   companyName, 
-  employeeCount
+  employeeCount,
+  locale
 }: { 
   companyName: string; 
   employeeCount: number;
+  locale: Locale;
 }) {
 
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-3xl font-bold text-gray-900">Tableau de bord</h1>
+        <h1 className="text-3xl font-bold text-gray-900">{t(locale, "dashboard.title")}</h1>
         <p className="text-gray-600 mt-2">
-          Bienvenue, {companyName}
+          {t(locale, "dashboard.welcome")}, {companyName}
         </p>
       </div>
 
@@ -80,14 +92,14 @@ function DashboardContent({
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">
-              Total Employés
+              {t(locale, "dashboard.totalEmployees")}
             </CardTitle>
             <Users className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">{employeeCount}</div>
             <p className="text-xs text-muted-foreground">
-              Employés actifs
+              {t(locale, "dashboard.activeEmployees")}
             </p>
           </CardContent>
         </Card>
@@ -95,14 +107,14 @@ function DashboardContent({
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">
-              Prochaine Paie
+              {t(locale, "dashboard.nextPayrollRun")}
             </CardTitle>
             <Calculator className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">31 Oct</div>
             <p className="text-xs text-muted-foreground">
-              Prochaine paie
+              {t(locale, "dashboard.nextPayroll")}
             </p>
           </CardContent>
         </Card>
@@ -110,14 +122,14 @@ function DashboardContent({
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">
-              Statut Entreprise
+              {t(locale, "dashboard.companyStatus")}
             </CardTitle>
             <Settings className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">Actif</div>
+            <div className="text-2xl font-bold">{t(locale, "dashboard.active")}</div>
             <p className="text-xs text-muted-foreground">
-              Statut de l&apos;entreprise
+              {t(locale, "dashboard.companyStatusDesc")}
             </p>
           </CardContent>
         </Card>
@@ -125,14 +137,14 @@ function DashboardContent({
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">
-              Traitement Paie
+              {t(locale, "dashboard.payrollProcessing")}
             </CardTitle>
             <CalendarDays className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">En cours</div>
+            <div className="text-2xl font-bold">{t(locale, "dashboard.inProgress")}</div>
             <p className="text-xs text-muted-foreground">
-              Traitement automatique
+              {t(locale, "dashboard.automaticProcessing")}
             </p>
           </CardContent>
         </Card>
@@ -145,33 +157,33 @@ function DashboardContent({
 
       {/* Quick Actions - Mobile Optimized */}
       <div className="space-y-4">
-        <h2 className="text-xl font-semibold text-gray-900">Actions Rapides</h2>
+        <h2 className="text-xl font-semibold text-gray-900">{t(locale, "dashboard.quickActions")}</h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
-          <Link href="/fr/dashboard/employees">
+          <Link href={`/${locale}/dashboard/employees`}>
             <Button variant="outline" className="w-full h-16 sm:h-20 flex flex-col items-center justify-center space-y-1 sm:space-y-2 p-3">
               <Users className="h-5 w-5 sm:h-6 sm:w-6" />
-              <span className="text-xs sm:text-sm font-medium">Employés</span>
+              <span className="text-xs sm:text-sm font-medium">{t(locale, "navigation.employees")}</span>
             </Button>
           </Link>
           
-          <Link href="/fr/dashboard/payroll">
+          <Link href={`/${locale}/dashboard/payroll`}>
             <Button variant="outline" className="w-full h-16 sm:h-20 flex flex-col items-center justify-center space-y-1 sm:space-y-2 p-3">
               <Calculator className="h-5 w-5 sm:h-6 sm:w-6" />
-              <span className="text-xs sm:text-sm font-medium">Paie</span>
+              <span className="text-xs sm:text-sm font-medium">{t(locale, "navigation.payroll")}</span>
             </Button>
           </Link>
           
-          <Link href="/fr/dashboard/leaves">
+          <Link href={`/${locale}/dashboard/leaves`}>
             <Button variant="outline" className="w-full h-16 sm:h-20 flex flex-col items-center justify-center space-y-1 sm:space-y-2 p-3">
               <CalendarDays className="h-5 w-5 sm:h-6 sm:w-6" />
-              <span className="text-xs sm:text-sm font-medium">Congés</span>
+              <span className="text-xs sm:text-sm font-medium">{t(locale, "navigation.leaves")}</span>
             </Button>
           </Link>
           
-          <Link href="/fr/dashboard/settings">
+          <Link href={`/${locale}/settings`}>
             <Button variant="outline" className="w-full h-16 sm:h-20 flex flex-col items-center justify-center space-y-1 sm:space-y-2 p-3">
               <Settings className="h-5 w-5 sm:h-6 sm:w-6" />
-              <span className="text-xs sm:text-sm font-medium">Paramètres</span>
+              <span className="text-xs sm:text-sm font-medium">{t(locale, "navigation.settings")}</span>
             </Button>
           </Link>
         </div>
@@ -179,7 +191,7 @@ function DashboardContent({
 
       {/* CNSS Declaration Section */}
       <div className="space-y-4">
-        <h2 className="text-xl font-semibold text-gray-900">Déclarations CNSS</h2>
+        <h2 className="text-xl font-semibold text-gray-900">{t(locale, "dashboard.cnssDeclarations")}</h2>
         <div className="flex justify-center">
           <CNSSDeclarationDialog />
         </div>

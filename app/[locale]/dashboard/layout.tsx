@@ -2,6 +2,8 @@ import { redirect } from "next/navigation";
 import { createSupabaseServerClient } from "@/lib/supabaseServer";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
+import { LanguageSwitcher } from "@/components/LanguageSwitcher";
+import { t, type Locale } from "@/lib/translations";
 import { 
   LayoutDashboard, 
   Users, 
@@ -17,12 +19,17 @@ import {
 
 export default async function DashboardLayout({
   children,
+  params,
 }: {
   children: React.ReactNode;
+  params: Promise<{ locale: Locale }>;
 }) {
+  const { locale: localeParam } = await params;
   const supabase = await createSupabaseServerClient();
   const { data: { user } } = await supabase.auth.getUser();
-  if (!user) redirect("/fr/login");
+  const locale = (localeParam || 'fr') as Locale;
+  
+  if (!user) redirect(`/${locale}/login`);
 
   // Check if company exists
   const { data: companies } = await supabase
@@ -34,24 +41,25 @@ export default async function DashboardLayout({
   const company = companies?.[0] || null;
 
   if (!company) {
-    redirect("/fr/settings");
+    redirect(`/${locale}/settings`);
   }
 
   async function handleSignOut() {
     "use server";
     const supabase = await createSupabaseServerClient();
     await supabase.auth.signOut();
-    redirect("/fr/login");
+    redirect(`/${locale}/login`);
   }
 
+  // Use translations for navigation
   const navigation = [
-    { name: "Vue d'ensemble", href: "/fr/dashboard", icon: "LayoutDashboard" },
-    { name: "Employés", href: "/fr/dashboard/employees", icon: "Users" },
-    { name: "Paie", href: "/fr/dashboard/payroll", icon: "Calculator" },
-    { name: "Analyses", href: "/fr/dashboard/analytics", icon: "BarChart3" },
-    { name: "Congés", href: "/fr/dashboard/leaves", icon: "CalendarDays" },
-    { name: "Assistant IA", href: "/fr/dashboard/ai", icon: "Sparkles" },
-    { name: "Paramètres", href: "/fr/settings", icon: "Settings" },
+    { name: t(locale, "navigation.overview"), href: `/${locale}/dashboard`, icon: "LayoutDashboard" },
+    { name: t(locale, "navigation.employees"), href: `/${locale}/dashboard/employees`, icon: "Users" },
+    { name: t(locale, "navigation.payroll"), href: `/${locale}/dashboard/payroll`, icon: "Calculator" },
+    { name: t(locale, "navigation.analytics"), href: `/${locale}/dashboard/analytics`, icon: "BarChart3" },
+    { name: t(locale, "navigation.leaves"), href: `/${locale}/dashboard/leaves`, icon: "CalendarDays" },
+    { name: t(locale, "navigation.aiAssistant"), href: `/${locale}/dashboard/ai`, icon: "Sparkles" },
+    { name: t(locale, "navigation.settings"), href: `/${locale}/settings`, icon: "Settings" },
   ];
 
   return (
@@ -67,6 +75,7 @@ export default async function DashboardLayout({
               <h1 className="ml-3 text-lg font-semibold text-gray-900">PaieFacile</h1>
             </div>
             <div className="flex items-center space-x-2">
+              <LanguageSwitcher />
               <form action={handleSignOut}>
                 <Button type="submit" variant="ghost" size="sm">
                   <LogOut className="h-4 w-4" />
@@ -78,8 +87,8 @@ export default async function DashboardLayout({
       </div>
 
       {/* Desktop sidebar */}
-      <div className="hidden lg:flex lg:w-64 lg:flex-col lg:fixed lg:inset-y-0">
-        <div className="flex flex-col flex-grow bg-white border-r border-gray-200 pt-5 pb-4 overflow-y-auto">
+      <div className={`hidden lg:flex lg:w-64 lg:flex-col lg:fixed lg:inset-y-0 ${locale === 'ar' ? 'lg:right-0' : 'lg:left-0'} ${locale === 'ar' ? 'rtl-sidebar' : ''}`}>
+        <div className={`flex flex-col flex-grow bg-white pt-5 pb-4 overflow-y-auto ${locale === 'ar' ? 'border-l border-gray-200' : 'border-r border-gray-200'}`}>
           <div className="flex items-center flex-shrink-0 px-4">
             <h1 className="text-xl font-bold text-gray-900">PaieFacile</h1>
           </div>
@@ -108,11 +117,15 @@ export default async function DashboardLayout({
                     </div>
                   </div>
                 </div>
+                {/* Language Switcher */}
+                <div className="mt-3 mb-3">
+                  <LanguageSwitcher />
+                </div>
                 <div className="mt-3 flex space-x-2">
                   <form action={handleSignOut} className="flex-1">
                     <Button type="submit" variant="outline" size="sm" className="w-full">
                       <LogOut className="h-4 w-4 mr-2" />
-                      Déconnexion
+                      {t(locale, "navigation.logout")}
                     </Button>
                   </form>
                 </div>
@@ -162,11 +175,15 @@ export default async function DashboardLayout({
                     </div>
                   </div>
                 </div>
+                {/* Language Switcher */}
+                <div className="mt-3 mb-3">
+                  <LanguageSwitcher />
+                </div>
                 <div className="mt-3 flex space-x-2">
                   <form action={handleSignOut} className="flex-1">
                     <Button type="submit" variant="outline" size="sm" className="w-full">
                       <LogOut className="h-4 w-4 mr-2" />
-                      Déconnexion
+                      {t(locale, "navigation.logout")}
                     </Button>
                   </form>
                 </div>
@@ -177,7 +194,7 @@ export default async function DashboardLayout({
       </div>
 
       {/* Main content */}
-      <div className="lg:pl-64 flex flex-col flex-1">
+      <div className={`flex flex-col flex-1 ${locale === 'ar' ? 'lg:pr-64 rtl-main-content' : 'lg:pl-64'}`}>
         <main className="flex-1">
           <div className="py-6">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">

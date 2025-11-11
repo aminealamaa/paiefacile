@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { usePathname } from "next/navigation";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
@@ -21,6 +22,8 @@ import {
 } from "lucide-react";
 import { submitLeaveRequest, updateLeaveRequestStatus } from "@/app/actions/leave";
 import { format } from "date-fns";
+import { t, type Locale } from "@/lib/translations";
+import { extractLocaleFromPath } from "@/lib/i18n-utils";
 
 interface Employee extends Record<string, unknown> {
   id: string;
@@ -58,23 +61,27 @@ interface LeaveManagementTabsProps {
   employees: Employee[];
   leaveRequests: LeaveRequest[] | Record<string, unknown>[];
   approvedLeaves: ApprovedLeave[] | Record<string, unknown>[];
+  locale?: Locale;
 }
 
 export function LeaveManagementTabs({ 
   employees, 
   leaveRequests, 
-  approvedLeaves 
+  approvedLeaves,
+  locale: propLocale
 }: LeaveManagementTabsProps) {
+  const pathname = usePathname();
+  const locale = propLocale || extractLocaleFromPath(pathname);
   const [selectedDate, setSelectedDate] = useState<Date | undefined>(new Date());
 
   const getStatusBadge = (status: string) => {
     switch (status) {
       case "approved":
-        return <Badge variant="default" className="bg-green-100 text-green-800"><Check className="w-3 h-3 mr-1" />Approuvé</Badge>;
+        return <Badge variant="default" className="bg-green-100 text-green-800"><Check className="w-3 h-3 mr-1" />{t(locale, "leaves.approved")}</Badge>;
       case "rejected":
-        return <Badge variant="destructive"><X className="w-3 h-3 mr-1" />Rejeté</Badge>;
+        return <Badge variant="destructive"><X className="w-3 h-3 mr-1" />{t(locale, "leaves.rejected")}</Badge>;
       case "pending":
-        return <Badge variant="secondary"><Clock className="w-3 h-3 mr-1" />En attente</Badge>;
+        return <Badge variant="secondary"><Clock className="w-3 h-3 mr-1" />{t(locale, "leaves.pending")}</Badge>;
       default:
         return <Badge variant="outline">{status}</Badge>;
     }
@@ -110,30 +117,30 @@ export function LeaveManagementTabs({
       <TabsList className="grid w-full grid-cols-2">
         <TabsTrigger value="requests" className="flex items-center gap-2">
           <List className="w-4 h-4" />
-          Demandes
+          {t(locale, "leaves.requestsList")}
         </TabsTrigger>
         <TabsTrigger value="calendar" className="flex items-center gap-2">
           <CalendarDays className="w-4 h-4" />
-          Calendrier
+          {t(locale, "leaves.teamCalendar")}
         </TabsTrigger>
       </TabsList>
 
       <TabsContent value="requests" className="space-y-4">
         <div className="flex justify-between items-center">
-          <h2 className="text-xl font-semibold">Demandes de Congés</h2>
-          <RequestLeaveDialog employees={employees} />
+          <h2 className="text-xl font-semibold">{t(locale, "leaves.leaveRequests")}</h2>
+          <RequestLeaveDialog employees={employees} locale={locale} />
         </div>
 
         <div className="rounded-md border">
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead>Employé</TableHead>
-                <TableHead>Type de Congé</TableHead>
-                <TableHead>Date de Début</TableHead>
-                <TableHead>Date de Fin</TableHead>
-                <TableHead>Statut</TableHead>
-                <TableHead>Actions</TableHead>
+                <TableHead>{t(locale, "leaves.employee")}</TableHead>
+                <TableHead>{t(locale, "leaves.leaveType")}</TableHead>
+                <TableHead>{t(locale, "leaves.startDate")}</TableHead>
+                <TableHead>{t(locale, "leaves.endDate")}</TableHead>
+                <TableHead>{t(locale, "leaves.status")}</TableHead>
+                <TableHead>{t(locale, "employees.actions")}</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -149,7 +156,10 @@ export function LeaveManagementTabs({
                     </TableCell>
                     <TableCell>
                       <Badge className={getLeaveTypeColor(req.leave_type)}>
-                        {req.leave_type}
+                        {req.leave_type === "annual" ? t(locale, "leaves.annualLeave") :
+                         req.leave_type === "sick" ? t(locale, "leaves.sickLeave") :
+                         req.leave_type === "unpaid" ? t(locale, "leaves.unpaidLeave") :
+                         t(locale, "leaves.other")}
                       </Badge>
                     </TableCell>
                     <TableCell>{format(new Date(req.start_date), "MMM dd, yyyy")}</TableCell>
@@ -165,7 +175,7 @@ export function LeaveManagementTabs({
                             onClick={() => handleStatusUpdate(req.id, "approved")}
                           >
                             <Check className="w-3 h-3 mr-1" />
-                            Approuver
+                            {t(locale, "leaves.approve")}
                           </Button>
                           <Button
                             size="sm"
@@ -174,7 +184,7 @@ export function LeaveManagementTabs({
                             onClick={() => handleStatusUpdate(req.id, "rejected")}
                           >
                             <X className="w-3 h-3 mr-1" />
-                            Rejeter
+                            {t(locale, "leaves.reject")}
                           </Button>
                         </div>
                       )}
@@ -189,8 +199,8 @@ export function LeaveManagementTabs({
 
       <TabsContent value="calendar" className="space-y-4">
         <div className="flex justify-between items-center">
-          <h2 className="text-xl font-semibold">Calendrier d&apos;Équipe</h2>
-          <p className="text-sm text-gray-600">Voir les demandes de congés approuvées</p>
+          <h2 className="text-xl font-semibold">{t(locale, "leaves.teamCalendar")}</h2>
+          <p className="text-sm text-gray-600">{t(locale, "leaves.viewApproved")}</p>
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
@@ -203,7 +213,7 @@ export function LeaveManagementTabs({
           </div>
           
           <div className="space-y-4">
-            <h3 className="font-semibold">Congés à Venir</h3>
+            <h3 className="font-semibold">{t(locale, "leaves.upcomingLeaves")}</h3>
             <div className="space-y-2">
               {approvedLeaves
                 .filter(leave => new Date((leave as ApprovedLeave).start_date) >= new Date())
@@ -222,7 +232,10 @@ export function LeaveManagementTabs({
                           </p>
                         </div>
                         <Badge className={getLeaveTypeColor(approvedLeave.leave_type)}>
-                          {approvedLeave.leave_type}
+                          {approvedLeave.leave_type === "annual" ? t(locale, "leaves.annualLeave") :
+                           approvedLeave.leave_type === "sick" ? t(locale, "leaves.sickLeave") :
+                           approvedLeave.leave_type === "unpaid" ? t(locale, "leaves.unpaidLeave") :
+                           t(locale, "leaves.other")}
                         </Badge>
                       </div>
                     </div>
@@ -236,7 +249,7 @@ export function LeaveManagementTabs({
   );
 }
 
-function RequestLeaveDialog({ employees }: { employees: Employee[] }) {
+function RequestLeaveDialog({ employees, locale }: { employees: Employee[]; locale: Locale }) {
   const [isOpen, setIsOpen] = useState(false);
 
   const handleSubmit = async (formData: FormData) => {
@@ -245,7 +258,7 @@ function RequestLeaveDialog({ employees }: { employees: Employee[] }) {
       setIsOpen(false);
       window.location.reload();
     } else {
-      alert(result.error || "Failed to submit leave request");
+      alert(result.error || t(locale, "leaves.submitError"));
     }
   };
 
@@ -254,19 +267,19 @@ function RequestLeaveDialog({ employees }: { employees: Employee[] }) {
       <DialogTrigger>
         <Button>
           <Plus className="w-4 h-4 mr-2" />
-          Demander un Congé
+          {t(locale, "leaves.requestLeave")}
         </Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
-          <DialogTitle>Demander un Congé</DialogTitle>
+          <DialogTitle>{t(locale, "leaves.requestLeave")}</DialogTitle>
         </DialogHeader>
         <form action={handleSubmit} className="space-y-4">
           <div className="space-y-2">
-            <Label htmlFor="employee_id">Employé</Label>
+            <Label htmlFor="employee_id">{t(locale, "leaves.employee")}</Label>
             <Select name="employee_id" required>
               <SelectTrigger>
-                <SelectValue placeholder="Sélectionner un employé" />
+                <SelectValue placeholder={t(locale, "leaves.selectEmployee")} />
               </SelectTrigger>
               <SelectContent>
                 {employees.map((employee) => (
@@ -280,7 +293,7 @@ function RequestLeaveDialog({ employees }: { employees: Employee[] }) {
 
           <div className="grid grid-cols-2 gap-4">
             <div className="space-y-2">
-              <Label htmlFor="start_date">Date de Début</Label>
+              <Label htmlFor="start_date">{t(locale, "leaves.startDate")}</Label>
               <Input
                 id="start_date"
                 name="start_date"
@@ -289,7 +302,7 @@ function RequestLeaveDialog({ employees }: { employees: Employee[] }) {
               />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="end_date">Date de Fin</Label>
+              <Label htmlFor="end_date">{t(locale, "leaves.endDate")}</Label>
               <Input
                 id="end_date"
                 name="end_date"
@@ -300,34 +313,34 @@ function RequestLeaveDialog({ employees }: { employees: Employee[] }) {
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="leave_type">Type de Congé</Label>
+            <Label htmlFor="leave_type">{t(locale, "leaves.leaveType")}</Label>
             <Select name="leave_type" required>
               <SelectTrigger>
-                <SelectValue placeholder="Sélectionner le type de congé" />
+                <SelectValue placeholder={t(locale, "leaves.selectLeaveType")} />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="annual">Congé Annuel</SelectItem>
-                <SelectItem value="sick">Congé Maladie</SelectItem>
-                <SelectItem value="unpaid">Congé Sans Solde</SelectItem>
-                <SelectItem value="other">Autre</SelectItem>
+                <SelectItem value="annual">{t(locale, "leaves.annualLeave")}</SelectItem>
+                <SelectItem value="sick">{t(locale, "leaves.sickLeave")}</SelectItem>
+                <SelectItem value="unpaid">{t(locale, "leaves.unpaidLeave")}</SelectItem>
+                <SelectItem value="other">{t(locale, "leaves.other")}</SelectItem>
               </SelectContent>
             </Select>
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="reason">Raison (Optionnel)</Label>
+            <Label htmlFor="reason">{t(locale, "leaves.reason")}</Label>
             <Input
               id="reason"
               name="reason"
-              placeholder="Entrer la raison du congé"
+              placeholder={t(locale, "leaves.enterReason")}
             />
           </div>
 
           <div className="flex justify-end gap-2">
             <Button type="button" variant="outline" onClick={() => setIsOpen(false)}>
-              Annuler
+              {t(locale, "common.cancel")}
             </Button>
-            <Button type="submit">Soumettre la Demande</Button>
+            <Button type="submit">{t(locale, "leaves.submitRequest")}</Button>
           </div>
         </form>
       </DialogContent>

@@ -12,18 +12,35 @@ import {
 import { Globe } from "lucide-react";
 
 export function LanguageSwitcher() {
-  // Removed useTranslations and useLocale - using static text
   const pathname = usePathname();
   const router = useRouter();
 
+  // Extract current locale from pathname
+  const getCurrentLocale = (): string => {
+    const segments = pathname.split('/').filter(Boolean);
+    const locale = segments[0];
+    if (['fr', 'en', 'ar'].includes(locale)) {
+      return locale;
+    }
+    return 'fr'; // Default to French
+  };
+
+  const currentLocale = getCurrentLocale();
+
   const handleLanguageChange = (newLocale: string) => {
-    // Simplified language switching - just redirect to the new locale
-    router.replace(`/${newLocale}${pathname}`);
+    // Remove current locale from pathname and add new one
+    const pathWithoutLocale = pathname.replace(`/${currentLocale}`, '') || '/';
+    const newPath = `/${newLocale}${pathWithoutLocale === '/' ? '' : pathWithoutLocale}`;
+    router.replace(newPath);
   };
 
   const getCurrentLanguageLabel = () => {
-    // Simplified language switcher - always show French
-    return 'Français';
+    const labels: Record<string, string> = {
+      'fr': 'Français',
+      'en': 'English',
+      'ar': 'العربية'
+    };
+    return labels[currentLocale] || 'Français';
   };
 
   return (

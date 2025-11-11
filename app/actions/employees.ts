@@ -1,8 +1,8 @@
 "use server";
 
-import { redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
-import { createSupabaseServerClient } from "@/lib/supabaseServer";
+import { requireAuthWithCompany } from "@/lib/auth-utils";
+import { logAuditEvent, AuditAction, ResourceType } from "@/lib/audit";
 import { z } from "zod";
 
 const EmployeeSchema = z.object({
@@ -20,9 +20,7 @@ const EmployeeSchema = z.object({
 
 export async function addEmployeeAction(formData: FormData) {
   try {
-    const supabase = await createSupabaseServerClient();
-    const { data: { user } } = await supabase.auth.getUser();
-    if (!user) redirect("/login");
+    const { user, supabase, company } = await requireAuthWithCompany();
 
     const parsed = EmployeeSchema.safeParse({
       first_name: formData.get("first_name")?.toString() ?? "",
@@ -42,27 +40,6 @@ export async function addEmployeeAction(formData: FormData) {
       return { error: parsed.error.flatten().formErrors.join("\n") };
     }
 
-    // Français: Vérifier et récupérer l'entreprise de l'utilisateur
-    const { data: companies, error: companyError } = await supabase
-      .from("companies")
-      .select("id, name")
-      .eq("user_id", user.id)
-      .limit(1);
-    
-    if (companyError) {
-      console.error("Company query error:", companyError);
-      return { error: `Erreur de base de données: ${companyError.message}` };
-    }
-    
-    if (!companies || companies.length === 0) {
-      console.error("No company found for user:", user.id);
-      return { 
-        error: "Aucune entreprise trouvée. Veuillez d'abord compléter la configuration de votre entreprise dans les Paramètres.",
-        redirectTo: "/settings"
-      };
-    }
-    
-    const company = companies[0];
     console.log("Creating employee for company:", company.name, "ID:", company.id);
 
     // Préparer les données de l'employé
@@ -92,6 +69,19 @@ export async function addEmployeeAction(formData: FormData) {
     }
 
     console.log("Employee created successfully:", newEmployee);
+    
+    // Log audit event
+    await logAuditEvent({
+      action: AuditAction.EMPLOYEE_CREATED,
+      userId: user.id,
+      resourceType: ResourceType.EMPLOYEE,
+      resourceId: newEmployee.id,
+      details: { 
+        companyId: company.id,
+        employeeName: `${parsed.data.first_name} ${parsed.data.last_name}`,
+      },
+    });
+    
     revalidatePath("/dashboard/employees");
     return { success: true, employee: newEmployee };
     

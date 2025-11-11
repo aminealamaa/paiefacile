@@ -1,9 +1,9 @@
 "use server";
 
-import { redirect } from "next/navigation";
-import { createSupabaseServerClient } from "@/lib/supabaseServer";
+import { requireAuth } from "@/lib/auth-utils";
 import { sendChatMessage, askQuestionWithContext } from "@/lib/ai-chat-service";
 import { createSafePayload } from "@/lib/ai-data-anonymizer";
+import { logAuditEvent, AuditAction, ResourceType } from "@/lib/audit";
 import type { ChatMessage } from "@/lib/ai-chat-service";
 
 /**
@@ -16,12 +16,20 @@ export async function askAIQuestion(
   includeCompanyData: boolean = false
 ) {
   try {
-    const supabase = await createSupabaseServerClient();
-    const { data: { user } } = await supabase.auth.getUser();
+    const { user, supabase } = await requireAuth();
 
-    if (!user) {
-      redirect("/fr/login");
-    }
+    // Log AI query for audit
+    await logAuditEvent({
+      action: AuditAction.AI_QUERY,
+      userId: user.id,
+      resourceType: ResourceType.USER,
+      resourceId: user.id,
+      details: { 
+        questionLength: question.length,
+        includeCompanyData,
+        conversationLength: conversationHistory.length,
+      },
+    });
 
     // If user wants to include company data, fetch and anonymize it
     let contextData: {

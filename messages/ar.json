@@ -3,18 +3,28 @@
     "overview": "نظرة عامة",
     "employees": "الموظفين",
     "payroll": "كشف الرواتب",
+    "analytics": "التحليلات",
     "leaves": "الإجازات",
+    "aiAssistant": "مساعد الذكاء الاصطناعي",
     "settings": "الإعدادات",
     "logout": "تسجيل الخروج"
   },
   "dashboard": {
     "title": "لوحة التحكم",
     "totalEmployees": "إجمالي الموظفين",
-    "nextPayrollRun": "تشغيل كشف الرواتب التالي",
+    "activeEmployees": "الموظفين النشطين",
+    "nextPayrollRun": "كشف الرواتب القادم",
+    "nextPayroll": "كشف الرواتب القادم",
     "companyStatus": "حالة الشركة",
+    "companyStatusDesc": "حالة الشركة",
     "payrollProcessing": "معالجة الرواتب",
+    "inProgress": "قيد التنفيذ",
+    "automaticProcessing": "معالجة تلقائية",
+    "active": "نشط",
     "quickActions": "إجراءات سريعة",
-    "welcome": "مرحباً بك في باي فاسيل"
+    "welcome": "مرحباً",
+    "companyName": "شركتك",
+    "cnssDeclarations": "إعلانات CNSS"
   },
   "employees": {
     "title": "الموظفين",
@@ -24,6 +34,10 @@
     "firstName": "الاسم الأول",
     "lastName": "الاسم الأخير",
     "email": "البريد الإلكتروني",
+    "cin": "رقم البطاقة الوطنية",
+    "cinPlaceholder": "رقم البطاقة الوطنية",
+    "cnss": "CNSS",
+    "cnssPlaceholder": "رقم CNSS",
     "position": "المنصب",
     "hireDate": "تاريخ التوظيف",
     "familyInfo": "معلومات العائلة",
@@ -35,36 +49,59 @@
     "widowed": "أرمل",
     "salary": "الراتب",
     "actions": "الإجراءات",
+    "contractType": "نوع العقد",
+    "selectContractType": "اختر النوع",
+    "saving": "جاري الحفظ...",
+    "maxChildrenNote": "الحد الأقصى 6 أطفال للخصومات الضريبية"
+  },
+  "common": {
     "cancel": "إلغاء",
-    "save": "حفظ"
+    "save": "حفظ",
+    "edit": "تعديل",
+    "unexpectedError": "حدث خطأ غير متوقع"
   },
   "payroll": {
-    "title": "كشف الرواتب",
-    "subtitle": "حساب وإدارة الرواتب",
+    "title": "إدارة الرواتب",
+    "subtitle": "إنشاء وإدارة كشوف رواتب موظفيك",
+    "aiSuggestions": "اقتراحات الذكاء الاصطناعي",
     "calculatePayroll": "حساب الراتب",
     "baseSalary": "الراتب الأساسي",
     "overtimeHours": "ساعات العمل الإضافي",
-    "bonuses": "المكافآت",
+    "bonuses": "المكافأة",
     "deductions": "الخصومات",
     "downloadPayslip": "تحميل كشف الراتب",
     "employee": "الموظف",
+    "selectEmployee": "اختر موظف",
     "grossSalary": "الراتب الإجمالي",
     "netSalary": "الراتب الصافي",
+    "month": "الشهر",
+    "year": "السنة",
+    "results": "النتائج",
+    "label": "الوصف",
+    "amount": "المبلغ (درهم)",
+    "netTaxable": "الصافي الخاضع للضريبة",
+    "familyDeductions": "خصومات العائلة",
+    "otherDeductions": "خصومات أخرى",
     "cnssEmployee": "مساهمة CNSS للموظف",
     "cnssEmployer": "مساهمة CNSS لصاحب العمل",
     "amoEmployee": "مساهمة AMO للموظف",
     "amoEmployer": "مساهمة AMO لصاحب العمل",
     "igr": "ضريبة الدخل (IGR)",
-    "familyDeductions": "خصومات العائلة"
+    "calculate": "حساب",
+    "payslip": "كشف الراتب"
   },
   "leaves": {
     "title": "إدارة الإجازات",
     "subtitle": "إدارة طلبات الإجازة",
+    "requestsList": "الطلبات",
+    "teamCalendar": "التقويم",
     "requestLeave": "طلب إجازة",
+    "leaveRequests": "طلبات الإجازات",
+    "employee": "الموظف",
     "leaveType": "نوع الإجازة",
     "startDate": "تاريخ البداية",
     "endDate": "تاريخ النهاية",
-    "reason": "السبب",
+    "reason": "السبب (اختياري)",
     "annual": "سنوية",
     "sick": "مرضية",
     "unpaid": "بدون راتب",
@@ -72,17 +109,57 @@
     "status": "الحالة",
     "pending": "في الانتظار",
     "approved": "موافق عليها",
-    "rejected": "مرفوضة"
+    "rejected": "مرفوضة",
+    "approve": "موافقة",
+    "reject": "رفض",
+    "upcomingLeaves": "الإجازات القادمة",
+    "annualLeave": "إجازة سنوية",
+    "sickLeave": "إجازة مرضية",
+    "unpaidLeave": "إجازة بدون راتب",
+    "selectEmployee": "اختر موظف",
+    "selectLeaveType": "اختر نوع الإجازة",
+    "enterReason": "أدخل سبب الإجازة",
+    "submitRequest": "إرسال الطلب",
+    "viewApproved": "عرض طلبات الإجازات الموافق عليها",
+    "submitError": "فشل إرسال الطلب"
   },
   "company": {
     "title": "إعدادات الشركة",
+    "subtitle": "قم بتكوين معلومات شركتك",
     "companyName": "اسم الشركة",
     "rcNumber": "رقم السجل التجاري",
     "ifNumber": "رقم الضريبة",
     "cnssNumber": "رقم CNSS",
     "ice": "رقم ICE",
     "patente": "الرخصة",
-    "address": "العنوان"
+    "address": "العنوان",
+    "phone": "الهاتف",
+    "email": "البريد الإلكتروني",
+    "taxId": "الرقم الضريبي",
+    "saveChanges": "حفظ التغييرات"
+  },
+  "settings": {
+    "title": "إعدادات الشركة",
+    "subtitle": "قم بتكوين معلومات شركتك",
+    "companyName": "اسم الشركة",
+    "address": "العنوان",
+    "phone": "الهاتف",
+    "email": "البريد الإلكتروني",
+    "taxId": "الرقم الضريبي",
+    "saveChanges": "حفظ التغييرات"
+  },
+  "auth": {
+    "login": "تسجيل الدخول",
+    "signup": "إنشاء حساب",
+    "email": "البريد الإلكتروني",
+    "password": "كلمة المرور",
+    "confirmPassword": "تأكيد كلمة المرور",
+    "firstName": "الاسم الأول",
+    "lastName": "الاسم الأخير",
+    "alreadyHaveAccount": "لديك حساب بالفعل؟",
+    "dontHaveAccount": "ليس لديك حساب؟",
+    "signInHere": "سجل الدخول هنا",
+    "signUpHere": "سجل هنا"
   },
   "landing": {
     "hero": {
@@ -147,6 +224,7 @@
     "cancel": "إلغاء",
     "edit": "تعديل",
     "delete": "حذف",
+    "add": "إضافة",
     "confirm": "تأكيد",
     "back": "رجوع",
     "next": "التالي",
@@ -154,7 +232,52 @@
     "search": "بحث",
     "filter": "تصفية",
     "export": "تصدير",
-    "import": "استيراد"
+    "import": "استيراد",
+    "close": "إغلاق",
+    "open": "فتح",
+    "yes": "نعم",
+    "no": "لا"
+  },
+  "ai": {
+    "assistant": "مساعد الذكاء الاصطناعي",
+    "title": "مساعد الذكاء الاصطناعي - التحسين والامتثال",
+    "subtitle": "قم بتحسين إدارة الرواتب باستخدام الذكاء الاصطناعي",
+    "chat": {
+      "title": "اطرح أسئلتك حول الرواتب المغربية",
+      "subtitle": "مساعدنا للذكاء الاصطناعي متخصص في التشريع الضريبي والاجتماعي المغربي.",
+      "placeholder": "اطرح سؤالك حول الرواتب المغربية...",
+      "includeData": "تضمين بيانات شركتي (مجهولة الهوية) للحصول على سياق أكثر دقة",
+      "send": "إرسال"
+    },
+    "optimization": {
+      "title": "فرص التحسين",
+      "subtitle": "تحليل فرص التحسين الضريبي لشركتك"
+    },
+    "compliance": {
+      "title": "مخاطر الامتثال",
+      "subtitle": "تحليل مخاطر الامتثال والكشف عن المشاكل المحتملة"
+    }
+  },
+  "analytics": {
+    "title": "التحليلات والتقارير",
+    "subtitle": "لوحة تحكم تحليلية لـ",
+    "noCompany": "لم يتم العثور على شركة",
+    "noCompanyDesc": "يرجى تكوين شركتك في الإعدادات للوصول إلى التحليلات.",
+    "loadError": "خطأ في التحميل"
+  },
+  "ai": {
+    "title": "مساعد الذكاء الاصطناعي - التحسين والامتثال",
+    "subtitle": "قم بتحسين إدارة الرواتب باستخدام الذكاء الاصطناعي",
+    "chat": {
+      "title": "مساعد الدردشة",
+      "subtitle": "مساعدنا للذكاء الاصطناعي متخصص في التشريع الضريبي والاجتماعي المغربي. يمكنه الإجابة على أسئلتك حول CNSS و AMO و IGR والمزيد."
+    },
+    "optimization": {
+      "title": "التحسين"
+    },
+    "compliance": {
+      "title": "الامتثال"
+    }
   },
   "language": {
     "english": "English",
