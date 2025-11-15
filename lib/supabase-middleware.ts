@@ -19,8 +19,8 @@ export function createSupabaseMiddlewareClient(request: NextRequest, response: N
         response.cookies.set({ name, value, ...options });
       },
       remove(name: string, options: CookieOptions) {
-        request.cookies.set({ name, value: '', ...options, maxAge: 0 });
-        response.cookies.set({ name, value: '', ...options, maxAge: 0 });
+        request.cookies.set(name, '');
+        response.cookies.set(name, '', { ...options, maxAge: 0 });
       },
     },
   });

@@ -23,12 +23,12 @@ interface LeaveRequest extends Record<string, unknown> {
 export default async function LeavesPage({
   params,
 }: {
-  params: Promise<{ locale: Locale }>;
+  params: Promise<{ locale: string }>;
 }) {
   const { locale: localeParam } = await params;
   const supabase = await createSupabaseServerClient();
   const { data: { user } } = await supabase.auth.getUser();
-  const locale = localeParam || 'fr';
+  const locale = (localeParam || 'fr') as Locale;
   if (!user) redirect(`/${locale}/login`);
 
   // Get company ID first

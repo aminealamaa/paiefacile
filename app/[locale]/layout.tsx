@@ -7,11 +7,11 @@ export default async function LocaleLayout({
   params,
 }: {
   children: React.ReactNode;
-  params: Promise<{ locale: Locale }>;
+  params: Promise<{ locale: string }>;
 }) {
   const { locale: localeParam } = await params;
   const pixelId = process.env.NEXT_PUBLIC_META_PIXEL_ID || '';
-  const locale = localeParam || 'fr';
+  const locale = (localeParam || 'fr') as Locale;
   const dir = getDirection(locale);
   const lang = getLangCode(locale);
 

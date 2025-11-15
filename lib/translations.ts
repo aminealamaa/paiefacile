@@ -6,6 +6,9 @@
 
 import type { Locale } from './i18n-utils';
 
+// Re-export Locale type for convenience
+export type { Locale };
+
 // Import translation files
 import frMessages from '@/messages/fr.json';
 import enMessages from '@/messages/en.json';

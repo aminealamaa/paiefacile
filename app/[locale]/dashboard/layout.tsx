@@ -14,7 +14,8 @@ import {
   Menu,
   X,
   BarChart3,
-  Sparkles
+  Sparkles,
+  Clock
 } from "lucide-react";
 
 export default async function DashboardLayout({
@@ -22,7 +23,7 @@ export default async function DashboardLayout({
   params,
 }: {
   children: React.ReactNode;
-  params: Promise<{ locale: Locale }>;
+  params: Promise<{ locale: string }>;
 }) {
   const { locale: localeParam } = await params;
   const supabase = await createSupabaseServerClient();
@@ -58,6 +59,7 @@ export default async function DashboardLayout({
     { name: t(locale, "navigation.payroll"), href: `/${locale}/dashboard/payroll`, icon: "Calculator" },
     { name: t(locale, "navigation.analytics"), href: `/${locale}/dashboard/analytics`, icon: "BarChart3" },
     { name: t(locale, "navigation.leaves"), href: `/${locale}/dashboard/leaves`, icon: "CalendarDays" },
+    { name: t(locale, "navigation.attendance"), href: `/${locale}/dashboard/attendance`, icon: "Clock" },
     { name: t(locale, "navigation.aiAssistant"), href: `/${locale}/dashboard/ai`, icon: "Sparkles" },
     { name: t(locale, "navigation.settings"), href: `/${locale}/settings`, icon: "Settings" },
   ];
@@ -214,6 +216,7 @@ function getIcon(iconName: string) {
     case "Calculator": return <Calculator className="mr-3 flex-shrink-0 h-5 w-5" />;
     case "BarChart3": return <BarChart3 className="mr-3 flex-shrink-0 h-5 w-5" />;
     case "CalendarDays": return <CalendarDays className="mr-3 flex-shrink-0 h-5 w-5" />;
+    case "Clock": return <Clock className="mr-3 flex-shrink-0 h-5 w-5" />;
     case "Sparkles": return <Sparkles className="mr-3 flex-shrink-0 h-5 w-5" />;
     case "Settings": return <Settings className="mr-3 flex-shrink-0 h-5 w-5" />;
     default: return null;

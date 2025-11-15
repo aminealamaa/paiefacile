@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { useRouter, usePathname } from "next/navigation";
+import { usePathname } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { trackEmployeeAdded } from "@/components/MetaPixel";
 import { Dialog, DialogTrigger, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
@@ -13,15 +13,14 @@ import { addEmployeeAction } from "@/app/actions/employees";
 import { t, type Locale } from "@/lib/translations";
 import { extractLocaleFromPath } from "@/lib/i18n-utils";
 
-export function AddEmployeeDialog({ locale: propLocale }: { locale?: Locale }) {
-  const pathname = usePathname();
-  const locale = propLocale || extractLocaleFromPath(pathname);
-  const [isOpen, setIsOpen] = useState(false);
-  const [contractType, setContractType] = useState<string>("");
-  const [maritalStatus, setMaritalStatus] = useState<string>("");
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-  const router = useRouter();
+      export function AddEmployeeDialog({ locale: propLocale }: { locale?: Locale }) {
+        const pathname = usePathname();
+        const locale = propLocale || extractLocaleFromPath(pathname);
+        const [isOpen, setIsOpen] = useState(false);
+        const [contractType, setContractType] = useState<string>("");
+        const [maritalStatus, setMaritalStatus] = useState<string>("");
+        const [isLoading, setIsLoading] = useState(false);
+        const [error, setError] = useState<string | null>(null);
 
   const handleSubmit = async (formData: FormData) => {
     setIsLoading(true);
@@ -38,24 +37,19 @@ export function AddEmployeeDialog({ locale: propLocale }: { locale?: Locale }) {
       
       const result = await addEmployeeAction(formData);
       
-      if (result?.success) {
-        // Track employee addition
-        trackEmployeeAdded();
-        
-        setIsOpen(false);
-        // Reset form
-        setContractType("");
-        setMaritalStatus("");
-        // Refresh the page to show the new employee
-        window.location.reload();
-      } else if (result?.error) {
-        if (result.redirectTo) {
-          // If we need to redirect to settings, do it
-          router.push(result.redirectTo);
-        } else {
-          setError(result.error);
-        }
-      }
+             if (result?.success) {
+               // Track employee addition
+               trackEmployeeAdded();
+               
+               setIsOpen(false);
+               // Reset form
+               setContractType("");
+               setMaritalStatus("");
+               // Refresh the page to show the new employee
+               window.location.reload();
+             } else if (result?.error) {
+               setError(result.error);
+             }
     } catch (err: unknown) {
       const errorMessage = err instanceof Error ? err.message : t(locale, "common.unexpectedError");
       setError(errorMessage);

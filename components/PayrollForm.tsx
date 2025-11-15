@@ -1,9 +1,10 @@
 "use client";
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { useActionState, useEffect } from "react";
+import { useActionState, useEffect, useState } from "react";
 import { usePathname } from "next/navigation";
 import { calculatePayroll } from "@/app/actions/payroll";
+import { getOvertimeHoursFromAttendance } from "@/app/actions/payroll-integration";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -13,12 +14,47 @@ import { EmailPayslipDialog } from "@/components/EmailPayslipDialog";
 import { trackPayrollGeneration } from "@/components/MetaPixel";
 import { t, type Locale } from "@/lib/translations";
 import { extractLocaleFromPath } from "@/lib/i18n-utils";
+import { Clock } from "lucide-react";
 
 export function PayrollForm({ employees, company, locale: propLocale }: { employees: Record<string, unknown>[]; company: Record<string, unknown>; locale?: Locale }) {
   const pathname = usePathname();
   const locale = propLocale || extractLocaleFromPath(pathname);
   const initialState: Record<string, unknown> = { };
   const [state, formAction] = useActionState(calculatePayroll, initialState);
+  const [selectedEmployeeId, setSelectedEmployeeId] = useState<string>("");
+  const [selectedMonth, setSelectedMonth] = useState<string>("");
+  const [selectedYear, setSelectedYear] = useState<string>("");
+  const [overtimeFromAttendance, setOvertimeFromAttendance] = useState<number | null>(null);
+  const [loadingOvertime, setLoadingOvertime] = useState(false);
+
+  // Load overtime hours from attendance when employee, month, and year are selected
+  useEffect(() => {
+    if (selectedEmployeeId && selectedMonth && selectedYear) {
+      loadOvertimeFromAttendance();
+    } else {
+      setOvertimeFromAttendance(null);
+    }
+  }, [selectedEmployeeId, selectedMonth, selectedYear]);
+
+  const loadOvertimeFromAttendance = async () => {
+    if (!selectedEmployeeId || !selectedMonth || !selectedYear) return;
+    
+    setLoadingOvertime(true);
+    try {
+      const result = await getOvertimeHoursFromAttendance(
+        selectedEmployeeId,
+        Number(selectedMonth),
+        Number(selectedYear)
+      );
+      if (result.success && result.data) {
+        setOvertimeFromAttendance(result.data.totalOvertimeHours);
+      }
+    } catch (error) {
+      console.error("Error loading overtime:", error);
+    } finally {
+      setLoadingOvertime(false);
+    }
+  };
 
   // Track payroll generation when result is available
   useEffect(() => {
@@ -45,6 +81,8 @@ export function PayrollForm({ employees, company, locale: propLocale }: { employ
               name="employeeId" 
               className="w-full rounded-md border px-3 py-2" 
               required
+              value={selectedEmployeeId}
+              onChange={(e) => setSelectedEmployeeId(e.target.value)}
             >
               <option value="">{t(locale, "payroll.selectEmployee")}</option>
               {employees.map((e) => (
@@ -63,7 +101,9 @@ export function PayrollForm({ employees, company, locale: propLocale }: { employ
               min="1" 
               max="12" 
               placeholder="1-12"
-              required 
+              required
+              value={selectedMonth}
+              onChange={(e) => setSelectedMonth(e.target.value)}
             />
           </div>
           <div className="space-y-2">
@@ -75,7 +115,9 @@ export function PayrollForm({ employees, company, locale: propLocale }: { employ
               min="2000" 
               max="2100" 
               placeholder="2024"
-              required 
+              required
+              value={selectedYear}
+              onChange={(e) => setSelectedYear(e.target.value)}
             />
           </div>
         </div>
@@ -94,16 +136,30 @@ export function PayrollForm({ employees, company, locale: propLocale }: { employ
             />
           </div>
           <div className="space-y-2">
-            <Label htmlFor="overtimeHours">{t(locale, "payroll.overtimeHours")}</Label>
+            <Label htmlFor="overtimeHours" className="flex items-center gap-2">
+              {t(locale, "payroll.overtimeHours")}
+              {loadingOvertime && <span className="text-xs text-gray-500">({t(locale, "common.loading")})</span>}
+              {overtimeFromAttendance !== null && !loadingOvertime && (
+                <span className="text-xs text-green-600 flex items-center gap-1">
+                  <Clock className="h-3 w-3" />
+                  {t(locale, "payroll.fromAttendance")}: {overtimeFromAttendance.toFixed(2)}h
+                </span>
+              )}
+            </Label>
             <Input 
               id="overtimeHours"
               type="number" 
               step="0.01" 
               min="0" 
               name="overtimeHours" 
-              defaultValue={0} 
-              placeholder="0.00"
+              defaultValue={overtimeFromAttendance !== null ? overtimeFromAttendance : 0}
+              placeholder={overtimeFromAttendance !== null ? String(overtimeFromAttendance.toFixed(2)) : "0.00"}
             />
+            {overtimeFromAttendance !== null && (
+              <p className="text-xs text-gray-500">
+                {t(locale, "payroll.overtimeAutoLoaded")}
+              </p>
+            )}
           </div>
         </div>
 

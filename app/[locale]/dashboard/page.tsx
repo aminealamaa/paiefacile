@@ -56,7 +56,8 @@ export default async function DashboardPage({
     );
   } catch (error) {
     console.error("Error in DashboardPage:", error);
-    const locale = params.locale || 'fr';
+    const { locale: localeParam } = await params;
+    const locale = (localeParam || 'fr') as Locale;
     // Return a fallback UI instead of crashing
     return (
       <DashboardContent 

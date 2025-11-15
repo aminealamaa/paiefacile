@@ -11,12 +11,12 @@ import { t, type Locale } from "@/lib/translations";
 export default async function AIAdvisorPage({
   params,
 }: {
-  params: Promise<{ locale: Locale }>;
+  params: Promise<{ locale: string }>;
 }) {
   const { locale: localeParam } = await params;
   const supabase = await createSupabaseServerClient();
   const { data: { user } } = await supabase.auth.getUser();
-  const locale = localeParam || 'fr';
+  const locale = (localeParam || 'fr') as Locale;
 
   if (!user) {
     redirect(`/${locale}/login`);
@@ -60,18 +60,18 @@ export default async function AIAdvisorPage({
             </CardHeader>
             <CardContent>
               <div className="h-[600px]">
-                <AIChatInterface locale={locale} />
+                <AIChatInterface />
               </div>
             </CardContent>
           </Card>
         </TabsContent>
 
         <TabsContent value="optimization" className="space-y-4">
-          <OptimizationDashboard locale={locale} />
+          <OptimizationDashboard />
         </TabsContent>
 
         <TabsContent value="compliance" className="space-y-4">
-          <ComplianceRiskPanel locale={locale} />
+          <ComplianceRiskPanel />
         </TabsContent>
       </Tabs>
     </div>
