@@ -22,10 +22,10 @@ export async function analyzeCompanyOptimizationAction() {
       .from("companies")
       .select("id")
       .eq("user_id", user.id)
-      .limit(1)
-      .single();
+      .limit(1);
 
-    if (companyError || !companies) {
+    const company = companies?.[0];
+    if (companyError || !company) {
       return {
         success: false,
         error: "Entreprise non trouvée. Veuillez configurer votre entreprise dans les paramètres.",
@@ -36,7 +36,7 @@ export async function analyzeCompanyOptimizationAction() {
     const { data: employees, error: employeesError } = await supabase
       .from("employees")
       .select("*")
-      .eq("company_id", companies.id);
+      .eq("company_id", company.id);
 
     if (employeesError) {
       return {
