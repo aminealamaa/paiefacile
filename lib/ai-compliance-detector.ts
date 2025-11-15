@@ -6,7 +6,6 @@
 
 import { calculateMoroccanPayroll } from "./moroccan-taxes";
 import { validateMoroccanCNSS, validateMoroccanCIN } from "./moroccan-taxes";
-import { IGR_BRACKETS_2025 } from "./moroccan-taxes";
 
 export interface ComplianceIssue {
   type:
@@ -245,7 +244,7 @@ function checkSalaryAnomalies(
       salaries.reduce((sum, s) => sum + Math.pow(s - avgSalary, 2), 0) / salaries.length
     );
 
-    payrollData.forEach((payroll, index) => {
+    payrollData.forEach((payroll) => {
       const salary = Number(payroll.gross_salary) || 0;
       if (salary === 0) return;
 

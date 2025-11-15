@@ -4,9 +4,9 @@
  * Français: Couche de service IA principale
  */
 
-import { sendChatMessage, askQuestionWithContext, isAIServiceAvailable } from "./ai-chat-service";
+import { askQuestionWithContext, isAIServiceAvailable } from "./ai-chat-service";
 import { createSafePayload, validateNoPII } from "./ai-data-anonymizer";
-import type { ChatMessage, ChatResponse } from "./ai-chat-service";
+import type { ChatResponse } from "./ai-chat-service";
 
 /**
  * Call external LLM (OpenAI ChatGPT) with anonymized data
@@ -65,7 +65,7 @@ export async function analyzePayrollData(data: {
   };
   insights: string[];
 }> {
-  const { employees, payroll, company } = data;
+  const { employees, payroll } = data;
 
   const totalEmployees = employees.length;
   const totalPayroll = payroll

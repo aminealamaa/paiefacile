@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -38,11 +38,7 @@ export function WorkScheduleForm({ employeeId, locale }: WorkScheduleFormProps) 
   const [breakDuration, setBreakDuration] = useState<string>("60");
   const [daysOfWeek, setDaysOfWeek] = useState<number[]>([1, 2, 3, 4, 5]);
 
-  useEffect(() => {
-    loadSchedule();
-  }, [employeeId]);
-
-  const loadSchedule = async () => {
+  const loadSchedule = useCallback(async () => {
     setLoading(true);
     try {
       const result = await getWorkSchedule(employeeId);
@@ -55,12 +51,16 @@ export function WorkScheduleForm({ employeeId, locale }: WorkScheduleFormProps) 
         setBreakDuration(String(schedule.break_duration || 60));
         setDaysOfWeek((schedule.days_of_week as number[]) || [1, 2, 3, 4, 5]);
       }
-    } catch (error) {
-      console.error("Error loading schedule:", error);
+    } catch (err) {
+      console.error("Error loading schedule:", err);
     } finally {
       setLoading(false);
     }
-  };
+  }, [employeeId]);
+
+  useEffect(() => {
+    loadSchedule();
+  }, [loadSchedule]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -84,7 +84,7 @@ export function WorkScheduleForm({ employeeId, locale }: WorkScheduleFormProps) 
       } else {
         setMessage({ type: "error", text: result.error || t(locale, "attendance.scheduleError") });
       }
-    } catch (error) {
+    } catch (err) {
       setMessage({ type: "error", text: t(locale, "common.unexpectedError") });
     } finally {
       setSaving(false);
