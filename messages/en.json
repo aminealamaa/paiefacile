@@ -81,7 +81,9 @@
     "amount": "Amount (MAD)",
     "netTaxable": "Net Taxable",
     "familyDeductions": "Family Deductions",
-    "otherDeductions": "Other Deductions"
+    "otherDeductions": "Other Deductions",
+    "fromAttendance": "From Attendance",
+    "overtimeAutoLoaded": "Overtime hours automatically loaded from attendance"
   },
   "leaves": {
     "title": "Leave Management",
@@ -176,11 +178,6 @@
       "title": "Compliance"
     }
   },
-  "payroll": {
-    "title": "Payroll Management",
-    "subtitle": "Generate and manage your employees' pay slips",
-    "aiSuggestions": "AI Suggestions"
-  },
   "leaves": {
     "title": "Leave Management",
     "subtitle": "Manage your employees' leave requests"
@@ -245,10 +242,6 @@
       "on_leave": "On Leave",
       "conge": "Leave"
     }
-  },
-  "payroll": {
-    "fromAttendance": "From Attendance",
-    "overtimeAutoLoaded": "Overtime hours automatically loaded from attendance"
   },
   "months": {
     "january": "January",

@@ -82,7 +82,9 @@
     "amount": "Montant (MAD)",
     "netTaxable": "Net imposable",
     "familyDeductions": "Abattements familiaux",
-    "otherDeductions": "Autres déductions"
+    "otherDeductions": "Autres déductions",
+    "fromAttendance": "Depuis le pointage",
+    "overtimeAutoLoaded": "Heures supplémentaires chargées automatiquement depuis le pointage"
   },
   "leaves": {
     "title": "Gestion des Congés",
@@ -237,10 +239,6 @@
       "on_leave": "En congé",
       "conge": "Congé"
     }
-  },
-  "payroll": {
-    "fromAttendance": "Depuis le pointage",
-    "overtimeAutoLoaded": "Heures supplémentaires chargées automatiquement depuis le pointage"
   },
   "months": {
     "january": "Janvier",
