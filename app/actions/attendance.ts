@@ -13,8 +13,7 @@ import type { SupabaseClient } from "@supabase/supabase-js";
  */
 function calculateTotalHours(
   checkInTime: string | null,
-  checkOutTime: string | null,
-  date: string
+  checkOutTime: string | null
 ): number {
   if (!checkInTime || !checkOutTime) {
     return 0;
@@ -67,11 +66,10 @@ async function recalculateHoursIfNeeded(
 ): Promise<void> {
   const checkInTime = record.check_in_time as string | null;
   const checkOutTime = record.check_out_time as string | null;
-  const date = record.date as string;
 
   // Always recalculate if both times are present
   if (checkInTime && checkOutTime) {
-    const calculatedHours = calculateTotalHours(checkInTime, checkOutTime, date);
+    const calculatedHours = calculateTotalHours(checkInTime, checkOutTime);
     
     // Update if calculated hours differ from stored hours (or if stored hours is 0)
     const currentTotalHours = Number(record.total_hours) || 0;
@@ -96,8 +94,7 @@ async function recalculateHoursIfNeeded(
 async function calculateWeeklyOvertime(
   supabase: SupabaseClient,
   employeeId: string,
-  currentDate: string,
-  todayHours: number
+  currentDate: string
 ): Promise<number> {
   try {
     // Get start of week (Monday)
@@ -315,11 +312,10 @@ export async function clockOutAction(employeeId: string) {
     const breakDuration = workSchedule?.break_duration || 0;
     const breakHours = breakDuration / 60;
     const totalHours = Math.max(0, diffHours - breakHours);
-    const expectedHours = workSchedule?.daily_hours || 8;
     
     // Calculate daily overtime (>8h/day) and weekly overtime (>44h/week)
     const dailyOvertime = Math.max(0, totalHours - 8); // Moroccan law: >8h/day is overtime
-    const weeklyOvertime = await calculateWeeklyOvertime(supabase, employeeId, today, totalHours);
+    const weeklyOvertime = await calculateWeeklyOvertime(supabase, employeeId, today);
     
     // Use the maximum of daily or weekly overtime calculation
     const overtimeHours = Math.max(dailyOvertime, weeklyOvertime);
@@ -734,7 +730,7 @@ export async function createAttendanceRecordAction(formData: FormData) {
 
     // Always calculate total hours if both times are provided
     if (check_in_time && check_out_time) {
-      total_hours = calculateTotalHours(check_in_time, check_out_time, date);
+      total_hours = calculateTotalHours(check_in_time, check_out_time);
     } else if (check_in_time && !check_out_time && status === "present") {
       // If only entry time is provided and status is present, set hours to 0
       // This will be updated when exit time is added

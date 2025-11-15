@@ -14,7 +14,7 @@ import frMessages from '@/messages/fr.json';
 import enMessages from '@/messages/en.json';
 import arMessages from '@/messages/ar.json';
 
-const messages: Record<Locale, typeof frMessages> = {
+const messages: Record<Locale, Record<string, unknown>> = {
   fr: frMessages,
   en: enMessages,
   ar: arMessages,

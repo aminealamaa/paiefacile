@@ -1,10 +1,10 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Table, TableHeader, TableBody, TableRow, TableHead, TableCell } from "@/components/ui/table";
 import { getEmployeeAttendance, getMonthlyAttendanceSummary, getAllAttendanceRecords } from "@/app/actions/attendance";
-import { Calendar, Clock, TrendingUp } from "lucide-react";
+import { Calendar } from "lucide-react";
 import { t, type Locale } from "@/lib/translations";
 
 interface AttendanceRecordsProps {
@@ -32,10 +32,56 @@ export function AttendanceRecords({ employeeId, locale }: AttendanceRecordsProps
     setCurrentEmployeeId(employeeId);
   }, [employeeId]);
 
+  const loadRecords = useCallback(async () => {
+    setLoading(true);
+    try {
+      const startDate = `${selectedYear}-${String(selectedMonth).padStart(2, "0")}-01`;
+      // Get the last day of the month correctly
+      const lastDay = new Date(selectedYear, selectedMonth, 0).getDate();
+      const endDate = `${selectedYear}-${String(selectedMonth).padStart(2, "0")}-${String(lastDay).padStart(2, "0")}`;
+
+      console.log(`Loading records for ${currentEmployeeId ? `employee ${currentEmployeeId}` : 'all employees'}, month ${selectedMonth}/${selectedYear}, date range: ${startDate} to ${endDate}`);
+      
+      // If employeeId is provided, get records for that employee, otherwise get all records
+      const result = currentEmployeeId 
+        ? await getEmployeeAttendance(currentEmployeeId, startDate, endDate)
+        : await getAllAttendanceRecords(startDate, endDate);
+      
+      if (result.success) {
+        console.log(`Successfully loaded ${result.data?.length || 0} records`);
+        setRecords(result.data as Record<string, unknown>[] || []);
+      } else {
+        console.error("Error loading records:", result.error);
+        setRecords([]);
+      }
+    } catch (err) {
+      console.error("Error loading records:", err);
+      setRecords([]);
+    } finally {
+      setLoading(false);
+    }
+  }, [currentEmployeeId, selectedMonth, selectedYear]);
+
+  const loadSummary = useCallback(async () => {
+    try {
+      // Summary only makes sense for a specific employee, skip if showing all employees
+      if (!currentEmployeeId) {
+        setSummary(null);
+        return;
+      }
+      const result = await getMonthlyAttendanceSummary(currentEmployeeId, selectedYear, selectedMonth);
+      if (result.success && result.data) {
+        setSummary(result.data as typeof summary);
+      }
+    } catch (err) {
+      console.error("Error loading summary:", err);
+    }
+  }, [currentEmployeeId, selectedYear, selectedMonth]);
+
   useEffect(() => {
     loadRecords();
     loadSummary();
-  }, [currentEmployeeId, selectedMonth, selectedYear]);
+  }, [loadRecords, loadSummary]);
 
   // Listen for attendance record save events to refresh data
   useEffect(() => {
@@ -88,51 +134,6 @@ export function AttendanceRecords({ employeeId, locale }: AttendanceRecordsProps
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentEmployeeId, selectedMonth, selectedYear]); // Include deps so we have access to latest values
 
-  const loadRecords = async () => {
-    setLoading(true);
-    try {
-      const startDate = `${selectedYear}-${String(selectedMonth).padStart(2, "0")}-01`;
-      // Get the last day of the month correctly
-      const lastDay = new Date(selectedYear, selectedMonth, 0).getDate();
-      const endDate = `${selectedYear}-${String(selectedMonth).padStart(2, "0")}-${String(lastDay).padStart(2, "0")}`;
-
-      console.log(`Loading records for ${currentEmployeeId ? `employee ${currentEmployeeId}` : 'all employees'}, month ${selectedMonth}/${selectedYear}, date range: ${startDate} to ${endDate}`);
-      
-      // If employeeId is provided, get records for that employee, otherwise get all records
-      const result = currentEmployeeId 
-        ? await getEmployeeAttendance(currentEmployeeId, startDate, endDate)
-        : await getAllAttendanceRecords(startDate, endDate);
-      
-      if (result.success) {
-        console.log(`Successfully loaded ${result.data?.length || 0} records`);
-        setRecords(result.data as Record<string, unknown>[] || []);
-      } else {
-        console.error("Error loading records:", result.error);
-        setRecords([]);
-      }
-    } catch (error) {
-      console.error("Error loading records:", error);
-      setRecords([]);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const loadSummary = async () => {
-    try {
-      // Summary only makes sense for a specific employee, skip if showing all employees
-      if (!currentEmployeeId) {
-        setSummary(null);
-        return;
-      }
-      const result = await getMonthlyAttendanceSummary(currentEmployeeId, selectedYear, selectedMonth);
-      if (result.success && result.data) {
-        setSummary(result.data as typeof summary);
-      }
-    } catch (error) {
-      console.error("Error loading summary:", error);
-    }
-  };
 
   const formatDate = (dateString: string) => {
     return new Date(dateString).toLocaleDateString("fr-FR", {
@@ -242,14 +243,20 @@ export function AttendanceRecords({ employeeId, locale }: AttendanceRecordsProps
                 records.map((record) => {
                   // Extract employee name from the record
                   // Supabase returns joined data in different formats, try both
-                  const employee = (record as any).employees || (record as any).employee;
+                  const recordWithEmployee = record as Record<string, unknown> & {
+                    employees?: { first_name?: string; last_name?: string } | { first_name?: string; last_name?: string }[];
+                    employee?: { first_name?: string; last_name?: string };
+                  };
+                  const employee = recordWithEmployee.employees || recordWithEmployee.employee;
                   let employeeName = 'N/A';
                   
                   if (employee) {
                     if (Array.isArray(employee) && employee.length > 0) {
-                      employeeName = `${employee[0].last_name || ''} ${employee[0].first_name || ''}`.trim();
-                    } else if (typeof employee === 'object') {
-                      employeeName = `${employee.last_name || ''} ${employee.first_name || ''}`.trim();
+                      const emp = employee[0];
+                      employeeName = `${emp.last_name || ''} ${emp.first_name || ''}`.trim();
+                    } else if (typeof employee === 'object' && !Array.isArray(employee)) {
+                      const emp = employee as { first_name?: string; last_name?: string };
+                      employeeName = `${emp.last_name || ''} ${emp.first_name || ''}`.trim();
                     }
                   }
                   

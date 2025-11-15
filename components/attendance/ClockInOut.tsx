@@ -62,7 +62,7 @@ export function ClockInOut({ employees, locale }: ClockInOutProps) {
       } else {
         setMessage({ type: "error", text: result.error || "Erreur lors de l'enregistrement" });
       }
-    } catch (error) {
+    } catch (err) {
       setMessage({ type: "error", text: t(locale, "common.unexpectedError") });
     } finally {
       setLoading(false);

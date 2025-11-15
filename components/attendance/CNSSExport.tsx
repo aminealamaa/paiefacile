@@ -16,7 +16,7 @@ export function CNSSExport({ locale }: CNSSExportProps) {
   const [loading, setLoading] = useState(false);
   const [selectedMonth, setSelectedMonth] = useState(new Date().getMonth() + 1);
   const [selectedYear, setSelectedYear] = useState(new Date().getFullYear());
-  const [exportData, setExportData] = useState<unknown>(null);
+  const [exportData, setExportData] = useState<Record<string, unknown> | null>(null);
 
   const handlePreview = async () => {
     setLoading(true);

@@ -20,7 +20,7 @@ const WorkScheduleSchema = z.object({
  */
 export async function saveWorkScheduleAction(formData: FormData) {
   try {
-    const { user, supabase, company } = await requireAuthWithCompany();
+    const { supabase, company } = await requireAuthWithCompany();
 
     const parsed = WorkScheduleSchema.safeParse({
       employeeId: formData.get("employeeId")?.toString() ?? "",

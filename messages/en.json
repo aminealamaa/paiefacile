@@ -12,11 +12,19 @@
   "dashboard": {
     "title": "Dashboard Overview",
     "totalEmployees": "Total Employees",
+    "activeEmployees": "Active Employees",
     "nextPayrollRun": "Next Payroll Run",
+    "nextPayroll": "Next Payroll",
     "companyStatus": "Company Status",
+    "companyStatusDesc": "Company Status",
     "payrollProcessing": "Payroll Processing",
+    "inProgress": "In Progress",
+    "automaticProcessing": "Automatic Processing",
+    "active": "Active",
     "quickActions": "Quick Actions",
-    "welcome": "Welcome to PaieFacile"
+    "welcome": "Welcome",
+    "companyName": "Your Company",
+    "cnssDeclarations": "CNSS Declarations"
   },
   "employees": {
     "title": "Employees",

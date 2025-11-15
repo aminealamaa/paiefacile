@@ -49,11 +49,12 @@ export async function getAttendanceForCNSSExport(
     }
 
     // Format data for CNSS export
+    const companyData = company as Record<string, unknown>;
     const exportData = {
       company: {
         name: company.name,
-        cnss_affiliation_number: company.cnss_affiliation_number,
-        ice: company.ice,
+        cnss_affiliation_number: companyData.cnss_affiliation_number || companyData.cnss_number || "",
+        ice: companyData.ice || "",
       },
       period: {
         month,
